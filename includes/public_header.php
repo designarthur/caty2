@@ -1,4 +1,8 @@
 <?php
+// includes/public_header.php
+// Ensure functions.php is loaded for getSystemSetting() and other utilities
+require_once __DIR__ . '/functions.php'; // Corrected to ensure functions.php is loaded
+
 // Determine the current page to set active navigation link
 $currentPage = basename($_SERVER['PHP_SELF']);
 $currentDir = basename(dirname($_SERVER['PHP_SELF']));
@@ -11,9 +15,15 @@ if ($currentDir == 'Company' || $currentDir == 'Resources' || $currentDir == 'Se
 // Function to check if a link is active
 function isActive($pageName, $currentPage) {
     if (strpos($currentPage, $pageName) !== false) {
-        return 'font-bold text-blue-custom';
+        return 'font-bold text-blue-custom'; // Tailwind class for active state
     }
-    return 'text-gray-700 hover:text-blue-custom';
+    return 'text-gray-700 hover:text-blue-custom'; // Tailwind class for inactive state
+}
+
+// Fetch company name from system settings (assuming this is done globally or in index.php before including this file)
+global $companyName; // Declare global to access if set in a parent scope
+if (!$companyName) {
+    $companyName = getSystemSetting('company_name') ?? 'Catdump'; // Fallback if not set
 }
 ?>
 <!DOCTYPE html>
@@ -21,15 +31,14 @@ function isActive($pageName, $currentPage) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($pageTitle) ? $pageTitle : 'Catdump - Your Seamless Rental Journey'; ?></title>
+    <title><?php echo isset($pageTitle) ? $pageTitle : htmlspecialchars($companyName) . ' - Your Seamless Rental Journey'; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-
-
     <style>
-        /* Global CSS for body, containers, buttons, and general layout */
+        /* General styles, adjust paths as needed */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f9fa;
@@ -43,582 +52,416 @@ function isActive($pageName, $currentPage) {
             margin: 0 auto;
             padding: 1.5rem;
         }
-        .section-box {
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            padding: 4rem;
-            margin-bottom: 3.5rem;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .section-box-alt {
-            background-color: #eef2f6;
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            padding: 4rem;
-            margin-bottom: 3.5rem;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .btn-primary {
-            background-color: #1a73e8;
-            color: white;
-            padding: 1.2rem 3.5rem;
-            border-radius: 0.75rem;
-            font-weight: 800;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        .btn-primary:hover {
-            background-color: #155bb5;
-            transform: translateY(-7px);
-            box-shadow: 0 15px 35px rgba(26, 115, 232, 0.6);
-        }
-        .btn-secondary {
-            background-color: transparent;
-            color: #1a73e8;
-            padding: 1.2rem 3.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            border: 2px solid #1a73e8;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        .btn-secondary:hover {
-            background-color: #1a73e8;
-            color: white;
-            transform: translateY(-7px);
-            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.2);
-        }
-        .icon-box {
-            background-color: #34a853;
-            color: white;
-            border-radius: 50%;
-            padding: 1.8rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
         .text-blue-custom {
-            color: #1a73e8;
+            color: #1a73e8; /* Ensure this color is defined or use default Tailwind blue-600 */
         }
-        .text-green-custom {
-            color: #34a853;
-        }
-
-        /* Hero section specific styles */
-        .hero-background {
-            background-image: url('https://placehold.co/1920x900/d0d9e6/1a73e8?text=Hero+Background'); /* Placeholder, update as needed */
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            z-index: 0;
-            padding-top: 10rem;
-            padding-bottom: 10rem;
-        }
-        .hero-overlay {
-            background: linear-gradient(to right, rgba(248, 249, 250, 0.9), rgba(248, 249, 250, 0.6));
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            color: #2d3748;
-        }
-
-        /* Animation on scroll styles */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-        }
-
-        .animate-on-scroll.is-visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .delay-100 { transition-delay: 0.1s; animation-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; animation-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; animation-delay: 0.3s; }
-        .delay-400 { transition-delay: 0.4s; animation-delay: 0.4s; }
-        .delay-500 { transition-delay: 0.5s; animation-delay: 0.5s; }
-        .delay-600 { transition-delay: 0.6s; animation-delay: 0.6s; }
-        .delay-700 { transition-delay: 0.7s; animation-delay: 0.7s; }
-        .delay-800 { transition-delay: 0.8s; animation-delay: 0.8s; }
-        .delay-900 { transition-delay: 0.9s; animation-delay: 0.9s; }
-        .delay-1000 { transition-delay: 1s; animation-delay: 1s; }
-
-        /* Card hover effect */
-        .card-hover-effect {
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            background-color: #ffffff;
-            color: #2d3748;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            transform-style: preserve-3d;
-        }
-        .card-hover-effect:hover {
-            transform: translateY(-10px) scale(1.04) rotateX(2deg) rotateY(2deg);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-            background-color: #f8f9fa;
-            border-color: #1a73e8;
-        }
-        .card-hover-effect .icon-box {
-            background-color: #34a853;
-            color: white;
-        }
-
-        /* Mobile navigation overlay */
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        /* Desktop dropdown navigation */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Mobile dropdown navigation */
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px; /* Adjust as needed */
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        /* Header scroll effect */
+        /* Style for the fixed header on scroll */
         .header-scrolled {
             background-color: rgba(255, 255, 255, 0.98);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Header logo specific styles */
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
+        /* Styles for mobile menu drawer */
+        .mobile-menu-drawer {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
+        .mobile-menu-drawer.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
-
-        /* How it works specific styles (if needed, otherwise remove) */
-        .how-it-works-container {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
+        /* Desktop dropdown initial hidden state and transitions */
+        .desktop-flyout-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(0.25rem); /* Equivalent to translate-y-1 */
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out; /* ease-out duration-200 */
+            pointer-events: none; /* Disable interaction when hidden */
         }
-
-        .how-it-works-row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 4rem;
+        .desktop-flyout-menu.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto; /* Enable interaction when visible */
+            transition: opacity 0.2s ease-in, transform 0.2s ease-in; /* ease-in duration-150 */
         }
-
-        .how-it-works-image-box {
-            background-color: #f8f9fa;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 200px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .how-it-works-image-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        .how-it-works-image-box img {
-            max-width: 90%;
-            height: auto;
+        /* Custom button styles for header login/signup */
+        .btn-header-primary {
+            background-color: #1a73e8;
+            color: white;
+            padding: 0.5rem 1.25rem; /* Smaller padding for slimmer header */
             border-radius: 0.5rem;
-        }
-
-        .how-it-works-content {
-            flex: 1;
-            text-align: center;
-        }
-
-        .how-it-works-step-number {
-            font-size: 1.2rem;
             font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        }
+        .btn-header-primary:hover {
+            background-color: #155bb5;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+        }
+        .btn-header-secondary {
+            background-color: transparent;
             color: #1a73e8;
-            margin-bottom: 0.5rem;
-        }
-
-        .how-it-works-step-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 1rem;
-        }
-
-        .how-it-works-step-description {
-            color: #4a5568;
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-
-        @media (min-width: 768px) {
-            .how-it-works-row {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .how-it-works-row:nth-child(even) {
-                flex-direction: row-reverse;
-            }
-            .how-it-works-content {
-                text-align: left;
-            }
-            .how-it-works-image-box {
-                width: 50%;
-            }
-        }
-
-        /* Accordion styles (if needed, otherwise remove) */
-        .accordion-item {
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .accordion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 1rem;
-            cursor: pointer;
+            padding: 0.5rem 1.25rem; /* Smaller padding for slimmer header */
+            border-radius: 0.5rem;
             font-weight: 600;
-            font-size: 1.25rem;
-            color: #2d3748;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
+            border: 1px solid transparent; /* To prevent jump on hover */
         }
-        .accordion-header:hover {
-            background-color: #f0f4f8;
-        }
-        .accordion-header svg {
-            transition: transform 0.3s ease;
-        }
-        .accordion-header.active svg {
-            transform: rotate(180deg);
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-            padding: 0 1rem;
-            color: #4a5568;
-        }
-        .accordion-content.open {
-            max-height: 200px; /* Adjust as needed */
-            padding-bottom: 1.5rem;
-        }
-
-        /* Feature card icon styles (if needed, otherwise remove) */
-        .feature-card .icon-wrapper {
-            background-color: #eef2f6;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-        .feature-card .icon {
-            font-size: 2rem;
-            color: #1a73e8;
+        .btn-header-secondary:hover {
+            color: #155bb5;
+            border-color: #e2e8f0; /* Subtle border on hover */
+            background-color: #f8f9fa;
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <header id="main-header" class="bg-white bg-opacity-90 backdrop-blur-sm text-gray-800 shadow-xl py-4 sticky top-0 z-50 transition-all duration-300 ease-in-out">
-        <div class="container-box flex justify-between items-center">
-            <div class="flex items-center">
-                <img src="/assets/images/logo.png" alt="Catdump Logo" class="h-14 w-14 mr-4 rounded-full shadow-lg">
-                <div class="text-4xl font-extrabold text-blue-custom">Catdump</div>
+    <header class="bg-white py-3 shadow-md sticky top-0 z-50 transition-all duration-300 ease-in-out" id="main-header"> <nav class="container-box mx-auto flex items-center justify-between p-3" aria-label="Global"> <div class="flex lg:flex-1">
+                <a href="/index.php" class="-m-1.5 p-1.5">
+                    <span class="sr-only"><?php echo htmlspecialchars($companyName); ?></span>
+                    <img class="h-12 w-auto mr-4 rounded-full shadow-lg" src="/assets/images/logo.png" alt="<?php echo htmlspecialchars($companyName); ?> Logo" /> </a>
             </div>
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="/index.php" class="<?php echo isActive('index.php', $currentPage); ?> font-medium text-lg transition duration-300">Home</a>
-                <a href="/How-it-works.php" class="<?php echo isActive('How-it-works.php', $currentPage); ?> font-medium text-lg transition duration-300">How It Works</a>
+            <div class="flex lg:hidden">
+                <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" id="mobile-menu-button">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+            <div class="hidden lg:flex lg:gap-x-12">
+                <a href="/How-it-works.php" class="<?php echo isActive('How-it-works.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">How It Works</a>
                 
-                <div class="dropdown">
-                    <a href="#" class="text-gray-700 hover:text-blue-custom font-medium text-lg transition duration-300 flex items-center">
+                <div class="relative" id="services-menu-desktop"> <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="services-dropdown-button">
                         Services
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="/Services/Dumpster-Rentals.php">Dumpster Rentals</a>
-                        <a href="/Services/Temporary-Toilets.php">Temporary Toilets</a>
-                        <a href="/Services/Storage-Containers.php">Storage Containers</a>
-                        <a href="/Services/Junk-Removal.php">Junk Removal</a>
-                        <a href="/Services/Relocation-Swap.php">Relocation & Swap</a>
+                        <svg class="size-5 flex-none text-gray-400 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div id="services-flyout-menu" class="desktop-flyout-menu absolute left-1/2 z-10 top-full pt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                        <div class="p-4">
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-dumpster size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Services/Dumpster-Rentals.php" class="block text-gray-900">
+                                        Dumpster Rentals
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Efficient waste management solutions</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-restroom size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Services/Temporary-Toilets.php" class="block text-gray-900">
+                                        Temporary Toilets
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Clean & reliable portable sanitation</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-warehouse size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Services/Storage-Containers.php" class="block text-gray-900">
+                                        Storage Containers
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Secure on-site storage solutions</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-fire size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Services/Junk-Removal.php" class="block text-gray-900">
+                                        Junk Removal
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Effortless disposal of unwanted items</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-truck-moving size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Services/Relocation-&-Swap.php" class="block text-gray-900">
+                                        Relocation & Swap
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Flexible solutions for changing project needs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
+                            <a href="/Resources/Contact.php" class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
+                                <i class="fas fa-phone size-5 flex-none text-gray-400"></i>
+                                Contact Sales
+                            </a>
+                            <a href="/Resources/Customer-Resources.php" class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
+                                <i class="fas fa-question-circle size-5 flex-none text-gray-400"></i>
+                                Customer Resources
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="dropdown">
-                    <a href="#" class="text-gray-700 hover:text-blue-custom font-medium text-lg transition duration-300 flex items-center">
+                <div class="relative" id="company-menu-desktop"> <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="company-dropdown-button">
                         Company
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="/Company/About-Us.php">About Us</a>
-                        <a href="/Company/Sustainability.php">Sustainability</a>
-                        <a href="/Company/Testimonials.php">Testimonials</a>
+                        <svg class="size-5 flex-none text-gray-400 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div id="company-flyout-menu" class="desktop-flyout-menu absolute left-1/2 z-10 top-full pt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                        <div class="p-4">
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-info-circle size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Company/About-Us.php" class="block text-gray-900">
+                                        About Us
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Learn about our mission and values</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-leaf size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Company/Sustainability.php" class="block text-gray-900">
+                                        Sustainability
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Our commitment to a greener future</p>
+                                </div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                    <i class="fas fa-star size-6 text-gray-600 group-hover:text-indigo-600"></i>
+                                </div>
+                                <div class="flex-auto">
+                                    <a href="/Company/Testimonials.php" class="block text-gray-900">
+                                        Testimonials
+                                        <span class="absolute inset-0"></span>
+                                    </a>
+                                    <p class="mt-1 text-sm text-gray-600">Hear from our happy customers</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="dropdown">
-                    <a href="#" class="text-gray-700 hover:text-blue-custom font-medium text-lg transition duration-300 flex items-center">
-                        Resources
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <a href="/Resources/Blog.php" class="<?php echo isActive('Resources/Blog.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">Blog</a>
+                <a href="/Resources/Contact.php" class="<?php echo isActive('Resources/Contact.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">Contact</a>
+            </div>
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4"> <a href="/customer/login.php" class="btn-header-secondary">Log in</a>
+                <a href="/customer/login.php" class="btn-header-primary">Sign up</a> </div>
+        </nav>
+        <div class="mobile-menu-drawer fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-md hidden" role="dialog" aria-modal="true" id="mobile-menu-drawer">
+            <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                <div class="flex items-center justify-between">
+                    <a href="/index.php" class="-m-1.5 p-1.5">
+                        <span class="sr-only"><?php echo htmlspecialchars($companyName); ?></span>
+                        <img class="h-8 w-auto" src="/assets/images/logo.png" alt="<?php echo htmlspecialchars($companyName); ?> Logo" />
                     </a>
-                    <div class="dropdown-content">
-                        <a href="/Resources/Pricing-Finance.php">Pricing & Finance</a>
-                        <a href="/Resources/Customer-Resources.php">Customer Resources</a>
-                        <a href="/Resources/Blog.php">Blog/News</a>
-                        <a href="/Resources/FAQs.php">FAQs</a>
-                        <a href="/Resources/Support-Center.php">Support Center</a>
-                        <a href="/Resources/Contact.php">Contact</a>
+                    <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" id="close-mobile-menu">
+                        <span class="sr-only">Close menu</span>
+                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-6 flow-root">
+                    <div class="-my-6 divide-y divide-gray-500/10">
+                        <div class="space-y-2 py-6">
+                            <a href="/How-it-works.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 <?php echo isActive('How-it-works.php', $currentPage); ?>">How It Works</a>
+                            <div class="-mx-3">
+                                <button type="button" class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50" aria-controls="mobile-services-panel" aria-expanded="false" id="mobile-services-dropdown-button">
+                                    Services
+                                    <svg class="size-5 flex-none" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="mt-2 space-y-2 hidden" id="mobile-services-panel">
+                                    <a href="/Services/Dumpster-Rentals.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Dumpster Rentals</a>
+                                    <a href="/Services/Temporary-Toilets.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Temporary Toilets</a>
+                                    <a href="/Services/Storage-Containers.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Storage Containers</a>
+                                    <a href="/Services/Junk-Removal.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Junk Removal</a>
+                                    <a href="/Services/Relocation-&-Swap.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Relocation & Swap</a>
+                                </div>
+                            </div>
+                            <div class="-mx-3">
+                                <button type="button" class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50" aria-controls="mobile-company-panel" aria-expanded="false" id="mobile-company-dropdown-button">
+                                    Company
+                                    <svg class="size-5 flex-none" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="mt-2 space-y-2 hidden" id="mobile-company-panel">
+                                    <a href="/Company/About-Us.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">About Us</a>
+                                    <a href="/Company/Sustainability.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Sustainability</a>
+                                    <a href="/Company/Testimonials.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Testimonials</a>
+                                </div>
+                            </div>
+                            <a href="/Resources/Blog.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 <?php echo isActive('Resources/Blog.php', $currentPage); ?>">Blog</a>
+                            <a href="/Resources/Contact.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 <?php echo isActive('Resources/Contact.php', $currentPage); ?>">Contact</a>
+                        </div>
+                        <div class="py-6">
+                            <a href="/customer/login.php" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Log in</a>
+                            <a href="/customer/login.php" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Sign up</a> </div>
                     </div>
                 </div>
-            </nav>
-            <a href="/customer/dashboard.php" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            <button id="mobile-menu-button" class="md:hidden p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            </button>
+            </div>
         </div>
     </header>
-
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="/index.php" class="<?php echo isActive('index.php', $currentPage); ?> text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="/How-it-works.php" class="<?php echo isActive('How-it-works.php', $currentPage); ?> text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="/Services/Dumpster-Rentals.php">Dumpster Rentals</a>
-                        <a href="/Services/Temporary-Toilets.php">Temporary Toilets</a>
-                        <a href="/Services/Storage-Containers.php">Storage Containers</a>
-                        <a href="/Services/Junk-Removal.php">Junk Removal</a>
-                        <a href="/Services/Relocation-Swap.php">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div class="dropdown">
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="/Company/About-Us.php">About Us</a>
-                        <a href="/Company/Sustainability.php">Sustainability</a>
-                        <a href="/Company/Testimonials.php">Testimonials</a>
-                    </div>
-                </div>
-
-                <div class="dropdown">
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="/Resources/Pricing-Finance.php">Pricing & Finance</a>
-                        <a href="/Resources/Customer-Resources.php">Customer Resources</a>
-                        <a href="/Resources/Blog.php">Blog/News</a>
-                        <a href="/Resources/FAQs.php">FAQs</a>
-                        <a href="/Resources/Support-Center.php">Support Center</a>
-                        <a href="/Resources/Contact.php">Contact</a>
-                    </div>
-                </div>
-                <a href="/customer/dashboard.php" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+            const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
+            const mobileServicesPanel = document.getElementById('mobile-services-panel');
+            const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
+            const mobileCompanyPanel = document.getElementById('mobile-company-panel');
+            const servicesDropdownButton = document.getElementById('services-dropdown-button');
+            const servicesFlyoutMenu = document.getElementById('services-flyout-menu');
+            const companyDropdownButton = document.getElementById('company-dropdown-button');
+            const companyFlyoutMenu = document.getElementById('company-flyout-menu');
             const mainHeader = document.getElementById('main-header');
 
-            // Mobile menu toggle
+            // Timeout variables for hover delays
+            let servicesTimeout;
+            let companyTimeout;
+            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
+
+            // Function to show a desktop flyout menu
+            function showDesktopFlyout(button, menu) {
+                clearTimeout(servicesTimeout);
+                clearTimeout(companyTimeout); // Clear any pending hide for the other menu
+                
+                // Hide the other menu if it's open
+                if (menu === servicesFlyoutMenu) {
+                    companyFlyoutMenu.classList.remove('visible');
+                    companyDropdownButton.setAttribute('aria-expanded', 'false');
+                    companyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                } else {
+                    servicesFlyoutMenu.classList.remove('visible');
+                    servicesDropdownButton.setAttribute('aria-expanded', 'false');
+                    servicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                }
+
+                menu.classList.add('visible');
+                button.setAttribute('aria-expanded', 'true');
+                button.querySelector('svg').classList.add('rotate-180');
+            }
+
+            // Function to hide a desktop flyout menu with a delay
+            function hideDesktopFlyout(button, menu, timeoutVar) {
+                timeoutVar = setTimeout(() => {
+                    menu.classList.remove('visible');
+                    button.setAttribute('aria-expanded', 'false');
+                    button.querySelector('svg').classList.remove('rotate-180');
+                }, hoverDelay);
+                return timeoutVar;
+            }
+
+            // --- Mobile Menu Drawer Logic ---
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
+                    mobileMenuDrawer.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
                 });
             }
 
             if (closeMobileMenuButton) {
                 closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
+                    mobileMenuDrawer.classList.add('hidden');
+                    document.body.style.overflow = ''; // Restore body scrolling
                 });
             }
 
             // Close mobile menu when a link is clicked inside it
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
+            if (mobileMenuDrawer) {
+                mobileMenuDrawer.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
+                        mobileMenuDrawer.classList.add('hidden');
+                        document.body.style.overflow = '';
                     });
                 });
             }
 
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
+            // --- Mobile Services Dropdown (Accordion style) ---
+            if (mobileServicesDropdownButton) {
+                mobileServicesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileServicesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
+                    // Close other mobile dropdowns if open
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
                 });
-            });
+            }
 
-            // Header scroll effect
+            // --- Mobile Company Dropdown (Accordion style) ---
+            if (mobileCompanyDropdownButton) {
+                mobileCompanyDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileCompanyPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
+
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
+            }
+
+            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
+            if (servicesDropdownButton && servicesFlyoutMenu) {
+                servicesDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
+                servicesFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu)); // Keep open if mouse enters menu
+
+                servicesDropdownButton.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+                servicesFlyoutMenu.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+            }
+
+            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
+            if (companyDropdownButton && companyFlyoutMenu) {
+                companyDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
+                companyFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu)); // Keep open if mouse enters menu
+
+                companyDropdownButton.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+                companyFlyoutMenu.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+            }
+
+            // --- Header Scroll Effect (Sticky header background change) ---
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
+                if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
                     mainHeader.classList.add('header-scrolled');
                 } else {
                     mainHeader.classList.remove('header-scrolled');
@@ -626,3 +469,5 @@ function isActive($pageName, $currentPage) {
             });
         });
     </script>
+</body>
+</html>

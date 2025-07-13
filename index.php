@@ -175,131 +175,8 @@ if (!$companyName) {
             font-size: 0.9rem;
         }
 
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
-        }
-
+        /* How it works specific styles (if needed, otherwise remove) */
         .how-it-works-container {
             display: flex;
             flex-direction: column;
@@ -378,6 +255,7 @@ if (!$companyName) {
             }
         }
 
+        /* Accordion styles (if needed, otherwise remove) */
         .accordion-item {
             border-bottom: 1px solid #e2e8f0;
         }
@@ -892,9 +770,7 @@ if (!$companyName) {
     </style>
 </head>
 <body class="antialiased">
-
-    <?php include 'includes/public_header.php'; ?>
-
+<?php include 'includes/public_header.php'; ?>
     <main>
         <section id="hero-section" class="py-20 md:py-32">
             <div class="container-box">
@@ -1139,7 +1015,7 @@ if (!$companyName) {
                     <div class="p-10 rounded-2xl shadow-xl card-hover-effect animate-on-scroll delay-200">
                         <img src="/assets/images/payment_options.png" alt="Flexible Payments" class="rounded-lg mb-6 mx-auto shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Flexible & Secure Payment Solutions</h3>
-                        <p class="text-gray-600 leading-relaxed mb-6">We offer a wide variety of secure payment options to suit your preferences, including all major credit cards and convenient ACH transfers. For larger or ongoing projects, we provide flexible financing plans designed to help you manage your budget effectively without delaying crucial work. Rest assured, your financial data is always protected with state-of-the-art, bank-level security measures, giving you complete peace of mind.</p>
+                        <p class="text-gray-600 leading-relaxed mb-6">We offer a wide variety of secure payment options to suit your preferences, including all major credit cards and ACH transfers. For larger or ongoing projects, we provide flexible financing plans designed to help you manage your budget effectively without delaying crucial work. Rest assured, your financial data is always protected with state-of-the-art, bank-level security measures, giving you complete peace of mind.</p>
                         <a href="#" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More about Payments & Financing <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                 </div>
@@ -1301,56 +1177,6 @@ if (!$companyName) {
         </section>
     </main>
 
-   <?php include 'includes/public_footer.php'; ?>
-
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <button id="close-mobile-menu" class="absolute top-8 right-8 text-gray-600 hover:text-blue-custom">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-        <div class="mobile-nav-content">
-            <nav class="flex flex-col space-y-8">
-                <a href="#how-it-works-section">How It Works</a>
-                <div class="relative">
-                    <button data-dropdown-toggle="mobile-services" class="w-full flex items-center justify-center text-2xl font-semibold">
-                        Services <svg data-dropdown-arrow="mobile-services" class="w-6 h-6 ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="mobile-services" class="mobile-dropdown-content">
-                        <a href="#">Dumpster Rentals</a>
-                        <a href="#">Temporary Toilets</a>
-                        <a href="#">Storage Containers</a>
-                        <a href="#">Junk Removal</a>
-                        <a href="#">Relocation & Swap</a>
-                    </div>
-                </div>
-                <div class="relative">
-                    <button data-dropdown-toggle="mobile-company" class="w-full flex items-center justify-center text-2xl font-semibold">
-                        Company <svg data-dropdown-arrow="mobile-company" class="w-6 h-6 ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="mobile-company" class="mobile-dropdown-content">
-                        <a href="#">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="#">Sustainability</a>
-                        <a href="#testimonials-section">Testimonials</a>
-                    </div>
-                </div>
-                 <div class="relative">
-                    <button data-dropdown-toggle="mobile-resources" class="w-full flex items-center justify-center text-2xl font-semibold">
-                        Resources <svg data-dropdown-arrow="mobile-resources" class="w-6 h-6 ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="mobile-resources" class="mobile-dropdown-content">
-                        <a href="#">Pricing & Finance</a>
-                        <a href="#">Customer Resources</a>
-                        <a href="#">Blog/News</a>
-                        <a href="#faq-section">FAQs</a>
-                        <a href="#">Support Center</a>
-                        <a href="#contact-section">Contact</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-
     <div id="chat-bubble-floating">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
     </div>
@@ -1404,31 +1230,6 @@ if (!$companyName) {
                 }
             });
 
-            // Mobile menu functionality
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
-                });
-            }
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
-                });
-            }
-
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
-                    });
-                });
-            }
-
             // Animate on scroll
             const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
             const observer = new IntersectionObserver((entries) => {
@@ -1477,51 +1278,6 @@ if (!$companyName) {
 
             document.querySelectorAll('[data-target]').forEach(counter => {
                 counterObserver.observe(counter);
-            });
-
-            // Header scroll effect
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
-            // Mobile dropdown functionality
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
-
-                    if (targetContent) {
-                        targetContent.classList.toggle('open');
-                        if(arrowIcon) {
-                            arrowIcon.classList.toggle('rotate-180');
-                        }
-                    }
-                });
-            });
-
-            // Accordion functionality
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const content = document.getElementById(header.dataset.accordionToggle);
-                    const isActive = header.classList.contains('active');
-
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
-                    });
-
-                    if (!isActive) {
-                        header.classList.add('active');
-                        content.classList.add('open');
-                    }
-                });
             });
 
             // Autotyping effect for hero text
@@ -1700,4 +1456,5 @@ if (!$companyName) {
     </script>
 
 </body>
+<?php include 'includes/public_footer.php'; ?>
 </html>

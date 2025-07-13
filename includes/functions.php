@@ -140,10 +140,15 @@ function generateToken($length = 32) {
  * @return string|null
  */
 function getSystemSetting($key) {
-    global $conn;
+    global $conn; // IMPORTANT: Access the global database connection
     static $settings = [];
 
     if (!isset($settings[$key])) {
+        // Ensure $conn is not null before preparing statement
+        if (!$conn) {
+            error_log("Attempted to call getSystemSetting('{$key}') but \$conn is null.");
+            return null; // Or throw a more specific error if appropriate
+        }
         $stmt = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
         $stmt->bind_param("s", $key);
         $stmt->execute();
@@ -196,7 +201,7 @@ function createBookingFromInvoice(mysqli $conn, int $invoice_id): ?int {
             u.first_name, u.email
         FROM invoices i
         JOIN users u ON i.user_id = u.id
-        LEFT JOIN quotes q ON i.quote_id = q.id
+        LEFT JOIN quotes q ON i.quote_id = q.id -- Use LEFT JOIN as quote_id can be NULL
         WHERE i.id = ?
     ");
     $stmt_fetch->bind_param("i", $invoice_id);
