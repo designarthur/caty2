@@ -1,11 +1,25 @@
+<?php
+// Resources/Blog.php
+
+// Include necessary files
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+// Fetch company name from system settings
+$companyName = getSystemSetting('company_name');
+if (!$companyName) {
+    $companyName = 'Catdump'; // Fallback if not set in DB
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catdump Blog & News: Insights, Updates & Industry Trends</title>
+    <title>Blog & News - <?php echo htmlspecialchars($companyName); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -92,7 +106,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/d0e5ee/1a73e8?text=Blog+News+Hero');
+            background-image: url('https://placehold.co/1920x900/e0efff/1a73e8?text=Blog+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -172,131 +186,6 @@
         .testimonial-source {
             color: #718096;
             font-size: 0.9rem;
-        }
-
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
         }
 
         .how-it-works-container {
@@ -427,17 +316,34 @@
             font-size: 2rem;
             color: #1a73e8;
         }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
         .blog-post-card {
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
-            height: 100%; /* Ensures cards in a grid have equal height */
+            overflow: hidden; /* Ensures image corners are rounded */
         }
         .blog-post-card:hover {
             transform: translateY(-5px);
@@ -445,97 +351,70 @@
         }
         .blog-post-card img {
             width: 100%;
-            height: 200px;
+            height: 200px; /* Consistent image height */
             object-fit: cover;
-            border-radius: 1.5rem 1.5rem 0 0;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
         }
-        .blog-post-card-content {
+        .blog-post-content {
             padding: 2rem;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            flex-grow: 1;
         }
-        .blog-post-card-content .category-tag {
-            background-color: #eef2f6;
-            color: #1a73e8;
-            font-weight: 600;
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-bottom: 1rem;
+        .blog-post-meta {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.75rem;
         }
-        .blog-post-card-content h3 {
+        .blog-post-meta span {
+            margin-right: 0.75rem;
+        }
+        .blog-post-title {
             font-size: 1.75rem;
             font-weight: 700;
             color: #2d3748;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             line-height: 1.3;
         }
-        .blog-post-card-content p {
+        .blog-post-excerpt {
             font-size: 1rem;
             color: #4a5568;
             line-height: 1.6;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1; /* Pushes button to bottom */
         }
-        .blog-post-card-content .meta {
-            font-size: 0.9rem;
-            color: #718096;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-        }
-        .read-more-link {
+        .blog-read-more {
             color: #1a73e8;
             font-weight: 600;
-            display: flex;
-            align-items: center;
             transition: color 0.2s ease;
         }
-        .read-more-link:hover {
+        .blog-read-more:hover {
             color: #155bb5;
+            text-decoration: underline;
         }
-
-        .featured-post-card {
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            padding: 3rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            align-items: flex-start; /* Align text left for featured */
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @media (min-width: 1024px) {
-            .featured-post-card {
-                flex-direction: row;
-                text-align: left;
-            }
-            .featured-post-card img {
-                width: 40%;
-                max-width: 400px;
-                height: auto;
-                object-fit: cover;
-                border-radius: 1.5rem;
-                flex-shrink: 0;
-            }
-        }
-        .featured-post-card .content {
-            flex-grow: 1;
-        }
-        .featured-post-card h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-        .featured-post-card p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -543,239 +422,124 @@
 
     <?php include '../includes/public_header.php'; ?>
 
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Catdump Blog: <span class="text-blue-custom">Insights, News & Industry Trends</span>
+                    Blog & News: <span class="text-blue-custom">Insights & Updates</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Stay informed with expert advice, company updates, and the latest happenings in the equipment rental and waste management industries.
+                    Stay informed with the latest news, expert tips, industry trends, and company updates from Catdump.
                 </p>
-                <a href="#latest-articles" class="btn-primary inline-block animate-on-scroll delay-600">Browse Latest Articles</a>
+                <a href="#latest-posts" class="btn-primary inline-block animate-on-scroll delay-600">Explore Articles</a>
             </div>
         </section>
 
-        <section id="latest-articles" class="container-box py-20 md:py-32">
-            <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Latest Insights</h2>
-                <div class="featured-post-card animate-on-scroll delay-100 mb-12">
-                    <img src="https://placehold.co/400x250/1a73e8/ffffff?text=Featured+Article" alt="Featured Article Image">
-                    <div class="content">
-                        <span class="category-tag">Industry Trends</span>
-                        <h3>Revolutionizing Rentals: How AI is Changing the Game</h3>
-                        <p class="text-gray-700">Explore how artificial intelligence is transforming the equipment rental industry, from instant quoting to predictive maintenance, making your rental process smarter and more efficient than ever before.</p>
-                        <div class="meta">
-                            <span>July 1, 2025</span>
-                            <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="featured-post-card animate-on-scroll delay-200">
-                    <img src="https://placehold.co/400x250/34a853/ffffff?text=Featured+Sustainability" alt="Featured Sustainability Article">
-                    <div class="content">
-                        <span class="category-tag">Sustainability</span>
-                        <h3>Green Disposal: Catdump's Commitment to Eco-Friendly Junk Removal</h3>
-                        <p class="text-gray-700">Learn about our efforts to promote sustainable waste management, including recycling initiatives and partnering with environmentally conscious disposal facilities.</p>
-                        <div class="meta">
-                            <span>June 20, 2025</span>
-                            <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
+        <section id="latest-posts" class="container-box py-20 md:py-32">
             <div class="section-box">
-                <div class="mb-12 animate-on-scroll delay-100">
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-800 text-center mb-8">All Articles</h2>
-                    <div class="flex justify-center mb-8">
-                        <input type="text" placeholder="Search articles..." class="p-3 border border-gray-300 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-custom transition duration-200">
-                    </div>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="category-tag hover:bg-gray-200 transition duration-200">All</a>
-                        <a href="#" class="category-tag hover:bg-gray-200 transition duration-200">Company News</a>
-                        <a href="#" class="category-tag hover:bg-gray-200 transition duration-200">Tips & Guides</a>
-                        <a href="#" class="category-tag hover:bg-gray-200 transition duration-200">Industry Trends</a>
-                        <a href="#" class="category-tag hover:bg-gray-200 transition duration-200">Product Updates</a>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Latest Articles & Insights</h2>
+                <div class="blog-grid">
                     <div class="blog-post-card animate-on-scroll delay-100">
-                        <img src="https://placehold.co/400x250/d0e5ee/1a73e8?text=Dumpster+Tips" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Tips & Guides</span>
-                                <h3>Choosing the Right Dumpster Size for Your Home Project</h3>
-                                <p>Don't overpay or run out of space. Our guide helps you select the perfect dumpster for your renovation or cleanout.</p>
+                        <img src="https://placehold.co/400x200/a0e0ff/1a73e8?text=Dumpster+Tips" alt="Choosing the Right Dumpster Size">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> July 10, 2024</span>
+                                <span><i class="far fa-tag"></i> Dumpster Rentals</span>
                             </div>
-                            <div class="meta">
-                                <span>June 15, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
+                            <h3 class="blog-post-title">Choosing the Right Dumpster Size for Your Project</h3>
+                            <p class="blog-post-excerpt">Picking the correct dumpster size is crucial for efficiency and cost. Learn how to estimate your waste volume and select the ideal container for your home cleanout or construction job.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
                         </div>
                     </div>
-                    <div class="blog-post-card animate-on-scroll delay-200">
-                        <img src="https://placehold.co/400x250/e0e7f7/34a853?text=Toilet+Hygiene" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Industry Trends</span>
-                                <h3>Portable Toilets: The Unsung Heroes of Outdoor Events</h3>
-                                <p>Discover how modern portable sanitation ensures comfort and hygiene, even in the most demanding event environments.</p>
-                            </div>
-                            <div class="meta">
-                                <span>June 10, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-post-card animate-on-scroll delay-300">
-                        <img src="https://placehold.co/400x250/dbeff3/1a73e8?text=Storage+Security" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Tips & Guides</span>
-                                <h3>Maximizing Security: Tips for Your On-Site Storage Container</h3>
-                                <p>Protect your valuable assets. Learn practical tips for securing your rented storage container against theft and damage.</p>
-                            </div>
-                            <div class="meta">
-                                <span>May 28, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-post-card animate-on-scroll delay-400">
-                        <img src="https://placehold.co/400x250/f0e0d0/34a853?text=Future+Tech" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Company News</span>
-                                <h3>Catdump Unveils New AI Features for Enhanced Customer Experience</h3>
-                                <p>We're excited to announce major updates to our AI platform, making quoting and booking even faster and more intuitive.</p>
-                            </div>
-                            <div class="meta">
-                                <span>May 1, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-post-card animate-on-scroll delay-500">
-                        <img src="https://placehold.co/400x250/e0f0e0/1a73e8?text=Site+Safety" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Tips & Guides</span>
-                                <h3>Essential Safety Tips for Renting Heavy Equipment</h3>
-                                <p>Ensure a safe worksite with our crucial safety checklist for any project involving heavy machinery rentals.</p>
-                            </div>
-                            <div class="meta">
-                                <span>April 25, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-post-card animate-on-scroll delay-600">
-                        <img src="https://placehold.co/400x250/e8d0e5/34a853?text=Global+Growth" alt="Blog Post Image">
-                        <div class="blog-post-card-content">
-                            <div>
-                                <span class="category-tag">Company News</span>
-                                <h3>Catdump Expands Network to Serve More Cities Across the Globe</h3>
-                                <p>We're continuously growing our reach to bring seamless equipment rental solutions to even more regions.</p>
-                            </div>
-                            <div class="meta">
-                                <span>April 10, 2025</span>
-                                <a href="#" class="read-more-link">Read More <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="flex justify-center mt-20 animate-on-scroll delay-700">
-                    <nav class="flex items-center space-x-2">
-                        <a href="#" class="p-3 rounded-lg text-gray-500 hover:bg-gray-200 transition duration-200">Previous</a>
-                        <a href="#" class="p-3 rounded-lg text-white bg-blue-custom font-semibold">1</a>
-                        <a href="#" class="p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition duration-200">2</a>
-                        <a href="#" class="p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition duration-200">3</a>
-                        <a href="#" class="p-3 rounded-lg text-gray-500 hover:bg-gray-200 transition duration-200">Next</a>
-                    </nav>
+                    <div class="blog-post-card animate-on-scroll delay-200">
+                        <img src="https://placehold.co/400x200/b0ffc0/34a853?text=Eco+Disposal" alt="Eco-Friendly Waste Disposal">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> June 25, 2024</span>
+                                <span><i class="far fa-tag"></i> Sustainability</span>
+                            </div>
+                            <h3 class="blog-post-title">Eco-Friendly Waste Disposal: Catdump's Commitment</h3>
+                            <p class="blog-post-excerpt">Discover how Catdump and our partners are dedicated to sustainable waste management practices, from recycling and donation to minimizing landfill impact.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-post-card animate-on-scroll delay-300">
+                        <img src="https://placehold.co/400x200/ffd0b0/f59e0b?text=AI+Benefits" alt="Benefits of AI in Rentals">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> June 12, 2024</span>
+                                <span><i class="far fa-tag"></i> Technology</span>
+                            </div>
+                            <h3 class="blog-post-title">The Future of Rentals: How AI is Revolutionizing the Industry</h3>
+                            <p class="blog-post-excerpt">Explore the transformative power of AI in equipment rental, from instant quoting and smart matching to seamless logistics and customer support.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-post-card animate-on-scroll delay-400">
+                        <img src="https://placehold.co/400x200/c0c0ff/800080?text=Site+Safety" alt="Job Site Safety Tips">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> May 30, 2024</span>
+                                <span><i class="far fa-tag"></i> Safety</span>
+                            </div>
+                            <h3 class="blog-post-title">Essential Safety Tips for Renting Construction Equipment</h3>
+                            <p class="blog-post-excerpt">Ensure a safe and productive job site. Read our expert advice on handling, operating, and maintaining rented construction equipment for optimal safety.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-post-card animate-on-scroll delay-500">
+                        <img src="https://placehold.co/400x200/ffb0b0/ef4444?text=Permits" alt="Understanding Rental Permits">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> May 15, 2024</span>
+                                <span><i class="far fa-tag"></i> Regulations</span>
+                            </div>
+                            <h3 class="blog-post-title">Do You Need a Permit? Understanding Equipment Rental Regulations</h3>
+                            <p class="blog-post-excerpt">Navigating local regulations for equipment placement can be tricky. This guide clarifies when and why permits might be necessary for your rental units.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="blog-post-card animate-on-scroll delay-600">
+                        <img src="https://placehold.co/400x200/d0ffd0/34d59f?text=Cost+Saving" alt="Cost-Saving Rental Strategies">
+                        <div class="blog-post-content">
+                            <div class="blog-post-meta">
+                                <span><i class="far fa-calendar"></i> April 28, 2024</span>
+                                <span><i class="far fa-tag"></i> Cost Savings</span>
+                            </div>
+                            <h3 class="blog-post-title">Smart Strategies to Save Money on Equipment Rentals</h3>
+                            <p class="blog-post-excerpt">Maximize your budget with these expert tips on efficient scheduling, proper maintenance, and leveraging Catdump's platform for the best deals.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="blog-read-more mt-auto">Read More &rarr;</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready to Streamline Your Next Project?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Can't Find What You're Looking For?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    While you stay informed with our blog, let Catdump handle your equipment rental needs with unmatched speed and transparency.
+                    Our extensive blog covers many topics, but if you have a specific question, our AI assistant is ready to help!
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get an Instant Quote!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Chat with Our AI Assistant</a>
             </div>
         </section>
     </main>
 
-   <?php include '../includes/public_footer.php'; ?>
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <?php include '../includes/public_footer.php'; ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-
-            // Check if elements exist before adding event listeners
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
-                });
-            }
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
-                });
-            }
-
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
-                    });
-                });
-            }
-
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
-
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
-                    }
-                });
-            });
-
-
             const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -806,32 +570,65 @@
                 });
             }
             
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
+            // Accordion functionality for FAQs (if applicable, though blog won't have it directly)
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);
                     const isActive = header.classList.contains('active');
 
-                    // Close all open accordions first
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                    // Close all open accordions first (within the same section to prevent unintended closing)
+                    // This logic assumes you only want one accordion open at a time within its immediate parent group
+                    const parentSection = header.closest('.faq-category-section') || header.closest('.section-box') || header.closest('.section-box-alt');
+                    parentSection.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+                        if (activeHeader !== header) { // Don't close the currently clicked one
+                            activeHeader.classList.remove('active');
+                            document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                        }
                     });
 
-                    // If the clicked accordion was not active, open it
+                    // Toggle the clicked accordion
                     if (!isActive) {
                         header.classList.add('active');
                         content.classList.add('open');
                     }
                 });
+            });
+
+            // Counter animation for stats section (if applicable)
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const endValue = parseFloat(target.dataset.target); // Use parseFloat for percentages
+                        const duration = 2000;
+                        let startTimestamp = null;
+
+                        const step = (timestamp) => {
+                            if (!startTimestamp) startTimestamp = timestamp;
+                            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                            let currentValue;
+                            let textSuffix = '';
+
+                            if (target.dataset.target.includes('%')) {
+                                currentValue = Math.floor(progress * endValue);
+                                textSuffix = '%';
+                            } else {
+                                currentValue = Math.floor(progress * endValue);
+                            }
+                            target.textContent = currentValue.toLocaleString() + textSuffix;
+
+                            if (progress < 1) {
+                                window.requestAnimationFrame(step);
+                            }
+                        };
+                        window.requestAnimationFrame(step);
+                        observer.unobserve(target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('[data-target]').forEach(counter => {
+                counterObserver.observe(counter);
             });
         });
     </script>

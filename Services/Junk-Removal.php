@@ -6,6 +6,7 @@
     <title>Junk Removal Services - Catdump: Clear Your Space Easily</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -336,6 +337,30 @@
             line-height: 1.6;
             color: #4a5568;
         }
+
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -352,7 +377,7 @@
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
                     Say goodbye to unwanted clutter with our convenient, AI-powered junk removal service. Get instant quotes by simply showing us your junk!
                 </p>
-                <a href="#" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Instant Quote!</a>
+                <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Instant Quote!</a>
             </div>
         </section>
 
@@ -426,7 +451,7 @@
                             <p class="how-it-works-step-number">Step 1</p>
                             <h3 class="how-it-works-step-title">Capture & Upload Your Junk</h3>
                             <p class="how-it-works-step-description">No need for an on-site visit! Simply use your smartphone or camera to take a few photos or a short video of the junk you want removed. Our intuitive platform makes it easy to upload them directly. Provide any additional details through our AI chat for maximum accuracy.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Upload Your Images &rarr;</a>
+                            <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Upload Your Images &rarr;</a>
                         </div>
                     </div>
 
@@ -438,7 +463,7 @@
                             <p class="how-it-works-step-number">Step 2</p>
                             <h3 class="how-it-works-step-title">Instant AI Analysis & Quote</h3>
                             <p class="how-it-works-step-description">Our cutting-edge AI technology instantly analyzes the images and videos you've uploaded. It accurately assesses the volume, type, and complexity of your junk, then generates a precise and transparent quote in moments. You'll receive a detailed breakdown, so you know exactly what to expect.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Learn About AI Pricing &rarr;</a>
+                            <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Learn About AI Pricing &rarr;</a>
                         </div>
                     </div>
 
@@ -450,7 +475,7 @@
                             <p class="how-it-works-step-number">Step 3</p>
                             <h3 class="how-it-works-step-title">Confirm & Schedule Your Pickup</h3>
                             <p class="how-it-works-step-description">Review your instant quote on your personalized dashboard. If you're satisfied, simply confirm your booking and choose a convenient date and time for pickup. Our professional local crew will arrive promptly, remove your junk, and handle all the disposal, leaving your space clean and clutter-free.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Book Your Pickup &rarr;</a>
+                            <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Book Your Pickup &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -493,7 +518,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-700">
-                    <p class="text-xl text-gray-700">Don't see your item listed? Ask our AI or contact us for specific inquiries!</p>
+                    <p class="text-xl text-gray-700">Don't see your item listed? <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="text-blue-custom hover:underline font-medium">Ask our AI</a> or contact us for specific inquiries!</p>
                 </div>
             </div>
         </section>
@@ -563,7 +588,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All Junk Removal FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All Junk Removal FAQs</a>
                 </div>
             </div>
         </section>
@@ -574,10 +599,14 @@
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Experience the easiest way to get rid of unwanted items. Get your instant quote and schedule a pickup today with Catdump.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Start Your Free Junk Removal Quote!</a>
+                <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Start Your Free Junk Removal Quote!</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('junk-removal-service');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 

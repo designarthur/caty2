@@ -6,6 +6,7 @@
     <title>Relocation & Swap Services - Catdump: Adaptable Equipment Rentals</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -328,9 +329,33 @@
             margin-bottom: 0.75rem;
         }
         .scenario-card p {
-            font-size: 1rem;
+            font-size: 1.0rem; /* Adjusted for consistency */
             line-height: 1.6;
             color: #4a5568;
+        }
+
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -348,7 +373,7 @@
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
                     Project running longer? Need a different size unit? Catdump adapts to your changing needs with seamless rental extensions, unit swaps, and on-site relocations.
                 </p>
-                <a href="#" class="btn-primary inline-block animate-on-scroll delay-600">Request a Service Change Now!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block animate-on-scroll delay-600">Request a Service Change Now!</a>
             </div>
         </section>
 
@@ -414,7 +439,7 @@
                             <p class="how-it-works-step-number">Scenario 1</p>
                             <h3 class="how-it-works-step-title">Extend Your Rental Period</h3>
                             <p class="how-it-works-step-description">Project taking longer than expected? No problem. Simply log into your Catdump dashboard and select the "Extend Rental" option for your active equipment. Specify your new desired end date. We'll instantly provide updated pricing for the extension, and once confirmed, your rental period will be seamlessly adjusted without any hassle, keeping your project on schedule.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Extend My Rental &rarr;</a>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Extend My Rental &rarr;</a>
                         </div>
                     </div>
 
@@ -426,7 +451,7 @@
                             <p class="how-it-works-step-number">Scenario 2</p>
                             <h3 class="how-it-works-step-title">Swap Your Equipment for a Different Size</h3>
                             <p class="how-it-works-step-description">If your project's scope changes and you need a larger or smaller dumpster, storage container, or different type of portable toilet, use the "Request Swap" feature in your dashboard. Tell us the new specifications, and we'll provide new quotes from local suppliers. Once approved, we'll coordinate the efficient exchange: your current unit will be picked up, and the new one delivered promptly, minimizing disruption.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Request a Swap &rarr;</a>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Request a Swap &rarr;</a>
                         </div>
                     </div>
 
@@ -438,7 +463,7 @@
                             <p class="how-it-works-step-number">Scenario 3</p>
                             <h3 class="how-it-works-step-title">Relocate Your Unit On-Site</h3>
                             <p class="how-it-works-step-description">Need your dumpster or storage container moved to a different spot on your property or job site? Our "Relocate Unit" option in the dashboard allows you to request an internal move. Provide the new desired location, and our team will confirm the logistics and any applicable fees. A professional crew will then safely and efficiently move your rental, ensuring it's exactly where you need it for optimal workflow.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Initiate Relocation &rarr;</a>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Initiate Relocation &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -543,7 +568,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All Flexible Service FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All Flexible Service FAQs</a>
                 </div>
             </div>
         </section>
@@ -554,10 +579,14 @@
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Don't let changing project needs disrupt your progress. Catdump's flexible relocation and swap services keep you in control.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Go to Customer Portal to Manage Rentals</a>
+                <a href="/customer/dashboard.php" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Go to Customer Portal to Manage Rentals</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 

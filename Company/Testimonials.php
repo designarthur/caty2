@@ -1,11 +1,25 @@
+<?php
+// Company/Testimonials.php
+
+// Include necessary files
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+// Fetch company name from system settings
+$companyName = getSystemSetting('company_name');
+if (!$companyName) {
+    $companyName = 'Catdump'; // Fallback if not set in DB
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testimonials - Catdump: Hear From Our Happy Customers</title>
+    <title>Customer Testimonials - <?php echo htmlspecialchars($companyName); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -92,7 +106,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/e0e7f7/1a73e8?text=Testimonials+Hero');
+            background-image: url('https://placehold.co/1920x900/e0e9f5/1a73e8?text=Testimonials+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -172,27 +186,6 @@
         .testimonial-source {
             color: #718096;
             font-size: 0.9rem;
-        }
-        .featured-testimonial-card {
-            background-color: #1a73e8; /* Blue background for featured */
-            color: white;
-            border-radius: 1.5rem;
-            padding: 3rem;
-            box-shadow: 0 15px 40px rgba(26, 115, 232, 0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .featured-testimonial-card .testimonial-quote {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.5rem; /* Larger font for featured */
-        }
-        .featured-testimonial-card .testimonial-author {
-            color: white;
-            font-size: 1.1rem;
-        }
-        .featured-testimonial-card .testimonial-source {
-            color: rgba(255, 255, 255, 0.7);
         }
 
         .how-it-works-container {
@@ -324,43 +317,69 @@
             color: #1a73e8;
         }
 
-        .theme-card {
+        .testimonial-card-large {
             background-color: #ffffff;
             border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            padding: 4rem;
             border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
         }
-        .theme-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-        }
-        .theme-card .icon-large {
-            font-size: 3.5rem;
-            color: #1a73e8; /* Blue for themes */
+        .testimonial-card-large .quote-icon {
+            font-size: 3rem;
+            color: #1a73e8;
             margin-bottom: 1.5rem;
         }
-        .theme-card h3 {
-            font-size: 2rem;
-            font-weight: 700;
+        .testimonial-card-large .quote-text {
+            font-size: 1.75rem;
+            font-style: italic;
             color: #2d3748;
-            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            margin-bottom: 2rem;
         }
-        .theme-card p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #4a5568;
+        .testimonial-card-large .author-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
         }
-        .customer-photo {
-            width: 80px;
-            height: 80px;
+        .testimonial-card-large .author-info img {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid #eef2f6;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 1.25rem;
+            border: 3px solid #1a73e8;
+        }
+        .testimonial-card-large .author-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+        .testimonial-card-large .author-title {
+            font-size: 1rem;
+            color: #718096;
+        }
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -368,156 +387,91 @@
 
     <?php include '../includes/public_header.php'; ?>
 
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Hear From Our Happy Customers: <span class="text-blue-custom">Catdump Success Stories</span>
+                    Real Stories: <span class="text-blue-custom">Customer Testimonials</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Don't just take our word for it. Explore real experiences from clients who've streamlined their projects and achieved excellence with Catdump's intuitive platform and reliable services.
+                    Hear directly from our satisfied customers about their experiences with Catdump's efficient, transparent, and reliable equipment rental and waste management services.
                 </p>
-                <a href="#submit-testimonial" class="btn-primary inline-block animate-on-scroll delay-600">Submit Your Testimonial!</a>
+                <a href="#customer-stories" class="btn-primary inline-block animate-on-scroll delay-600">Read Their Stories</a>
             </div>
         </section>
 
-        <section class="container-box py-20 md:py-32">
+        <section id="customer-stories" class="container-box py-20 md:py-32">
             <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Featured Stories That Inspire</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div class="featured-testimonial-card animate-on-scroll delay-100">
-                        <p class="testimonial-quote">"Catdump revolutionized how we approach equipment rentals. The AI system is unbelievably accurate for quotes, and being able to manage everything from one dashboard has saved us countless hours. Unparalleled service and transparency!"</p>
-                        <div class="text-right">
-                            <p class="testimonial-author">- Sarah L.</p>
-                            <p class="testimonial-source">Construction Manager, Apex Builds</p>
-                        </div>
-                    </div>
-                    <div class="featured-testimonial-card animate-on-scroll delay-200">
-                        <p class="testimonial-quote">"As an event coordinator, finding reliable temporary toilets and knowing they'll be serviced on schedule is paramount. Catdump's platform made it effortless, and their commitment to cleanliness truly impressed our guests. A top-tier solution!"</p>
-                        <div class="text-right">
-                            <p class="testimonial-author">- Mark T.</p>
-                            <p class="testimonial-source">Event Coordinator, Elite Events Solutions</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">All Customer Testimonials</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">What Our Customers Love About Catdump</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                     <div class="testimonial-card animate-on-scroll delay-100">
-                        <img src="https://placehold.co/80x80/eef2f6/1a73e8?text=DL" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"Renting a dumpster for our home renovation was a breeze with Catdump. Their AI helped us pick the perfect size, and the delivery was exactly on time. Highly efficient!"</p>
-                        <p class="testimonial-author">- David M.</p>
-                        <p class="testimonial-source">Homeowner, Dumpster Rental</p>
+                        <p class="testimonial-quote">"Catdump transformed how we manage waste on our job sites. The AI quoting is lightning fast, and getting the right dumpster at the best price, delivered precisely on time, has made our operations so much smoother. Absolute game-changer!"</p>
+                        <p class="testimonial-author">- Michael S.</p>
+                        <p class="testimonial-source">Project Manager, Horizon Construction</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-200">
-                        <img src="https://placehold.co/80x80/eef2f6/34a853?text=ER" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"We always need reliable dumpsters for our construction sites. Catdump's platform provides the best local prices instantly, saving us significant time and money on every project."</p>
-                        <p class="testimonial-author">- Emily R.</p>
-                        <p class="testimonial-source">Site Manager, Dumpster Rental</p>
+                        <p class="testimonial-quote">"I needed a portable toilet for my outdoor event, and Catdump made it incredibly easy. The unit was spotless, and the delivery/pickup was seamless. Truly stress-free sanitation. Highly recommend their reliability!"</p>
+                        <p class="testimonial-author">- Sarah L.</p>
+                        <p class="testimonial-source">Event Coordinator, Elite Events</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-300">
-                        <img src="https://placehold.co/80x80/eef2f6/1a73e8?text=LK" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"Catdump's portable toilets were a game-changer for our outdoor concerts. Clean, well-maintained, and delivered on time. Our attendees truly appreciated the quality!"</p>
-                        <p class="testimonial-author">- Lisa K.</p>
-                        <p class="testimonial-source">Event Organizer, Portable Toilet Rental</p>
+                        <p class="testimonial-quote">"The junk removal service was beyond simple. I just uploaded a few photos, got an instant quote, and their professional crew had everything cleared out in no time. It saved me hours of hauling. Fantastic service and eco-friendly too!"</p>
+                        <p class="testimonial-author">- David R.</p>
+                        <p class="testimonial-source">Homeowner, Major Cleanout</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-400">
-                        <img src="https://placehold.co/80x80/eef2f6/34a853?text=RS" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"For our construction site, reliable sanitation is crucial. Catdump's quick delivery and consistent servicing meant our crew always had clean facilities. Excellent service!"</p>
-                        <p class="testimonial-author">- Robert S.</p>
-                        <p class="testimonial-source">Construction Foreman, Portable Toilet Rental</p>
+                        <p class="testimonial-quote">"Managing multiple construction sites means constant equipment needs. Catdump's dashboard gives me total control, and the ability to easily extend rentals or swap units is invaluable. It keeps my projects on schedule and on budget."</p>
+                        <p class="testimonial-author">- Emily C.</p>
+                        <p class="testimonial-source">Site Supervisor, BuildRight Corp.</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-500">
-                        <img src="https://placehold.co/80x80/eef2f6/1a73e8?text=JD" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"Getting a storage container for our renovation was incredibly easy. The unit was delivered quickly, very secure, and perfect for keeping our tools safe on site."</p>
-                        <p class="testimonial-author">- John D.</p>
-                        <p class="testimonial-source">Construction Foreman, Storage Container Rental</p>
+                        <p class="testimonial-quote">"The transparency in pricing is what sets Catdump apart. No hidden fees, just clear, competitive quotes that allowed me to save significantly on my storage container rental. Their customer support is also top-notch!"</p>
+                        <p class="testimonial-author">- Chris P.</p>
+                        <p class="testimonial-source">Business Owner, Inventory Management</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-600">
-                        <img src="https://placehold.co/80x80/eef2f6/34a853?text=SP" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"We needed temporary storage during our office move. Catdump provided a secure container exactly when we needed it, and the process was so much simpler than other rental companies."</p>
-                        <p class="testimonial-author">- Sarah P.</p>
-                        <p class="testimonial-source">Office Manager, Storage Container Rental</p>
-                    </div>
-                    <div class="testimonial-card animate-on-scroll delay-700">
-                        <img src="https://placehold.co/80x80/eef2f6/1a73e8?text=JR" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"The AI quoting system for junk removal is genius! I snapped a few photos, got an instant price, and they picked up everything the next day. So simple and fair."</p>
-                        <p class="testimonial-author">- Jessica R.</p>
-                        <p class="testimonial-source">Homeowner, Junk Removal</p>
-                    </div>
-                    <div class="testimonial-card animate-on-scroll delay-800">
-                        <img src="https://placehold.co/80x80/eef2f6/34a853?text=MT" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"We had a pile of construction debris that needed to go. Catdump's service was fast, efficient, and their crew was incredibly professional. Highly recommend for any cleanup job."</p>
-                        <p class="testimonial-author">- Mark T.</p>
-                        <p class="testimonial-source">Contractor, Junk Removal</p>
-                    </div>
-                    <div class="testimonial-card animate-on-scroll delay-900">
-                        <img src="https://placehold.co/80x80/eef2f6/1a73e8?text=AG" alt="Customer Photo" class="customer-photo mx-auto">
-                        <p class="testimonial-quote">"Our renovation hit a snag, and we needed our dumpster for an extra week. Extending it through Catdump's dashboard was incredibly easy, literally a few clicks!"</p>
-                        <p class="testimonial-author">- Alex G.</p>
-                        <p class="testimonial-source">Homeowner, Rental Extension</p>
+                        <p class="testimonial-quote">"For our large community fair, we needed various rentals, and Catdump delivered perfectly. Their ability to handle diverse needs from one platform, with such efficiency, was truly impressive. Our go-to for all future events."</p>
+                        <p class="testimonial-author">- Jessica B.</p>
+                        <p class="testimonial-source">Community Organizer, Green Valley Fairs</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
-            <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Why Our Customers Consistently Choose Catdump</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="theme-card animate-on-scroll delay-100">
-                        <div class="icon-large">⚡</div>
-                        <h3>Speed & Efficiency</h3>
-                        <p>Customers consistently praise our platform for its ability to provide instant quotes and quick service, saving them valuable time on every project.</p>
-                    </div>
-                    <div class="theme-card animate-on-scroll delay-200">
-                        <div class="icon-large">💰</div>
-                        <h3>Transparent Pricing</h3>
-                        <p>Our commitment to upfront, competitive pricing is a recurring theme, ensuring customers feel confident they're getting the best deal without hidden costs.</p>
-                    </div>
-                    <div class="theme-card animate-on-scroll delay-300">
-                        <div class="icon-large">🤝</div>
-                        <h3>Exceptional Support</h3>
-                        <p>From AI chat assistance to dedicated customer service, clients appreciate the responsive and helpful support they receive throughout their rental journey.</p>
-                    </div>
-                    <div class="theme-card animate-on-scroll delay-400">
-                        <div class="icon-large">✅</div>
-                        <h3>Reliability You Can Trust</h3>
-                        <p>Our vetted network of suppliers consistently delivers on time and provides well-maintained equipment, leading to dependable and smooth operations.</p>
-                    </div>
-                    <div class="theme-card animate-on-scroll delay-500">
-                        <div class="icon-large">✨</div>
-                        <h3>Unbeatable Ease of Use</h3>
-                        <p>The intuitive platform, especially the AI-powered booking and dashboard management, makes the entire rental process incredibly simple and stress-free.</p>
-                    </div>
-                    <div class="theme-card animate-on-scroll delay-600">
-                        <div class="icon-large">💡</div>
-                        <h3>Solutions for Every Need</h3>
-                        <p>Whether it's a specific dumpster size, flexible rental terms, or complex junk removal, customers value our comprehensive and adaptable service offerings.</p>
+            <div class="section-box text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">A Word from Our Valued Partners</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="testimonial-card-large animate-on-scroll delay-100">
+                        <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                        <p class="quote-text">"Partnering with Catdump has been a game-changer for our local dumpster business. Their AI-driven platform seamlessly connects us with qualified customers, optimizing our routes and reducing idle time. It’s truly the future of equipment rental logistics."</p>
+                        <div class="author-info">
+                            <img src="https://placehold.co/70x70/1a73e8/ffffff?text=Partner+CEO" alt="Partner CEO">
+                            <div>
+                                <p class="author-name">Robert Johnson</p>
+                                <p class="author-title">CEO, City Dumpsters Inc.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="submit-testimonial" class="container-box py-20 md:py-32">
+        <section class="container-box py-20 md:py-32">
             <div class="section-box-alt text-center">
                 <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Share Your Catdump Experience!</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Did Catdump help you streamline your project or simplify your rental needs? We'd love to hear your success story! Your feedback helps us grow and inspires others.
+                    Your feedback helps us grow and serve you better. We'd love to hear about your successful projects and how Catdump made a difference.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Write Your Review Now!</a>
-                <p class="text-gray-600 text-lg mt-8 animate-on-scroll delay-300">
-                    (Alternatively, you can contact our support team to provide feedback.)
-                </p>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Submit Your Testimonial</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 
@@ -553,7 +507,7 @@
                 });
             }
             
-            // Accordion functionality for FAQs and Quick Solutions
+            // Accordion functionality for FAQs (if applicable)
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);
@@ -575,43 +529,6 @@
                         content.classList.add('open');
                     }
                 });
-            });
-
-            // Counter animation for stats section (if applicable)
-            const counterObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const target = entry.target;
-                        const endValue = parseFloat(target.dataset.target); // Use parseFloat for percentages
-                        const duration = 2000;
-                        let startTimestamp = null;
-
-                        const step = (timestamp) => {
-                            if (!startTimestamp) startTimestamp = timestamp;
-                            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                            let currentValue;
-                            let textSuffix = '';
-
-                            if (target.dataset.target.includes('%')) {
-                                currentValue = Math.floor(progress * endValue);
-                                textSuffix = '%';
-                            } else {
-                                currentValue = Math.floor(progress * endValue);
-                            }
-                            target.textContent = currentValue.toLocaleString() + textSuffix;
-
-                            if (progress < 1) {
-                                window.requestAnimationFrame(step);
-                            }
-                        };
-                        window.requestAnimationFrame(step);
-                        observer.unobserve(target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            document.querySelectorAll('[data-target]').forEach(counter => {
-                counterObserver.observe(counter);
             });
         });
     </script>

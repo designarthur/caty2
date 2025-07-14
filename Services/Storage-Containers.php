@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storage Container Rentals - Catdump: Secure On-Site Solutions</title>
+    <title>Storage Container Rentals - Catdump: Secure Your Valuables</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -92,7 +92,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/d0e8f0/1a73e8?text=Storage+Containers+Hero');
+            background-image: url('https://placehold.co/1920x900/f0e0ee/1a73e8?text=Storage+Containers+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -303,7 +303,7 @@
             color: #1a73e8;
         }
 
-        .container-type-card {
+        .unit-type-card {
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -312,11 +312,11 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
         }
-        .container-type-card:hover {
+        .unit-type-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
-        .container-type-card img {
+        .unit-type-card img {
             max-width: 100%;
             height: 180px; /* Consistent image height */
             object-fit: contain;
@@ -324,16 +324,39 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
-        .container-type-card h3 {
+        .unit-type-card h3 {
             font-size: 2rem;
             font-weight: 700;
             color: #1a73e8;
             margin-bottom: 0.75rem;
         }
-        .container-type-card p {
+        .unit-type-card p {
             font-size: 1rem;
             line-height: 1.6;
             color: #4a5568;
+        }
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -346,12 +369,12 @@
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Secure & Convenient Storage Containers for <span class="text-blue-custom">Your Site or Home</span>
+                    Secure & Convenient Storage Container Rentals
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Keep your equipment, materials, and valuables safe and accessible with robust, weatherproof on-site storage solutions, delivered directly to your location.
+                    Protect your valuables on-site with our robust, weatherproof storage containers. Perfect for construction, renovations, or extra commercial space.
                 </p>
-                <a href="#" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Storage Container Quote!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Storage Container Quote!</a>
             </div>
         </section>
 
@@ -359,55 +382,55 @@
             <div class="section-box">
                 <div class="text-center mb-8 animate-on-scroll delay-100">
                     <span class="text-blue-custom text-lg font-semibold uppercase">Why Catdump for Storage?</span>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2">Your Reliable Partner for On-Site Storage</h2>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2">Your Reliable Source for On-Site Storage</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                     <div class="feature-card animate-on-scroll delay-200">
                         <div class="icon-wrapper">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a2 2 0 00-2-2H8a2 2 0 00-2 2v4h10z"></path></svg>
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a2 2 0 00-2-2H8a2 2 0 00-2 2v3m-2 4h.01M18 14h.01"></path></svg>
                         </div>
-                        <h4>Robust & Secure Construction</h4>
-                        <p>Our storage containers are built from heavy-duty steel, featuring secure locking mechanisms to ensure the utmost protection for your valuable contents against theft and vandalism.</p>
+                        <h4>Superior Security</h4>
+                        <p>Our storage containers are built from heavy-duty steel, featuring secure locking mechanisms to ensure your equipment, tools, and inventory are safe from theft and vandalism.</p>
                     </div>
 
                     <div class="feature-card animate-on-scroll delay-300">
                         <div class="icon-wrapper">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 005-5V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10m0 0l-1.5-1.5M10 10l3-3"></path></svg>
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9a2 2 0 012 2v7m-4 0h8a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2zm-5 0h.01M19 14h.01"></path></svg>
                         </div>
                         <h4>Weatherproof Protection</h4>
-                        <p>Designed to withstand harsh weather conditions, our containers keep your stored items dry, safe, and protected from rain, snow, wind, and extreme temperatures.</p>
+                        <p>Each container is designed to be fully watertight and wind-resistant, providing complete protection against rain, snow, and extreme temperatures for your sensitive items.</p>
                     </div>
 
                     <div class="feature-card animate-on-scroll delay-400">
                         <div class="icon-wrapper">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h4>Variety of Sizes & Types</h4>
-                        <p>Choose from popular 10ft, 20ft, and 40ft standard containers, or specialty options like office/storage combos, to perfectly fit the scale and nature of your project.</p>
+                        <h4>Flexible Rental Terms</h4>
+                        <p>Whether you need short-term storage for a renovation or a long-term solution for excess inventory, our flexible rental periods can be tailored to your exact needs.</p>
                     </div>
 
                     <div class="feature-card animate-on-scroll delay-500">
                         <div class="icon-wrapper">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <h4>Convenient On-Site Placement</h4>
-                        <p>We deliver your storage container directly to your home, job site, or business, providing instant, accessible storage exactly where you need it, maximizing efficiency.</p>
+                        <h4>Competitive Pricing</h4>
+                        <p>Our AI-powered marketplace connects you with multiple local suppliers, ensuring you receive the most competitive quotes and best value for your storage container rental.</p>
                     </div>
 
                     <div class="feature-card animate-on-scroll delay-600">
                         <div class="icon-wrapper">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                         </div>
-                        <h4>Competitive Pricing & Fast Quotes</h4>
-                        <p>Our AI-powered platform quickly gathers the best rates from local suppliers, ensuring you get transparent, competitive pricing for your storage container rental.</p>
+                        <h4>Hassle-Free Delivery</h4>
+                        <p>We handle all aspects of delivery and placement, bringing the container directly to your specified location with professional precision and efficiency.</p>
                     </div>
 
                     <div class="feature-card animate-on-scroll delay-700">
                         <div class="icon-wrapper">
                             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.105A9.763 9.763 0 0112 4c4.97 0 9 3.582 9 8z"></path></svg>
                         </div>
-                        <h4>Seamless Delivery & Support</h4>
-                        <p>Experience hassle-free delivery and pickup logistics, backed by our dedicated customer support team who are ready to assist you every step of the way.</p>
+                        <h4>Variety of Sizes Available</h4>
+                        <p>From compact 10-foot containers to large 40-foot units, we offer a range of sizes to perfectly accommodate your storage volume requirements.</p>
                     </div>
                 </div>
             </div>
@@ -415,43 +438,33 @@
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Range of Secure Storage Solutions</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Popular Storage Container Sizes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="container-type-card animate-on-scroll delay-100">
+                    <div class="unit-type-card animate-on-scroll delay-100">
                         <img src="https://placehold.co/250x180/1a73e8/ffffff?text=10ft+Container" alt="10ft Storage Container">
                         <h3>10ft Storage Container</h3>
-                        <p>Compact and versatile, ideal for small residential projects, seasonal storage, or job sites with limited space for tools and materials.</p>
+                        <p>Perfect for small projects, seasonal items, or extra household storage. Compact yet secure, ideal for limited spaces.</p>
                     </div>
-                    <div class="container-type-card animate-on-scroll delay-200">
+                    <div class="unit-type-card animate-on-scroll delay-200">
                         <img src="https://placehold.co/250x180/34a853/ffffff?text=20ft+Container" alt="20ft Storage Container">
                         <h3>20ft Storage Container</h3>
-                        <p>Our most popular option, perfect for medium-sized construction projects, home renovations, moving storage, or excess inventory for businesses.</p>
+                        <p>Our most popular size, versatile for residential renovations, commercial inventory, or mid-sized construction site storage.</p>
                     </div>
-                    <div class="container-type-card animate-on-scroll delay-300">
+                    <div class="unit-type-card animate-on-scroll delay-300">
                         <img src="https://placehold.co/250x180/1a73e8/ffffff?text=40ft+Container" alt="40ft Storage Container">
                         <h3>40ft Storage Container</h3>
-                        <p>Maximum capacity for large commercial projects, major demolitions, or extensive storage needs, offering ample space for machinery and bulk materials.</p>
-                    </div>
-                    <div class="container-type-card animate-on-scroll delay-400">
-                        <img src="https://placehold.co/250x180/34a853/ffffff?text=Office+Combo" alt="Office/Storage Combo Container">
-                        <h3>Office/Storage Combo</h3>
-                        <p>Combines secure storage with a dedicated office space, perfect for construction site management, allowing for both secure storage and administrative tasks.</p>
-                    </div>
-                    <div class="container-type-card animate-on-scroll delay-500">
-                        <img src="https://placehold.co/250x180/1a73e8/ffffff?text=Specialty+Container" alt="Specialty Storage Container">
-                        <h3>Specialty Containers</h3>
-                        <p>Beyond standard options, inquire about specialized containers such as open-top, refrigerated units, or those with unique access points for specific industry needs.</p>
+                        <p>Max capacity for large-scale construction, extensive commercial storage, or multiple residential projects. Offers ample space.</p>
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">Need a custom solution? Contact us!</a>
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-secondary inline-block">Need help choosing a size? Let our AI guide you!</a>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">How Easy It Is to Rent Your Storage Container</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Your 3-Step Process to Secure Storage</h2>
                 <div class="how-it-works-container">
                     <div class="how-it-works-row animate-on-scroll delay-100">
                         <div class="how-it-works-image-box">
@@ -459,33 +472,33 @@
                         </div>
                         <div class="how-it-works-content">
                             <p class="how-it-works-step-number">Step 1</p>
-                            <h3 class="how-it-works-step-title">Describe Your Storage Needs</h3>
-                            <p class="how-it-works-step-description">Tell our AI about the items you need to store, preferred container size, rental duration, and delivery location. Our system makes capturing details effortless.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Your Quote &rarr;</a>
+                            <h3 class="how-it-works-step-title">Tell Us Your Storage Needs</h3>
+                            <p class="how-it-works-step-description">Chat with our AI assistant about the items you need to store, the desired container size, and your rental duration. We'll capture all details efficiently.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Your Quote &rarr;</a>
                         </div>
                     </div>
 
                     <div class="how-it-works-row animate-on-scroll delay-300">
                         <div class="how-it-works-image-box">
-                            <img src="https://placehold.co/300x200/e0e7ff/34a853?text=Compare+Container+Prices" alt="Compare Container Prices">
+                            <img src="https://placehold.co/300x200/e0e7ff/34a853?text=Compare+Storage+Prices" alt="Compare Storage Prices">
                         </div>
                         <div class="how-it-works-content">
                             <p class="how-it-works-step-number">Step 2</p>
-                            <h3 class="how-it-works-step-title">Compare Best Local Offers</h3>
-                            <p class="how-it-works-step-description">Receive multiple competitive quotes from our network of vetted local storage container providers directly on your dashboard. Choose the best value for your project.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Offers &rarr;</a>
+                            <h3 class="how-it-works-step-title">Compare Competitive Local Quotes</h3>
+                            <p class="how-it-works-step-description">Receive immediate, transparent quotes from our network of trusted local storage container suppliers. Compare options and choose the best fit for your budget.</p>
+                            <a href="/Resources/Pricing-Finance.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Pricing & Finance &rarr;</a>
                         </div>
                     </div>
 
                     <div class="how-it-works-row animate-on-scroll delay-500">
                         <div class="how-it-works-image-box">
-                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=Book+Track+Container" alt="Book & Track Container">
+                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=Book+Track+Storage" alt="Book & Track Storage">
                         </div>
                         <div class="how-it-works-content">
                             <p class="how-it-works-step-number">Step 3</p>
-                            <h3 class="how-it-works-step-title">Book, Pay & Get Delivered</h3>
-                            <p class="how-it-works-step-description">Confirm your chosen container, complete secure payment, and enjoy seamless delivery right to your specified location. Manage and monitor your rental with ease.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Dashboard &rarr;</a>
+                            <h3 class="how-it-works-step-title">Book, Deliver & Secure Your Items</h3>
+                            <p class="how-it-works-step-description">Confirm your booking, make a secure payment, and our team will arrange prompt delivery and placement of your container, ready to secure your valuables.</p>
+                            <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Your Dashboard &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -494,22 +507,22 @@
 
         <section class="container-box py-20 md:py-32" id="testimonials-section">
             <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">What Our Customers Say About Our Storage Solutions</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">What Our Clients Say About Our Storage Containers</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                     <div class="testimonial-card animate-on-scroll delay-100">
-                        <p class="testimonial-quote">"Catdump made getting a storage container for our renovation incredibly easy. The unit was delivered quickly, very secure, and perfect for keeping our tools safe on site."</p>
-                        <p class="testimonial-author">- John D.</p>
-                        <p class="testimonial-source">Construction Foreman, Site Solutions Inc.</p>
+                        <p class="testimonial-quote">"Catdump's storage containers are top-notch! Incredibly secure and weatherproof, they were perfect for keeping our construction materials safe on-site through all weather."</p>
+                        <p class="testimonial-author">- Alex P.</p>
+                        <p class="testimonial-source">Site Manager, Grand Builds</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-200">
-                        <p class="testimonial-quote">"We needed temporary storage during our office move. Catdump provided a secure container exactly when we needed it, and the process was so much simpler than other rental companies."</p>
-                        <p class="testimonial-author">- Sarah P.</p>
-                        <p class="testimonial-source">Office Manager, Corporate Relo</p>
+                        <p class="testimonial-quote">"The process of renting a storage container through Catdump was unbelievably easy. Quick quote, prompt delivery, and excellent customer service. Highly recommend!"</p>
+                        <p class="testimonial-author">- Sarah T.</p>
+                        <p class="testimonial-source">Homeowner, Renovation Project</p>
                     </div>
                     <div class="testimonial-card animate-on-scroll delay-300">
-                        <p class="testimonial-quote">"The weatherproof container was crucial for our outdoor event equipment. Everything stayed dry and protected. Catdump offers reliable service and great value."</p>
-                        <p class="testimonial-author">- Mike T.</p>
-                        <p class="testimonial-source">Event Coordinator, Festival FX</p>
+                        <p class="testimonial-quote">"We needed extra inventory storage quickly, and Catdump delivered. The flexible rental terms were a huge plus, and the container was exactly what we needed."</p>
+                        <p class="testimonial-author">- Chris B.</p>
+                        <p class="testimonial-source">Retail Manager, Urban Outfitters</p>
                     </div>
                 </div>
             </div>
@@ -517,61 +530,65 @@
 
         <section class="container-box py-20 md:py-32" id="faq-section">
             <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Common Questions About Storage Container Rentals</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Frequently Asked Questions About Storage Containers</h2>
                 <div class="max-w-3xl mx-auto">
                     <div class="accordion-item animate-on-scroll delay-100">
                         <div class="accordion-header" data-accordion-toggle="faq-1">
-                            What sizes of storage containers are available?
+                            What sizes of storage containers do you offer?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-1" class="accordion-content">
-                            <p>We typically offer 10ft, 20ft, and 40ft standard containers. We also have specialized options like office/storage combo units. Our AI chat can help you determine the best size based on your storage volume and project requirements.</p>
+                            <p>We offer a range of popular sizes, including 10ft, 20ft, and 40ft storage containers, to meet various project and storage needs. Our AI assistant can help you determine the best size based on your specific requirements.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-200">
                         <div class="accordion-header" data-accordion-toggle="faq-2">
-                            What can I safely store in a container?
+                            Are the storage containers weatherproof and secure?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-2" class="accordion-content">
-                            <p>Our containers are ideal for storing construction materials, tools, equipment, household goods during renovations or moves, excess inventory, and more. Prohibited items generally include hazardous materials, flammables, perishables, and live animals. Check with your specific supplier for their detailed restrictions.</p>
+                            <p>Absolutely. All our storage containers are made from heavy-duty steel, designed to be fully watertight and wind-resistant, providing robust protection against all weather conditions. They also come with secure locking mechanisms for optimal security.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-300">
                         <div class="accordion-header" data-accordion-toggle="faq-3">
-                            Do I need a special foundation or site preparation for the container?
+                            How long can I rent a storage container for?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-3" class="accordion-content">
-                            <p>Containers need to be placed on a relatively flat, stable surface that can support their weight. While not always necessary, using gravel, concrete, or wooden blocks can help level the container and improve stability. Ensure there is clear, unobstructed access for delivery and pickup.</p>
+                            <p>We offer highly flexible rental terms, from short-term rentals (e.g., one month) for temporary projects to long-term solutions for ongoing storage needs. You can specify your desired rental duration when requesting a quote.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-400">
                         <div class="accordion-header" data-accordion-toggle="faq-4">
-                            How secure are the storage containers?
+                            What are the delivery requirements for a storage container?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-4" class="accordion-content">
-                            <p>Our containers are made from heavy-gauge steel and feature robust door mechanisms, often including a lockbox or multiple locking points, providing excellent security against unauthorized access. We recommend adding a high-quality padlock for maximum protection.</p>
+                            <p>A flat, level surface is required for placement, along with sufficient clear space for the delivery truck to maneuver. Our team will coordinate with you to ensure a smooth and safe delivery to your preferred location.</p>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All Storage FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All Storage Container FAQs</a>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready for Your On-Site Storage Solution?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready to Secure Your Assets On-Site?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Secure your valuables and streamline your project with a Catdump storage container. Get the space you need, delivered right to your door.
+                    Get durable, weatherproof storage containers delivered directly to your location. Protect your equipment and materials with Catdump's reliable rental solutions.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Storage Quote Today!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Storage Container Quote Today!</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 

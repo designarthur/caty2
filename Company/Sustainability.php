@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sustainability - Catdump: Building a Greener Future</title>
+    <title>Sustainability - Catdump: Our Commitment to a Greener Future</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -92,7 +93,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/e0f5e0/34a853?text=Sustainability+Hero');
+            background-image: url('https://placehold.co/1920x900/e8f5e0/34a853?text=Sustainability+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -303,7 +304,7 @@
             color: #1a73e8;
         }
 
-        .pillar-card {
+        .sustainability-card {
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -312,25 +313,48 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
         }
-        .pillar-card:hover {
+        .sustainability-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
-        .pillar-card .icon-large {
+        .sustainability-card .icon-large {
             font-size: 3.5rem;
             color: #34a853; /* Green for sustainability icons */
             margin-bottom: 1.5rem;
         }
-        .pillar-card h3 {
+        .sustainability-card h3 {
             font-size: 2rem;
             font-weight: 700;
             color: #2d3748;
             margin-bottom: 0.75rem;
         }
-        .pillar-card p {
+        .sustainability-card p {
             font-size: 1rem;
             line-height: 1.6;
             color: #4a5568;
+        }
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -338,107 +362,53 @@
 
     <?php include '../includes/public_header.php'; ?>
 
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Building a Greener Future: <span class="text-green-custom">Catdump's Commitment to Sustainability</span>
+                    Sustainability: <span class="text-green-custom">Our Commitment to a Greener Future</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    We believe in responsible equipment rentals. Discover how Catdump integrates environmental stewardship into every aspect of our operations, fostering a circular economy for a better planet.
+                    Discover how Catdump integrates eco-friendly practices into every aspect of our operations, from responsible waste management to energy-efficient equipment.
                 </p>
-                <a href="#our-vision" class="btn-primary inline-block animate-on-scroll delay-600">Learn About Our Initiatives</a>
+                <a href="#our-initiatives" class="btn-primary inline-block animate-on-scroll delay-600">Learn More About Our Efforts</a>
             </div>
         </section>
 
-        <section id="our-vision" class="container-box py-20 md:py-32">
-            <div class="section-box-alt flex flex-col lg:flex-row items-center justify-between gap-16">
-                <div class="lg:w-1/2 animate-on-scroll delay-100">
-                    <img src="https://placehold.co/600x400/34a853/ffffff?text=Sustainable+Practices" alt="Sustainable Practices and Green Technology" class="rounded-2xl shadow-xl border border-gray-200">
-                </div>
-                <div class="lg:w-1/2 text-center lg:text-left animate-on-scroll delay-200">
-                    <span class="text-green-custom text-lg font-semibold uppercase">Our Approach</span>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2 mb-8">A Vision for a Sustainable Equipment Rental Ecosystem</h2>
-                    <p class="text-lg text-gray-700 mb-6">
-                        At Catdump, sustainability isn't just a buzzword; it's a fundamental principle woven into the fabric of our business. We recognize the environmental impact of large-scale projects and are committed to mitigating it by fostering a more responsible equipment rental industry. Our goal is to minimize waste, conserve resources, and reduce carbon footprints across our operations and those of our partners.
-                    </p>
-                    <p class="text-lg text-gray-700 mb-6">
-                        We champion the principles of the circular economy within equipment rentals. By facilitating the efficient reuse and sharing of equipment, we significantly reduce the need for new manufacturing, thereby conserving raw materials and energy. Our innovative marketplace inherently promotes resource optimization, ensuring that equipment is utilized to its fullest potential and doesn't sit idle.
-                    </p>
-                    <p class="text-lg text-gray-700 font-semibold text-green-custom">
-                        We are dedicated to pioneering sustainable solutions that benefit our planet, our partners, and our customers.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Pillars of Environmental Responsibility</h2>
+        <section id="our-initiatives" class="container-box py-20 md:py-32">
+            <div class="section-box-alt">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Driving Environmental Responsibility</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="pillar-card animate-on-scroll delay-100">
-                        <div class="icon-large">⚙️🌱</div>
-                        <h3>Resource Efficiency</h3>
-                        <p>Our core model promotes maximizing the utilization of existing equipment, ensuring assets are actively rented rather than sitting idle, thus reducing the demand for new manufacturing.</p>
+                    <div class="sustainability-card animate-on-scroll delay-100">
+                        <div class="icon-large">♻️</div>
+                        <h3>Advanced Recycling Programs</h3>
+                        <p>We work with partners who prioritize recycling and proper sorting of materials collected through our dumpster and junk removal services, diverting waste from landfills.</p>
                     </div>
-                    <div class="pillar-card animate-on-scroll delay-200">
-                        <div class="icon-large">♻️🗑️</div>
-                        <h3>Waste Diversion & Recycling</h3>
-                        <p>Through our junk removal and dumpster services, we actively encourage and facilitate the recycling and proper sorting of waste, diverting materials from landfills whenever possible.</p>
+                    <div class="sustainability-card animate-on-scroll delay-200">
+                        <div class="icon-large">🌱</div>
+                        <h3>Promoting Reusability & Donation</h3>
+                        <p>Usable items from junk removal are channeled to local charities and donation centers, extending their lifespan and supporting community initiatives.</p>
                     </div>
-                    <div class="pillar-card animate-on-scroll delay-300">
-                        <div class="icon-large">🚚🌍</div>
+                    <div class="sustainability-card animate-on-scroll delay-300">
+                        <div class="icon-large">⚡</div>
+                        <h3>Energy-Efficient Equipment</h3>
+                        <p>We encourage our network of suppliers to utilize modern, well-maintained equipment that is more fuel-efficient and produces lower emissions.</p>
+                    </div>
+                    <div class="sustainability-card animate-on-scroll delay-400">
+                        <div class="icon-large">📊</div>
+                        <h3>Transparent Waste Tracking</h3>
+                        <p>Our platform aims to provide insights into waste diversion rates, allowing customers to understand the environmental impact of their projects.</p>
+                    </div>
+                    <div class="sustainability-card animate-on-scroll delay-500">
+                        <div class="icon-large">🗺️</div>
                         <h3>Optimized Logistics</h3>
-                        <p>Our smart platform helps optimize delivery and pickup routes for our partners, leading to reduced fuel consumption and lower greenhouse gas emissions from transportation.</p>
+                        <p>AI-driven route optimization for deliveries and pickups reduces fuel consumption and carbon emissions, contributing to cleaner air and less traffic.</p>
                     </div>
-                    <div class="pillar-card animate-on-scroll delay-400">
-                        <div class="icon-large">🤝🌳</div>
-                        <h3>Eco-Friendly Partnerships</h3>
-                        <p>We actively seek out and collaborate with suppliers who demonstrate strong commitments to sustainability, using eco-friendly practices and maintaining well-serviced equipment.</p>
-                    </div>
-                    <div class="pillar-card animate-on-scroll delay-500">
-                        <div class="icon-large">💻🌿</div>
-                        <h3>Digital-First Approach</h3>
-                        <p>By digitizing the entire rental process, from quoting to invoicing, we significantly reduce paper waste and the associated environmental impact.</p>
-                    </div>
-                    <div class="pillar-card animate-on-scroll delay-600">
-                        <div class="icon-large">🏘️💚</div>
-                        <h3>Community Engagement</h3>
-                        <p>We support local initiatives and educational programs focused on environmental protection and sustainable practices within the communities we serve.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Our Journey Towards a Sustainable Impact</h2>
-                <p class="text-xl text-gray-700 mb-12 max-w-4xl mx-auto animate-on-scroll delay-100">
-                    While we are continuously working to quantify our exact environmental contributions, our operational model is designed for inherent positive impact.
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-                    <div class="animate-on-scroll delay-200">
-                        <div class="icon-box mx-auto mb-6 bg-green-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l-7 7m7-7v10a1 1 0 01-1 1h-3"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-blue-custom mb-3" data-target="30">0%</p>
-                        <p class="text-xl text-gray-700">Projected Emissions Reduction by 2030</p>
-                    </div>
-                    <div class="animate-on-scroll delay-300">
-                        <div class="icon-box mx-auto mb-6 bg-blue-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-green-custom mb-3" data-target="80">0%</p>
-                        <p class="text-xl text-gray-700">Waste Diversion Target for Junk Removal</p>
-                    </div>
-                    <div class="animate-on-scroll delay-400">
-                        <div class="icon-box mx-auto mb-6 bg-green-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 1.38-.56 2.63-1.46 3.54S8.62 16 7.24 16c-1.38 0-2.63-.56-3.54-1.46S2.24 12.62 2.24 11s.56-2.63 1.46-3.54S5.86 6 7.24 6c1.38 0 2.63.56 3.54 1.46S12 9.62 12 11zm9.76-3.76c-.9-.9-2.15-1.46-3.54-1.46-1.38 0-2.63.56-3.54 1.46s-1.46 2.16-1.46 3.54c0 1.38.56 2.63 1.46 3.54s2.16 1.46 3.54 1.46c1.38 0 2.63-.56 3.54-1.46s1.46-2.16 1.46-3.54c0-1.38-.56-2.63-1.46-3.54z"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-blue-custom mb-3" data-target="50">0%</p>
-                        <p class="text-xl text-gray-700">Growth in Eco-Conscious Supplier Network</p>
+                    <div class="sustainability-card animate-on-scroll delay-600">
+                        <div class="icon-large">🤝</div>
+                        <h3>Sustainable Partnerships</h3>
+                        <p>We actively seek out and collaborate with suppliers who share our commitment to environmental stewardship and implement green practices.</p>
                     </div>
                 </div>
             </div>
@@ -446,28 +416,19 @@
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Partner with Us for a Greener Tomorrow</h2>
-                <p class="text-xl text-gray-700 mb-12 max-w-4xl mx-auto animate-on-scroll delay-100">
-                    Your choices make a difference. By choosing Catdump, you're not just getting efficient equipment rentals; you're contributing to a more sustainable future. Here's how you can further help:
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="animate-on-scroll delay-200">
-                        <div class="bg-blue-50 p-6 rounded-xl mb-4 shadow-sm">
-                            <h3 class="text-2xl font-semibold text-blue-custom mb-3">Choose Right-Sized Equipment</h3>
-                            <p class="text-gray-700">Selecting the appropriate dumpster or container size minimizes wasted space and optimizes transport efficiency.</p>
-                        </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Your Role in a Greener Future</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="animate-on-scroll delay-100">
+                        <img src="https://placehold.co/600x400/34a853/ffffff?text=Green+Future" alt="Green Future Initiative" class="rounded-2xl shadow-xl w-full h-auto">
                     </div>
-                    <div class="animate-on-scroll delay-300">
-                        <div class="bg-blue-50 p-6 rounded-xl mb-4 shadow-sm">
-                            <h3 class="text-2xl font-semibold text-blue-custom mb-3">Segregate Waste When Possible</h3>
-                            <p class="text-gray-700">Separating recyclables (e.g., cardboard, metal, clean concrete) from general waste greatly aids in effective waste diversion.</p>
-                        </div>
-                    </div>
-                    <div class="animate-on-scroll delay-400">
-                        <div class="bg-blue-50 p-6 rounded-xl mb-4 shadow-sm">
-                            <h3 class="text-2xl font-semibold text-blue-custom mb-3">Promptly Schedule Pickups</h3>
-                            <p class="text-gray-700">Notifying us promptly when a rental unit is ready for pickup allows for more efficient routing and reduced idle time.</p>
-                        </div>
+                    <div class="text-left animate-on-scroll delay-200">
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                            By choosing Catdump, you're not just getting efficient equipment rentals; you're also contributing to a more sustainable planet. Our platform makes it easy to select eco-conscious options and participate in responsible waste management.
+                        </p>
+                        <p class="text-xl text-gray-700 leading-relaxed">
+                            Every time you rent a dumpster through us, you're supporting a network that prioritizes recycling and mindful disposal. When you opt for our junk removal service, you're helping us give reusable items a second life. Together, we can build a more sustainable future, one project at a time.
+                        </p>
+                        <a href="/Resources/Blog.php" class="text-blue-custom hover:underline font-medium mt-6 inline-block">Read Our Sustainability Blog Posts &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -475,14 +436,21 @@
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready to Rent Responsibly?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Committed to Sustainable Operations?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Choose Catdump for your next equipment rental and join us in building a more sustainable future for the construction and event industries.
+                    Learn more about our initiatives or partner with us to drive positive environmental change in the equipment rental and waste management sectors.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Quote & Support Sustainability!</a>
+                <div class="flex flex-col sm:flex-row justify-center gap-6 animate-on-scroll delay-200">
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block">Get a Green Quote!</a>
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-secondary inline-block">Contact Our Sustainability Team</a>
+                </div>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 
@@ -518,7 +486,7 @@
                 });
             }
             
-            // Accordion functionality for FAQs and Quick Solutions
+            // Accordion functionality for FAQs (if applicable)
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);
@@ -540,43 +508,6 @@
                         content.classList.add('open');
                     }
                 });
-            });
-
-            // Counter animation for stats section
-            const counterObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const target = entry.target;
-                        const endValue = parseFloat(target.dataset.target); // Use parseFloat for percentages
-                        const duration = 2000;
-                        let startTimestamp = null;
-
-                        const step = (timestamp) => {
-                            if (!startTimestamp) startTimestamp = timestamp;
-                            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                            let currentValue;
-                            let textSuffix = '';
-
-                            if (target.dataset.target.includes('%')) {
-                                currentValue = Math.floor(progress * endValue);
-                                textSuffix = '%';
-                            } else {
-                                currentValue = Math.floor(progress * endValue);
-                            }
-                            target.textContent = currentValue.toLocaleString() + textSuffix;
-
-                            if (progress < 1) {
-                                window.requestAnimationFrame(step);
-                            }
-                        };
-                        window.requestAnimationFrame(step);
-                        observer.unobserve(target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            document.querySelectorAll('[data-target]').forEach(counter => {
-                counterObserver.observe(counter);
             });
         });
     </script>

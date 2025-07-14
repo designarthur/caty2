@@ -332,6 +332,29 @@
             line-height: 1.6;
             color: #4a5568;
         }
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -373,7 +396,7 @@
                         <div class="icon-large">📞</div>
                         <h3>Direct Support</h3>
                         <p>Connect with our friendly and knowledgeable support team via chat, email, or phone for personalized assistance with your rentals.</p>
-                        <a href="/Resources/Contact.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Contact Support &rarr;</a>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Chat with AI Assistant &rarr;</a>
                     </div>
                     <div class="resource-card animate-on-scroll delay-400">
                         <div class="icon-large">📊</div>
@@ -450,10 +473,14 @@
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Our team is here to help you navigate every aspect of your equipment rental needs. Don't hesitate to reach out!
                 </p>
-                <a href="/Resources/Contact.php" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Contact Our Support Team</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Chat with AI Assistant for Support</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 

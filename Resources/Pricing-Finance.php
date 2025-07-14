@@ -1,11 +1,25 @@
+<?php
+// Resources/Pricing-Finance.php
+
+// Include necessary files
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+// Fetch company name from system settings
+$companyName = getSystemSetting('company_name');
+if (!$companyName) {
+    $companyName = 'Catdump'; // Fallback if not set in DB
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing & Finance - Catdump: Transparent Costs & Flexible Options</title>
+    <title>Pricing & Financing - <?php echo htmlspecialchars($companyName); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -92,7 +106,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/d4e4f0/1a73e8?text=Pricing+Finance+Hero');
+            background-image: url('https://placehold.co/1920x900/e6e6fa/1a73e8?text=Pricing+Finance+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -303,66 +317,103 @@
             color: #1a73e8;
         }
 
-        .pricing-model-card {
+        .pricing-plan-card {
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
+            padding: 3rem;
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
         }
-        .pricing-model-card:hover {
+        .pricing-plan-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
-        .pricing-model-card .icon-large {
-            font-size: 3.5rem;
-            color: #1a73e8; /* Blue for pricing icons */
-            margin-bottom: 1.5rem;
+        .pricing-plan-card.highlighted {
+            border-color: #1a73e8;
+            box-shadow: 0 15px 40px rgba(26, 115, 232, 0.3);
+            transform: translateY(-10px);
         }
-        .pricing-model-card h3 {
-            font-size: 2rem;
+        .pricing-plan-card .plan-title {
+            font-size: 2.5rem;
             font-weight: 700;
             color: #2d3748;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
-        .pricing-model-card p {
-            font-size: 1rem;
-            line-height: 1.6;
+        .pricing-plan-card .price {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #1a73e8;
+            margin-bottom: 1rem;
+        }
+        .pricing-plan-card .price span {
+            font-size: 1.5rem;
+            font-weight: 500;
             color: #4a5568;
         }
-        .finance-option-card {
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            padding: 2.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
+        .pricing-plan-card .plan-description {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            min-height: 60px; /* To equalize height */
+        }
+        .pricing-plan-card ul {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            list-style: none; /* Remove default list style */
+            padding-left: 0; /* Remove default padding */
+        }
+        .pricing-plan-card ul li {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
             display: flex;
-            flex-direction: column;
             align-items: center;
         }
-        .finance-option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        .pricing-plan-card ul li svg {
+            color: #34a853;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
         }
-        .finance-option-card .icon-large {
-            font-size: 3.5rem;
-            color: #34a853; /* Green for finance icons */
-            margin-bottom: 1.5rem;
-        }
-        .finance-option-card h3 {
-            font-size: 2rem;
+        .pricing-plan-card .btn-select-plan {
+            background-color: #1a73e8;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
             font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4);
+            width: 100%;
         }
-        .finance-option-card p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #4a5568;
+        .pricing-plan-card .btn-select-plan:hover {
+            background-color: #155bb5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.6);
+        }
+
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
         }
     </style>
 </head>
@@ -370,87 +421,207 @@
 
     <?php include '../includes/public_header.php'; ?>
 
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Transparent Pricing & Flexible Finance <span class="text-blue-custom">for Every Project</span>
+                    Transparent Pricing & <span class="text-blue-custom">Flexible Financing Options</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Understand how Catdump provides competitive, upfront pricing for all equipment rentals and explore our adaptable financing solutions to power your projects.
+                    Get clear, competitive pricing upfront for all your equipment rentals and services. Explore financing solutions designed for your project budget.
                 </p>
-                <a href="#payment-options" class="btn-primary inline-block animate-on-scroll delay-600">Explore Payment Options</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block animate-on-scroll delay-600">Get an Instant Quote!</a>
             </div>
         </section>
 
-        <section id="pricing-model" class="container-box py-20 md:py-32">
-            <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Transparent Pricing Model</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="pricing-model-card animate-on-scroll delay-100">
-                        <div class="icon-large">💰</div>
-                        <h3>Competitive Marketplace</h3>
-                        <p>Our platform leverages a vast network of vetted local suppliers who bid competitively on your rental requests, ensuring you always get the best possible price.</p>
-                    </div>
-                    <div class="pricing-model-card animate-on-scroll delay-200">
-                        <div class="icon-large">🔍</div>
-                        <h3>Upfront & Clear Quotes</h3>
-                        <p>No hidden fees or surprises. Our quotes are comprehensive, detailing all costs, including delivery, pickup, rental duration, and any applicable taxes or environmental fees.</p>
-                    </div>
-                    <div class="pricing-model-card animate-on-scroll delay-300">
-                        <div class="icon-large">⚡</div>
-                        <h3>AI-Powered Pricing</h3>
-                        <p>Our advanced AI analyzes real-time market data, equipment availability, and your specific project needs to provide instant, accurate, and fair pricing.</p>
-                    </div>
-                    <div class="pricing-model-card animate-on-scroll delay-400">
-                        <div class="icon-large">⚖️</div>
-                        <h3>Value for Money</h3>
-                        <p>We focus on delivering not just low prices, but exceptional value. Our streamlined process and reliable partners ensure efficiency and peace of mind, saving you more than just money.</p>
-                    </div>
-                    <div class="pricing-model-card animate-on-scroll delay-500">
-                        <div class="icon-large">🔄</div>
-                        <h3>Flexible Adjustments</h3>
-                        <p>Need to extend, swap, or relocate a rental? Our transparent policies for these adjustments ensure you always know the cost upfront, adapting to your project's evolution.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="payment-options" class="container-box py-20 md:py-32">
+        <section class="container-box py-20 md:py-32">
             <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Flexible Payment & Financing Options</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="finance-option-card animate-on-scroll delay-100">
-                        <div class="icon-large">💳</div>
-                        <h3>Major Credit Cards</h3>
-                        <p>We accept all major credit cards, including Visa, MasterCard, American Express, and Discover, for quick and secure online payments through your dashboard.</p>
+                <div class="text-center mb-8 animate-on-scroll delay-100">
+                    <span class="text-blue-custom text-lg font-semibold uppercase">Our Approach</span>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2">Fair, Transparent, and Tailored Pricing</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <div class="feature-card animate-on-scroll delay-200">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.105A9.763 9.763 0 0112 4c4.97 0 9 3.582 9 8z"></path></svg>
+                        </div>
+                        <h4>AI-Driven Best Price Guarantee</h4>
+                        <p>Our intelligent system uses advanced algorithms to source the most competitive quotes from our network of local suppliers, ensuring you always get the best price available.</p>
                     </div>
-                    <div class="finance-option-card animate-on-scroll delay-200">
-                        <div class="icon-large">🏦</div>
-                        <h3>ACH Bank Transfers</h3>
-                        <p>For larger transactions or corporate accounts, we offer secure Automated Clearing House (ACH) bank transfer options, providing a direct and efficient payment method.</p>
+
+                    <div class="feature-card animate-on-scroll delay-300">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h4>No Hidden Fees</h4>
+                        <p>What you see is what you pay. We pride ourselves on transparent pricing with no surprise charges, so you can budget with confidence.</p>
                     </div>
-                    <div class="finance-option-card animate-on-scroll delay-300">
-                        <div class="icon-large">📈</div>
-                        <h3>Flexible Financing Plans</h3>
-                        <p>Need financing for large-scale or long-term projects? We partner with leading financial institutions to offer tailored financing solutions that fit your budget and cash flow needs, allowing you to acquire equipment without upfront capital strain.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Learn More About Financing &rarr;</a>
+
+                    <div class="feature-card animate-on-scroll delay-400">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 100 4m-4 12a2 2 0 100-4m14-4a2 2 0 100-4m-4 4a2 2 0 100 4m-6-4a2 2 0 100 4m-2 2a2 2 0 100 4m0-12a2 2 0 100 4"></path></svg>
+                        </div>
+                        <h4>Customized Solutions</h4>
+                        <p>Every project is unique. Our pricing adapts to your specific requirements, from rental duration to equipment type and quantity, ensuring optimal value.</p>
                     </div>
-                    <div class="finance-option-card animate-on-scroll delay-400">
-                        <div class="icon-large">🔒</div>
-                        <h3>Secure Online Payments</h3>
-                        <p>All online payments are processed through encrypted, industry-standard secure gateways, ensuring your financial information is protected with bank-level security at all times.</p>
+
+                    <div class="feature-card animate-on-scroll delay-500">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <h4>Flexible Payment Options</h4>
+                        <p>We accept all major credit cards and offer secure ACH transfers. For larger projects, inquire about our flexible financing plans to ease your cash flow.</p>
                     </div>
-                    <div class="finance-option-card animate-on-scroll delay-500">
-                        <div class="icon-large">🧾</div>
-                        <h3>Centralized Invoicing</h3>
-                        <p>All your invoices are accessible through your personalized Catdump dashboard, making it easy to track payments, view past transactions, and manage your accounts efficiently.</p>
+
+                    <div class="feature-card animate-on-scroll delay-600">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h4>Managed from Your Dashboard</h4>
+                        <p>View all your quotes, invoices, and payment history in one secure, intuitive customer dashboard. Pay with confidence and track your budget effortlessly.</p>
                     </div>
                 </div>
-                <div class="text-center mt-20 animate-on-scroll delay-600">
-                    <a href="/Resources/Contact.php" class="btn-secondary inline-block">Questions about payments? Contact our team!</a>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32">
+            <div class="section-box-alt">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">How Our Pricing Works: Simple & Clear</h2>
+                <div class="how-it-works-container">
+                    <div class="how-it-works-row animate-on-scroll delay-100">
+                        <div class="how-it-works-image-box">
+                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=Request+Quote" alt="Request a Quote">
+                        </div>
+                        <div class="how-it-works-content">
+                            <p class="how-it-works-step-number">Step 1</p>
+                            <h3 class="how-it-works-step-title">Request Your Quote Instantly</h3>
+                            <p class="how-it-works-step-description">Tell our AI what you need—type of equipment, size, duration, and location. Our system quickly gathers all necessary details to formulate your personalized quote request.</p>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start a Quote Now &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="how-it-works-row animate-on-scroll delay-300">
+                        <div class="how-it-works-image-box">
+                            <img src="https://placehold.co/300x200/e0e7ff/34a853?text=Compare+Options" alt="Compare Options">
+                        </div>
+                        <div class="how-it-works-content">
+                            <p class="how-it-works-step-number">Step 2</p>
+                            <h3 class="how-it-works-step-title">Compare & Select Best Offers</h3>
+                            <p class="how-it-works-step-description">Receive multiple competitive quotes from our vetted local partners directly in your dashboard. Compare pricing, availability, and terms to select the best option for your budget and timeline.</p>
+                            <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Your Dashboard &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="how-it-works-row animate-on-scroll delay-500">
+                        <div class="how-it-works-image-box">
+                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=Secure+Payment" alt="Secure Payment">
+                        </div>
+                        <div class="how-it-works-content">
+                            <p class="how-it-works-step-number">Step 3</p>
+                            <h3 class="how-it-works-step-title">Securely Pay & Manage Invoices</h3>
+                            <p class="how-it-works-step-description">Once you accept a quote, we'll generate a secure invoice. Pay easily using your preferred method through our encrypted payment portal. All invoices and payment history are stored in your dashboard for effortless financial management.</p>
+                            <a href="/customer/dashboard.php#invoices" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Invoices &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32">
+            <div class="section-box">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Basic Rental Price Guide</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="pricing-plan-card animate-on-scroll delay-100">
+                        <h3 class="plan-title">Small Projects</h3>
+                        <p class="price">$250<span>/week avg.</span></p>
+                        <p class="plan-description">Ideal for residential cleanouts, small renovations, or single item junk removal.</p>
+                        <ul>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>10-Yard Dumpster</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Standard Portable Toilet</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic Junk Removal</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>7-Day Rental Period</li>
+                        </ul>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-select-plan">Get Quote</a>
+                    </div>
+                    <div class="pricing-plan-card highlighted animate-on-scroll delay-200">
+                        <h3 class="plan-title">Medium Projects</h3>
+                        <p class="price">$450<span>/week avg.</span></p>
+                        <p class="plan-description">Best for mid-sized construction, multi-room renovations, or event sanitation.</p>
+                        <ul>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>20-Yard Dumpster</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>ADA Portable Toilet</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Standard Storage Container</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>14-Day Rental Period</li>
+                        </ul>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-select-plan">Get Quote</a>
+                    </div>
+                    <div class="pricing-plan-card animate-on-scroll delay-300">
+                        <h3 class="plan-title">Large Projects</h3>
+                        <p class="price">$700<span>/week avg.</span></p>
+                        <p class="plan-description">Designed for commercial cleanouts, large demolition, or major events.</p>
+                        <ul>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>30-Yard Dumpster</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Luxury Restroom Trailer</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Large Storage Container</li>
+                            <li><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>30-Day Rental Period</li>
+                        </ul>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-select-plan">Get Quote</a>
+                    </div>
+                </div>
+                <div class="text-center mt-20 animate-on-scroll delay-400">
+                    <p class="text-xl text-gray-700">These are average prices. Get a precise quote tailored to your needs from our AI assistant!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32" id="financing-section">
+            <div class="section-box-alt text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Flexible Financing for Larger Projects</h2>
+                <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
+                    For extensive renovations, multi-phase construction, or continuous commercial needs, Catdump offers tailored financing solutions to help manage your budget effectively.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="feature-card animate-on-scroll delay-200">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 4.016M2.944 12A11.955 11.955 0 014.016 3.382 11.955 11.955 0 0112 2.944c3.382.01 6.353.974 8.618 4.016A11.955 11.955 0 0121.056 12H21m-9 0c.834 0 1.5.666 1.5 1.5s-.666 1.5-1.5 1.5-1.5-.666-1.5-1.5.666-1.5 1.5-1.5zm-5 0c.834 0 1.5.666 1.5 1.5s-.666 1.5-1.5 1.5-1.5-.666-1.5-1.5.666-1.5 1.5-1.5zm-5 0c.834 0 1.5.666 1.5 1.5s-.666 1.5-1.5 1.5-1.5-.666-1.5-1.5.666-1.5 1.5-1.5z"></path></svg>
+                        </div>
+                        <h4>Flexible Payment Plans</h4>
+                        <p>Spread the cost of your large rentals over time with customizable payment schedules that align with your project's cash flow.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll delay-300">
+                        <div class="icon-wrapper">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                        <h4>Streamlined Application</h4>
+                        <p>Our simple application process for financing ensures quick approvals, so you can get the equipment you need without unnecessary delays.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-20 animate-on-scroll delay-400">
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-secondary inline-block">Contact Us About Financing</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32" id="testimonials-section">
+            <div class="section-box">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">What Our Customers Say About Our Pricing</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <div class="testimonial-card animate-on-scroll delay-100">
+                        <p class="testimonial-quote">"Catdump's pricing is incredibly fair and transparent. No hidden fees, and the AI always found us the best deals. It made budgeting for our project so much easier."</p>
+                        <p class="testimonial-author">- Michael S.</p>
+                        <p class="testimonial-source">Project Manager, Green Homes</p>
+                    </div>
+                    <div class="testimonial-card animate-on-scroll delay-200">
+                        <p class="testimonial-quote">"The financing options from Catdump were a lifesaver for our large-scale demolition. It allowed us to spread costs and keep our cash flow healthy. Highly recommend!"</p>
+                        <p class="testimonial-author">- Emily R.</p>
+                        <p class="testimonial-source">Contractor, Urban Demolitions</p>
+                    </div>
+                    <div class="testimonial-card animate-on-scroll delay-300">
+                        <p class="testimonial-quote">"I appreciate how clear and detailed the quotes are on the dashboard. It's easy to compare and know exactly what you're getting. Fantastic service."</p>
+                        <p class="testimonial-author">- David L.</p>
+                        <p class="testimonial-source">Business Owner, Retail Renovations</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -461,240 +632,120 @@
                 <div class="max-w-3xl mx-auto">
                     <div class="accordion-item animate-on-scroll delay-100">
                         <div class="accordion-header" data-accordion-toggle="faq-1">
-                            How does Catdump ensure I get the best price?
+                            How does Catdump determine pricing for rentals?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-1" class="accordion-content">
-                            <p>Our platform connects you with a broad network of vetted local suppliers. When you request a quote, these suppliers compete to offer you the best pricing. Our AI further optimizes this by considering real-time market data and availability, ensuring you receive the most competitive offer available.</p>
+                            <p>Our pricing is dynamic and competitive. When you request a quote, our AI system gathers current pricing and availability from our network of local partners. It factors in equipment type, size, rental duration, your location, and specific project needs to provide you with the best available rates instantly. This marketplace approach ensures you always get a fair and optimal price.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-200">
                         <div class="accordion-header" data-accordion-toggle="faq-2">
-                            Are there any hidden fees or charges?
+                            Are there any hidden fees or extra charges?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-2" class="accordion-content">
-                            <p>Absolutely not. Transparency is a core value at Catdump. All our quotes are comprehensive and clearly itemize every cost, including rental fees, delivery, pickup, fuel surcharges, and applicable taxes or environmental fees. What you see in your quote is what you pay.</p>
+                            <p>No. Transparency is a core value. Our quotes are comprehensive and include all standard fees associated with your rental. Any potential extra charges (like fees for overfilling, prohibited items, or extended rental periods beyond the agreed term) are clearly outlined in your rental agreement and in our FAQs. You'll always know what you're paying for upfront.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-300">
                         <div class="accordion-header" data-accordion-toggle="faq-3">
-                            How does the financing option work for large projects?
+                            What types of payment methods do you accept?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-3" class="accordion-content">
-                            <p>For qualifying large-scale or long-term projects, we offer flexible financing solutions through our trusted lending partners. After receiving your quote, you can apply for financing directly through our platform. Our partners will assess your needs and offer customized payment plans to help manage your project budget effectively.</p>
+                            <p>We accept all major credit cards (Visa, MasterCard, American Express, Discover) for convenient online payments. We also offer secure ACH (Automated Clearing House) bank transfers for larger transactions. All payments are processed through encrypted, secure payment gateways to protect your financial information.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-400">
                         <div class="accordion-header" data-accordion-toggle="faq-4">
-                            Can I get a custom quote for specialized equipment or long-term rentals?
+                            How do the financing options work for larger projects?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-4" class="accordion-content">
-                            <p>Yes, our AI system is designed to handle a wide range of requests, including specialized equipment and long-term rental needs. Simply provide detailed information through our AI chat, and we will generate a tailored quote. For highly complex or unique requirements, our sales team is also available to provide personalized assistance.</p>
+                            <p>For qualifying larger projects, we partner with financial institutions to offer flexible payment plans. This allows you to manage your cash flow more effectively by spreading out rental costs over a longer period. To learn more and apply, please contact our sales team directly, and they will guide you through the simple application process.</p>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All Pricing & Finance FAQs</a>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready for Transparent Pricing & Flexible Options?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready for a Clear Quote?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Get an instant, comprehensive quote and explore payment solutions that fit your project needs. Catdump simplifies your budgeting process.
+                    Experience transparent pricing and flexible options. Get your instant, personalized quote for any equipment rental or service with Catdump today!
                 </p>
-                <a href="/customer/dashboard.php" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Quote Today!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Quote Now!</a>
             </div>
         </section>
     </main>
 
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
     <?php include '../includes/public_footer.php'; ?>
 
     <script>
-        // IIFE for header JS to ensure it runs immediately
-        (function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-            const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
-            const mobileServicesPanel = document.getElementById('mobile-services-panel');
-            const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
-            const mobileCompanyPanel = document.getElementById('mobile-company-panel');
-            const mobileResourcesDropdownButton = document.getElementById('mobile-resources-dropdown-button'); // New
-            const mobileResourcesPanel = document.getElementById('mobile-resources-panel'); // New
-            const mainHeader = document.getElementById('main-header');
-
-            // Timeout variables for hover delays
-            let servicesTimeout;
-            let companyTimeout;
-            let resourcesTimeout; // New
-            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
-
-            // Function to show a desktop flyout menu
-            function showDesktopFlyout(button, menu) {
-                clearTimeout(servicesTimeout);
-                clearTimeout(companyTimeout);
-                clearTimeout(resourcesTimeout); // Clear any pending hide for all menus
-                
-                // Hide all other menus
-                document.querySelectorAll('.desktop-flyout-menu.visible').forEach(openMenu => {
-                    openMenu.classList.remove('visible');
-                });
-                document.querySelectorAll('[aria-expanded="true"]').forEach(expandedButton => {
-                    expandedButton.setAttribute('aria-expanded', 'false');
-                    expandedButton.querySelector('svg')?.classList.remove('rotate-180');
-                });
-
-                menu.classList.add('visible');
-                button.setAttribute('aria-expanded', 'true');
-                button.querySelector('svg')?.classList.add('rotate-180');
-            }
-
-            // Function to hide a desktop flyout menu with a delay
-            function hideDesktopFlyout(button, menu, timeoutRef) {
-                // Use the passed timeoutRef to assign the timeout ID
-                timeoutRef = setTimeout(() => {
-                    menu.classList.remove('visible');
-                    button.setAttribute('aria-expanded', 'false');
-                    button.querySelector('svg')?.classList.remove('rotate-180');
-                }, hoverDelay);
-                return timeoutRef; // Return the new timeout ID
-            }
-
-
-            // --- Mobile Menu Drawer Logic ---
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenuDrawer.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
-                });
-            }
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileMenuDrawer.classList.add('hidden');
-                    document.body.style.overflow = ''; // Restore body scrolling
-                });
-            }
-
-            // Close mobile menu when a link is clicked inside it
-            if (mobileMenuDrawer) {
-                mobileMenuDrawer.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenuDrawer.classList.add('hidden');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-
-            // --- Mobile Services Dropdown (Accordion style) ---
-            if (mobileServicesDropdownButton) {
-                mobileServicesDropdownButton.addEventListener('click', () => {
-                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
-                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileServicesPanel.classList.toggle('hidden');
-                    // Toggle the rotate class for the SVG icon
-                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
-
-                    // Close other mobile dropdowns if open
-                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
-                        mobileCompanyPanel.classList.add('hidden');
-                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileResourcesDropdownButton.id) {
-                        mobileResourcesPanel.classList.add('hidden');
-                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Apply delay if specified, otherwise add immediately
+                        const delay = parseFloat(getComputedStyle(entry.target).transitionDelay || 0);
+                        if (delay > 0) {
+                            setTimeout(() => {
+                                entry.target.classList.add('is-visible');
+                            }, delay * 1000); // Convert seconds to milliseconds
+                        } else {
+                            entry.target.classList.add('is-visible');
+                        }
+                        observer.unobserve(entry.target); // Stop observing once visible
                     }
                 });
-            }
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-            // --- Mobile Company Dropdown (Accordion style) ---
-            if (mobileCompanyDropdownButton) {
-                mobileCompanyDropdownButton.addEventListener('click', () => {
-                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
-                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileCompanyPanel.classList.toggle('hidden');
-                    // Toggle the rotate class for the SVG icon
-                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
+            animateOnScrollElements.forEach(element => {
+                observer.observe(element);
+            });
 
-                    // Close other mobile dropdowns if open
-                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
-                        mobileServicesPanel.classList.add('hidden');
-                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileResourcesDropdownButton.id) {
-                        mobileResourcesPanel.classList.add('hidden');
-                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
-            }
-
-            // --- Mobile Resources Dropdown (Accordion style) ---
-            if (mobileResourcesDropdownButton) {
-                mobileResourcesDropdownButton.addEventListener('click', () => {
-                    const isExpanded = mobileResourcesDropdownButton.getAttribute('aria-expanded') === 'true';
-                    mobileResourcesDropdownButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileResourcesPanel.classList.toggle('hidden');
-                    // Toggle the rotate class for the SVG icon
-                    mobileResourcesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
-
-                    // Close other mobile dropdowns if open
-                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileServicesDropdownButton.id) {
-                        mobileServicesPanel.classList.add('hidden');
-                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileCompanyDropdownButton.id) {
-                        mobileCompanyPanel.classList.add('hidden');
-                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
-            }
-
-
-            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
-            const servicesMenuDesktop = document.getElementById('services-menu-desktop');
-            if (servicesMenuDesktop) {
-                servicesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
-                servicesMenuDesktop.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
-            }
-
-            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
-            const companyMenuDesktop = document.getElementById('company-menu-desktop');
-            if (companyMenuDesktop) {
-                companyMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
-                companyMenuDesktop.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
-            }
-
-            // --- Desktop Resources Flyout Menu (Hover to toggle with JS for smoothness) ---
-            const resourcesMenuDesktop = document.getElementById('resources-menu-desktop');
-            if (resourcesMenuDesktop) {
-                resourcesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu));
-                resourcesMenuDesktop.addEventListener('mouseleave', () => { resourcesTimeout = hideDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu, resourcesTimeout); });
-            }
-
-
-            // --- Header Scroll Effect (Sticky header background change) ---
-            if (mainHeader) {
+            const heroSection = document.getElementById('hero-section');
+            if (heroSection) {
                 window.addEventListener('scroll', () => {
-                    if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
-                        mainHeader.classList.add('header-scrolled');
-                    } else {
-                        mainHeader.classList.remove('header-scrolled');
-                    }
+                    const scrollPosition = window.pageYOffset;
+                    heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px';
                 });
             }
-        })(); // Immediately invoked function expression
+            
+            // Accordion functionality for FAQs and Quick Solutions
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = document.getElementById(header.dataset.accordionToggle);
+                    const isActive = header.classList.contains('active');
+
+                    // Close all open accordions first (within the same section to prevent unintended closing)
+                    // This logic assumes you only want one accordion open at a time within its immediate parent group
+                    const parentSection = header.closest('.faq-category-section') || header.closest('.section-box') || header.closest('.section-box-alt');
+                    parentSection.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+                        if (activeHeader !== header) { // Don't close the currently clicked one
+                            activeHeader.classList.remove('active');
+                            document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                        }
+                    });
+
+                    // Toggle the clicked accordion
+                    if (!isActive) {
+                        header.classList.add('active');
+                        content.classList.add('open');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

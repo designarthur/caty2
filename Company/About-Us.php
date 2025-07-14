@@ -1,11 +1,25 @@
+<?php
+// Company/About-Us.php
+
+// Include necessary files
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+// Fetch company name from system settings
+$companyName = getSystemSetting('company_name');
+if (!$companyName) {
+    $companyName = 'Catdump'; // Fallback if not set in DB
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Catdump: Your Global Partner in Equipment Rental Excellence</title>
+    <title>About Us - <?php echo htmlspecialchars($companyName); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -92,7 +106,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/d8e2ed/1a73e8?text=About+Us+Hero+Background');
+            background-image: url('https://placehold.co/1920x900/e0e9f5/1a73e8?text=About+Us+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -303,64 +317,33 @@
             color: #1a73e8;
         }
 
-        .value-card {
+        .stats-section .stat-item {
+            text-align: center;
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             padding: 2.5rem;
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
         }
-        .value-card:hover {
+        .stats-section .stat-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
-        .value-card .icon-large {
+        .stats-section .icon-large {
             font-size: 3.5rem;
-            color: #34a853; /* Green for values */
+            color: #34a853; /* Green for stats icons */
             margin-bottom: 1.5rem;
         }
-        .value-card h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 0.75rem;
-        }
-        .value-card p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #4a5568;
-        }
-        .team-member-card {
-            background-color: #ffffff;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .team-member-card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1.5rem;
-            border: 4px solid #1a73e8;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .team-member-card h4 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2d3748;
+        .stats-section .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #1a73e8;
             margin-bottom: 0.5rem;
         }
-        .team-member-card p {
-            color: #718096;
-            font-size: 1rem;
+        .stats-section .stat-label {
+            font-size: 1.2rem;
+            color: #4a5568;
         }
     </style>
 </head>
@@ -373,131 +356,82 @@
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    About Catdump: Your Global Partner in <span class="text-blue-custom">Equipment Rental Excellence</span>
+                    About <?php echo htmlspecialchars($companyName); ?>: <span class="text-blue-custom">Our Story & Mission</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Discover our journey, mission, and the core values that drive us to revolutionize the equipment rental industry with innovation, transparency, and unparalleled service.
+                    Discover how we're revolutionizing equipment rentals and waste management with cutting-edge AI and a commitment to customer satisfaction.
                 </p>
-                <a href="#our-story" class="btn-primary inline-block animate-on-scroll delay-600">Our Story</a>
+                <a href="#our-story" class="btn-primary inline-block animate-on-scroll delay-600">Learn More About Us</a>
             </div>
         </section>
 
         <section id="our-story" class="container-box py-20 md:py-32">
-            <div class="section-box-alt flex flex-col lg:flex-row items-center justify-between gap-16">
-                <div class="lg:w-1/2 animate-on-scroll delay-100">
-                    <img src="https://placehold.co/600x400/1a73e8/ffffff?text=Catdump+Team" alt="Catdump Team Collaboration" class="rounded-2xl shadow-xl border border-gray-200">
-                </div>
-                <div class="lg:w-1/2 text-center lg:text-left animate-on-scroll delay-200">
-                    <span class="text-blue-custom text-lg font-semibold uppercase">Our Journey</span>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2 mb-8">Redefining Equipment Rentals with Innovation</h2>
-                    <p class="text-lg text-gray-700 mb-6">
-                        Catdump was founded with a singular vision: to transform the often-complex and time-consuming process of equipment rental into a seamless, transparent, and user-friendly experience. We saw an opportunity to leverage cutting-edge technology to connect customers with the best local deals on essential equipment, globally, starting from our base in the USA.
-                    </p>
-                    <p class="text-lg text-gray-700 mb-6">
-                        From humble beginnings, we've grown into a leading marketplace, driven by our commitment to innovation and customer satisfaction. Our AI-powered platform and extensive network of vetted suppliers ensure that whether you need a dumpster, temporary toilet, or storage container, you get it quickly, affordably, and with total peace of mind.
-                    </p>
-                    <p class="text-lg text-gray-700 font-semibold text-blue-custom">
-                        Our Mission: To empower projects of all sizes by providing instant, reliable, and cost-effective access to necessary equipment, everywhere.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
             <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">The Core Values That Drive Us</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="value-card animate-on-scroll delay-100">
-                        <div class="icon-large">💡</div>
-                        <h3>Innovation</h3>
-                        <p>We embrace cutting-edge technology, like AI, to continuously improve our platform, streamline processes, and deliver smarter solutions for our customers.</p>
-                    </div>
-                    <div class="value-card animate-on-scroll delay-200">
-                        <div class="icon-large">🤝</div>
-                        <h3>Customer-Centricity</h3>
-                        <p>Our customers are at the heart of everything we do. We are dedicated to providing unparalleled support, transparent processes, and tailored solutions to meet their unique needs.</p>
-                    </div>
-                    <div class="value-card animate-on-scroll delay-300">
-                        <div class="icon-large">✨</div>
-                        <h3>Transparency</h3>
-                        <p>We believe in clear, upfront pricing and honest communication at every step. No hidden fees, no surprises – just straightforward service you can trust.</p>
-                    </div>
-                    <div class="value-card animate-on-scroll delay-400">
-                        <div class="icon-large">✅</div>
-                        <h3>Reliability</h3>
-                        <p>We partner with only the most reliable local suppliers and strive for dependable service, ensuring equipment is delivered on time and in excellent condition.</p>
-                    </div>
-                    <div class="value-card animate-on-scroll delay-500">
-                        <div class="icon-large">♻️</div>
-                        <h3>Sustainability</h3>
-                        <p>We are committed to promoting eco-friendly practices in waste management and equipment usage, contributing to a healthier planet for future generations.</p>
-                    </div>
-                    <div class="value-card animate-on-scroll delay-600">
-                        <div class="icon-large">🌍</div>
-                        <h3>Global Vision, Local Impact</h3>
-                        <p>While our ambition is global, our focus remains on empowering local businesses and communities by providing accessible and efficient equipment rental solutions.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Meet Our Leadership</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <div class="team-member-card animate-on-scroll delay-100">
-                        <img src="https://placehold.co/150x150/1a73e8/ffffff?text=CEO" alt="CEO Profile">
-                        <h4>Jane Doe</h4>
-                        <p class="text-blue-custom font-semibold">Chief Executive Officer</p>
-                        <p class="text-gray-600 mt-2">Visionary leader driving Catdump's mission to revolutionize equipment rentals worldwide.</p>
-                    </div>
-                    <div class="team-member-card animate-on-scroll delay-200">
-                        <img src="https://placehold.co/150x150/34a853/ffffff?text=CTO" alt="CTO Profile">
-                        <h4>John Smith</h4>
-                        <p class="text-green-custom font-semibold">Chief Technology Officer</p>
-                        <p class="text-gray-600 mt-2">Architect of our cutting-edge AI and seamless digital platform, ensuring innovation at its core.</p>
-                    </div>
-                    <div class="team-member-card animate-on-scroll delay-300">
-                        <img src="https://placehold.co/150x150/1a73e8/ffffff?text=COO" alt="COO Profile">
-                        <h4>Emily White</h4>
-                        <p class="text-blue-custom font-semibold">Chief Operations Officer</p>
-                        <p class="text-gray-600 mt-2">Oversees all operational aspects, ensuring efficient logistics and unparalleled service delivery.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32" id="stats-section">
-            <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Impact in Numbers</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-16 animate-on-scroll">Our Journey: From Concept to Innovation Leader</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div class="animate-on-scroll delay-100">
-                        <div class="icon-box mx-auto mb-6 bg-green-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-blue-custom mb-3" data-target="10000">0</p>
-                        <p class="text-xl text-gray-700">Rentals Completed</p>
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                            Founded on the principle of simplifying complex processes, <?php echo htmlspecialchars($companyName); ?> emerged from a vision to revolutionize the traditional equipment rental and waste management industries. We observed the inefficiencies, the endless phone calls, and the uncertainty of traditional booking methods, and we knew there had to be a better way.
+                        </p>
+                        <p class="text-xl text-gray-700 leading-relaxed">
+                            Our journey began with a dedicated team of innovators, engineers, and industry veterans who shared a common goal: to leverage the power of artificial intelligence to create a seamless, transparent, and highly efficient platform. We set out to build a system where securing essential equipment and services would be as easy as a conversation, providing instant quotes and guaranteed best prices.
+                        </p>
                     </div>
                     <div class="animate-on-scroll delay-200">
-                        <div class="icon-box mx-auto mb-6 bg-blue-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.105A9.763 9.763 0 0112 4c4.97 0 9 3.582 9 8z"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-green-custom mb-3" data-target="500">0</p>
-                        <p class="text-xl text-gray-700">Verified Suppliers</p>
+                        <img src="https://placehold.co/600x400/e0e9f5/1a73e8?text=Our+Story+Image" alt="Our Story" class="rounded-2xl shadow-xl w-full h-auto">
                     </div>
-                    <div class="animate-on-scroll delay-300">
-                        <div class="icon-box mx-auto mb-6 bg-green-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-blue-custom mb-3" data-target="150">0</p>
-                        <p class="text-xl text-gray-700">Cities Served</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="our-mission" class="container-box py-20 md:py-32">
+            <div class="section-box-alt">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-16 animate-on-scroll">Our Mission & Values: Driving Your Success</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="animate-on-scroll delay-100">
+                        <img src="https://placehold.co/600x400/eef2f6/34a853?text=Our+Mission+Image" alt="Our Mission" class="rounded-2xl shadow-xl w-full h-auto">
                     </div>
-                    <div class="animate-on-scroll delay-400">
-                        <div class="icon-box mx-auto mb-6 bg-blue-custom text-white">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 100 4m-4 12a2 2 0 100-4m14-4a2 2 0 100-4m-4 4a2 2 0 100 4m-6-4a2 2 0 100 4m-2 2a2 2 0 100 4m0-12a2 2 0 100 4"></path></svg>
-                        </div>
-                        <p class="text-5xl font-extrabold text-green-custom mb-3" data-target="98">0%</p>
-                        <p class="text-xl text-gray-700">Customer Satisfaction</p>
+                    <div class="animate-on-scroll delay-200">
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6">Our Mission</h3>
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                            To empower businesses and individuals with intelligent, efficient, and transparent access to equipment rentals and waste management solutions, fostering seamless project execution and environmental responsibility.
+                        </p>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6">Our Core Values</h3>
+                        <ul class="space-y-4 text-left text-gray-700 text-lg">
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-custom mr-3"></i>Innovation: Continuously advancing technology for smarter solutions.</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-custom mr-3"></i>Transparency: Clear pricing and open communication, always.</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-custom mr-3"></i>Efficiency: Saving you time and resources with streamlined processes.</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-custom mr-3"></i>Reliability: Partnering with trusted providers for consistent, quality service.</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-custom mr-3"></i>Customer Focus: Dedicated to your success and satisfaction every step of the way.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32 stats-section">
+            <div class="section-box text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Catdump by the Numbers</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+                    <div class="stat-item animate-on-scroll delay-100">
+                        <div class="icon-large">✅</div>
+                        <p class="stat-number" data-target="10000">0</p>
+                        <p class="stat-label">Rentals Completed</p>
+                    </div>
+                    <div class="stat-item animate-on-scroll delay-200">
+                        <div class="icon-large">🤝</div>
+                        <p class="stat-number" data-target="500">0</p>
+                        <p class="stat-label">Verified Partners</p>
+                    </div>
+                    <div class="stat-item animate-on-scroll delay-300">
+                        <div class="icon-large">🌍</div>
+                        <p class="stat-number" data-target="150">0</p>
+                        <p class="stat-label">Cities Served</p>
+                    </div>
+                    <div class="stat-item animate-on-scroll delay-400">
+                        <div class="icon-large">⭐</div>
+                        <p class="stat-number" data-target="98">%</p>
+                        <p class="stat-label">Customer Satisfaction</p>
                     </div>
                 </div>
             </div>
@@ -505,43 +439,11 @@
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Our Global Presence, Rooted in the USA</h2>
-                <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    While Catdump proudly serves clients worldwide, our headquarters remains firmly established in the United States, driving our global operations from the heart of innovation. We are based in USA and deal in equipment rentals all over the globe.
-                </p>
-                <div class="flex flex-col items-center animate-on-scroll delay-200">
-                    <p class="text-2xl font-bold text-blue-custom mb-4">U.S. Headquarters Address:</p>
-                    <address class="text-xl text-gray-700 not-italic">
-                        9330 LBJ Freeway Suite 900<br>
-                        Dallas, TX 75243<br>
-                        USA
-                    </address>
-                    <div class="mt-12 w-full max-w-2xl h-80 bg-gray-300 rounded-xl shadow-lg flex items-center justify-center text-gray-500 text-lg">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3350.291703273105!2d-96.7369335848248!3d32.95420368092285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c2075775f0a6d%3A0xc3f8f1d3c0a5b9e!2s9330%20LBJ%20Freeway%20Suite%20900%2C%20Dallas%2C%20TX%2075243%2C%20USA!5e0!3m2!1sen!2sae!4v1678234567890!5m2!1sen!2sae"
-                            width="100%"
-                            height="100%"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Join the Catdump Family!</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Join the Revolution in Rentals!</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Whether you're looking for seamless equipment rentals or a rewarding career, we're building the future of the industry.
+                    Experience the unparalleled ease and efficiency of AI-powered equipment rental and waste management with Catdump.
                 </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-6 animate-on-scroll delay-200">
-                    <a href="#" class="btn-primary inline-block">Get Started Now!</a>
-                    <a href="careers.html" class="btn-secondary inline-block">Explore Careers</a>
-                </div>
+                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Started Today!</a>
             </div>
         </section>
     </main>
@@ -580,7 +482,7 @@
                 });
             }
             
-            // Accordion functionality for FAQs and Quick Solutions
+            // Accordion functionality for FAQs (if applicable)
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);

@@ -4,7 +4,6 @@
 // It will dynamically load page content from customer/pages/ via AJAX.
 ?>
 
-<!-- Logout Modal -->
 <div id="logout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -23,7 +22,6 @@
     </div>
 </div>
 
-<!-- Delete Account Modal -->
 <div id="delete-account-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -42,7 +40,6 @@
     </div>
 </div>
 
-<!-- Payment Success Modal -->
 <div id="payment-success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col text-center">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -59,55 +56,6 @@
     </div>
 </div>
 
-<!-- AI Chat Modal -->
-<div id="ai-chat-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="modal-content">
-        <div class="flex items-center justify-between p-3 sm:p-4 bg-gray-100 border-b sticky top-0 z-10">
-            <h3 class="text-base sm:text-xl font-bold text-gray-800" id="ai-chat-title">AI Assistant</h3>
-            <button class="text-gray-500 hover:text-gray-700 text-lg sm:text-2xl" onclick="hideModal('ai-chat-modal')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="ai-chat-messages" class="flex-1 p-3 sm:p-4 overflow-y-auto custom-scroll bg-gray-50">
-            </div>
-        <div id="ai-chat-file-upload-section" class="hidden sm:block p-3 sm:p-4 border-t bg-gray-50">
-            <label for="ai-chat-file-input" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Attach Files (Images/Videos for Junk Removal)</label>
-            <input type="file" id="ai-chat-file-input" name="media_files[]" multiple class="w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:mr-4 file:py-2 file:px-3 sm:file:px-4 file:rounded-full file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-            <div id="ai-chat-selected-files" class="mt-2 text-xs text-gray-600"></div>
-        </div>
-        <div class="p-2 sm:p-4 bg-white border-t sticky bottom-0">
-            <div class="flex items-center">
-                <button id="ai-chat-camera-btn" class="p-2 sm:p-3 bg-gray-200 hover:bg-gray-300 text-lg sm:text-xl text-gray-600 min-w-[40px] rounded-l-lg">
-                    <i class="fas fa-camera"></i>
-                </button>
-                <input type="text" id="ai-chat-input" placeholder="Type your message..." class="flex-1 p-2 sm:p-3 border-y border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base">
-                <button id="ai-chat-send-btn" class="px-3 sm:px-4 py-2 sm:py-3 bg-blue-600 text-white hover:bg-blue-700 min-w-[40px] rounded-r-lg">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Camera Upload Choice Modal -->
-<div id="camera-upload-choice-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
-    <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-sm sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
-        <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
-            <h3 class="text-lg sm:text-xl font-bold text-gray-800">Choose Media Source</h3>
-            <button class="text-gray-500 hover:text-gray-700 text-xl" onclick="hideModal('camera-upload-choice-modal')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="flex-1 p-4 sm:p-6 text-gray-800 flex flex-col space-y-3 sm:space-y-4">
-            <button id="choose-file-btn" class="px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm sm:text-base">Upload File</button>
-            <button id="take-photo-btn" class="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm sm:text-base">Take Photo</button>
-            <button id="shoot-video-btn" class="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm sm:text-base">Shoot Video</button>
-            <button class="px-4 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 text-sm sm:text-base" onclick="hideModal('camera-upload-choice-modal')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- Confirmation Modal -->
 <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -126,7 +74,6 @@
     </div>
 </div>
 
-<!-- Tutorial Overlay -->
 <div id="tutorial-overlay" class="fixed inset-0 bg-black bg-opacity-70 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-3xl sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -154,7 +101,6 @@
     </div>
 </div>
 
-<!-- Relocation Request Modal -->
 <div id="relocation-request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -177,7 +123,6 @@
     </div>
 </div>
 
-<!-- Swap Request Modal -->
 <div id="swap-request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -197,7 +142,6 @@
     </div>
 </div>
 
-<!-- Pickup Request Modal -->
 <div id="pickup-request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden">
     <div class="bg-white w-full h-full sm:w-11/12 sm:max-w-md sm:h-auto sm:my-8 rounded-t-lg sm:rounded-lg shadow-xl flex flex-col">
         <div class="flex items-center justify-between p-4 bg-gray-100 sm:bg-white border-b sm:border-b-0">
@@ -485,10 +429,10 @@
                     } catch (error) {
                         console.error('Error extracting frames:', error);
                         window.showToast(`Failed to extract frames from ${file.name}.`, 'error');
-                        aiChatFileInput.processedFiles = [file]; // Send original video if frame extraction fails
+                        processedFiles.push(file);
                     }
                 } else {
-                    aiChatFileInput.processedFiles = [file]; // For images, just push the original file
+                    processedFiles.push(file); // For images, just push the original file
                 }
             }
             document.body.removeChild(input); // Clean up the temporary input

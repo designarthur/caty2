@@ -28,6 +28,7 @@ if (!$companyName) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -572,140 +573,8 @@ if (!$companyName) {
             clip-path: circle(100% at 0 149%);
         }
 
-        /* Chat Widget Styles */
-        #chat-widget {
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            height: 70vh;
-            max-height: 600px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        #chat-header {
-            padding: 1rem 1.5rem;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            border-top-left-radius: 1.5rem;
-            border-top-right-radius: 1.5rem;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: #2d3748;
-            display: flex;
-            align-items: center;
-        }
-
-        #chat-header::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background-color: #34a853;
-            border-radius: 50%;
-            margin-right: 0.75rem;
-            animation: pulse-live 2s infinite;
-        }
-
-        @keyframes pulse-live {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 168, 83, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); }
-        }
-
-
-        #chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .chat-bubble {
-            padding: 0.75rem 1.25rem;
-            border-radius: 1.25rem;
-            max-width: 80%;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        .ai-bubble {
-            background-color: #eef2f6;
-            color: #2d3748;
-            border-bottom-left-radius: 0.25rem;
-            align-self: flex-start;
-        }
-
-        .user-bubble {
-            background-color: #1a73e8;
-            color: white;
-            border-bottom-right-radius: 0.25rem;
-            align-self: flex-end;
-        }
-
-        #chat-form {
-            display: flex;
-            padding: 1.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        #chat-input {
-            flex-grow: 1;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            margin-right: 1rem;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        #chat-input:focus {
-            outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-        }
-
-        #chat-send-btn {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #chat-send-btn:hover {
-            background-color: #155bb5;
-        }
-
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.75rem 1.25rem;
-        }
-        .typing-indicator span {
-            height: 8px;
-            width: 8px;
-            background-color: #a0aec0;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite both;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-
-        /* Floating Chat Bubble */
-        #chat-bubble-floating {
+        /* Floating Chat Bubble for homepage */
+        #floating-chat-trigger {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
@@ -719,52 +588,16 @@ if (!$companyName) {
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             cursor: pointer;
             z-index: 999;
-            transform: scale(0);
+            transform: scale(0); /* Hidden by default */
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        #chat-bubble-floating.visible {
-            transform: scale(1);
+        #floating-chat-trigger.visible {
+            transform: scale(1); /* Show when visible */
         }
-        #chat-bubble-floating svg {
+        #floating-chat-trigger svg {
             color: white;
             width: 32px;
             height: 32px;
-        }
-
-        /* Full Screen Chat Overlay */
-        #chat-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        #chat-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        #chat-overlay #chat-widget-overlay {
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-        }
-        #chat-overlay.visible #chat-widget-overlay {
-            transform: scale(1);
-        }
-        #chat-close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 2.5rem;
-            cursor: pointer;
-            line-height: 1;
         }
 
     </style>
@@ -783,14 +616,13 @@ if (!$companyName) {
                         <p class="text-xl text-gray-700 mb-8 max-w-xl mx-auto lg:mx-0">
                            Just tell our AI what you need. We'll connect with our local network and get you the best price, guaranteed, within the hour. No more waiting, no more hassle.
                         </p>
+                        <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block">Start a New Booking</a>
+                            <a href="#how-it-works-section" class="btn-secondary inline-block">How It Works</a>
+                        </div>
                     </div>
-                    <div id="chat-widget" class="w-full max-w-lg mx-auto lg:mx-0 animate-on-scroll delay-200">
-                        <div id="chat-header">AI Booking Assistant</div>
-                        <div id="chat-messages"></div>
-                        <form id="chat-form">
-                            <input type="text" id="chat-input" placeholder="e.g., 'I need a 20-yard dumpster for a week'" autocomplete="off">
-                            <button type="submit" id="chat-send-btn">Send</button>
-                        </form>
+                    <div class="w-full max-w-lg mx-auto lg:mx-0 animate-on-scroll delay-200 flex items-center justify-center min-h-[300px] border border-dashed border-gray-300 rounded-2xl bg-gray-50 text-gray-500">
+                        <p class="text-lg text-center p-4">AI Chat Assistant will appear here or can be opened from the bottom right corner.</p>
                     </div>
                 </div>
             </div>
@@ -864,7 +696,7 @@ if (!$companyName) {
                             <p class="how-it-works-step-number">Step 1</p>
                             <h3 class="how-it-works-step-title">Chat with Our AI Booking System</h3>
                             <p class="how-it-works-step-description">Start your rental process by simply chatting with our intelligent AI booking system. Tell us your specific equipment requirements, project details, and timeline, and our AI will efficiently capture all necessary information to begin your quote request, making the initial step quick and effortless.</p>
-                            <a href="#contact-section" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Chatting Now &rarr;</a>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Chatting Now &rarr;</a>
                         </div>
                     </div>
 
@@ -876,7 +708,7 @@ if (!$companyName) {
                             <p class="how-it-works-step-number">Step 2</p>
                             <h3 class="how-it-works-step-title">Best Prices from Our Partner Network</h3>
                             <p class="how-it-works-step-description">Once we have your requirements, our dedicated team immediately contacts our extensive network of trusted local partners. We leverage our relationships to secure the best possible pricing for your equipment, then list these competitive quotes directly into your personalized customer dashboard for easy review and comparison, ensuring you always get the optimal deal.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Pricing Details &rarr;</a>
+                            <a href="/Resources/Pricing-Finance.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Pricing Details &rarr;</a>
                         </div>
                     </div>
 
@@ -888,12 +720,12 @@ if (!$companyName) {
                             <p class="how-it-works-step-number">Step 3</p>
                             <h3 class="how-it-works-step-title">Confirm, Pay & Track Your Order</h3>
                             <p class="how-it-works-step-description">Review the pricing options on your dashboard. If you're satisfied, confirm your order directly. We'll then provide a secure payment link and add the invoice to your dashboard for convenient payment. You can track delivery status live if the partner allows, or receive direct notifications from the driver, ensuring complete transparency until delivery.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Your Dashboard &rarr;</a>
+                            <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Your Dashboard &rarr;</a>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-700">
-                    <a href="#" class="btn-secondary inline-block">Explore Full Process</a>
+                    <a href="/How-it-works.php" class="btn-secondary inline-block">Explore Full Process</a>
                 </div>
             </div>
         </section>
@@ -906,23 +738,23 @@ if (!$companyName) {
                         <img src="/assets/images/dumpster_rental.png" alt="Dumpster Rentals" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Dumpster Rentals</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">From extensive home cleanouts to large-scale construction projects, easily find the perfect size dumpster to efficiently handle any waste disposal need, ensuring a clean and safe site for your operations.</p>
-                        <a href="#contact-section" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                     <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-200">
                         <img src="/assets/images/portable_toilet.png" alt="Temporary Toilets" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Temporary Toilets</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">Ensure comfort and sanitation with our clean, reliable, and regularly serviced portable toilets, ideal for events, busy job sites, and emergency situations requiring immediate facilities on demand.</p>
-                        <a href="#contact-section" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                     <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-300">
                         <img src="/assets/images/storage_container.png" alt="Storage Containers" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Storage Containers</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">Secure your valuable equipment and materials with our robust, weatherproof on-site storage containers, conveniently delivered right to your specified location for maximum accessibility and protection.</p>
-                        <a href="#contact-section" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-400">
-                    <a href="#" class="btn-secondary inline-block">View All Services</a>
+                    <a href="/Services/Dumpster-Rentals.php" class="btn-secondary inline-block">View All Services</a>
                 </div>
             </div>
         </section>
@@ -934,13 +766,13 @@ if (!$companyName) {
                     <img src="/assets/images/junk_removal.png" alt="Junk Removal Services" class="rounded-lg mb-6 shadow-md border border-gray-300">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Advanced Junk Removal Services</h3>
                     <p class="text-gray-600 leading-relaxed mb-6">For efficient junk removal, simply upload images and even videos of your items. Our advanced system analyzes the content to generate a precise, fair quote. If you're satisfied with the quotation, we'll generate an invoice for you to conveniently pay directly from your personalized dashboard.</p>
-                    <a href="#contact-section" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                    <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                 </div>
                 <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-200">
                     <img src="/assets/images/relocation_swap.png" alt="Relocation & Swap Services" class="rounded-lg mb-6 shadow-md border border-gray-300">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Relocation & Swap Services</h3>
                     <p class="text-gray-600 leading-relaxed mb-6">Project running longer than expected? Need a different size unit for your evolving needs? We offer seamless relocation or swap services for your rental unit, ensuring your project stays on track and on budget without interruption.</p>
-                    <a href="#contact-section" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                 </div>
             </div>
         </section>
@@ -993,7 +825,7 @@ if (!$companyName) {
                         <li class="flex items-center"><svg class="w-6 h-6 mr-3 text-green-custom" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Receive instant notifications and updates.</li>
                         <li class="flex items-center"><svg class="w-6 h-6 mr-3 text-green-custom" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>View complete rental history and reorder with ease.</li>
                     </ul>
-                    <a href="#" class="btn-primary inline-block">Download the App</a>
+                    <a href="/customer/login.php" class="btn-primary inline-block">Login to Dashboard</a>
                 </div>
                 <div class="lg:w-1/2 flex justify-center items-center relative animate-on-scroll delay-300">
                     <img src="/assets/images/mobile_app_screen_1.png" alt="Mobile App Screen 1" class="w-1/2 md:w-1/3 lg:w-auto max-w-xs rounded-xl shadow-2xl transform rotate-3 translate-x-8 z-10 border-4 border-gray-300">
@@ -1010,13 +842,13 @@ if (!$companyName) {
                         <img src="/assets/images/dashboard_mockup.png" alt="<?php echo htmlspecialchars($companyName); ?> Dashboard" class="rounded-lg mb-6 mx-auto shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Total Control at Your Fingertips</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">The <?php echo htmlspecialchars($companyName); ?> dashboard provides a centralized, intuitive hub for all your rental activities. Effortlessly track orders, manage service schedules, view detailed invoices, and communicate directly with suppliers, all from one convenient place. Access your complete rental history and reorder previous services with a single click, simplifying your workflow and saving you valuable time. <br><br> You can also track the delivery status of your rentals directly from your dashboard. If a partner allows live tracking, you'll see real-time updates. Otherwise, your driver will contact you directly with progress notifications.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More about the My Dumpster Portal <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More about the My Dumpster Portal <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                     <div class="p-10 rounded-2xl shadow-xl card-hover-effect animate-on-scroll delay-200">
                         <img src="/assets/images/payment_options.png" alt="Flexible Payments" class="rounded-lg mb-6 mx-auto shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Flexible & Secure Payment Solutions</h3>
-                        <p class="text-gray-600 leading-relaxed mb-6">We offer a wide variety of secure payment options to suit your preferences, including all major credit cards and ACH transfers. For larger or ongoing projects, we provide flexible financing plans designed to help you manage your budget effectively without delaying crucial work. Rest assured, your financial data is always protected with state-of-the-art, bank-level security measures, giving you complete peace of mind.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More about Payments & Financing <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <p class="text-gray-600 leading-relaxed mb-6">We offer a wide variety of secure payment options to suit your preferences, including all major credit cards and ACH transfers. For larger or ongoing projects, we provide flexible financing plans designed to help you manage your budget effectively without delaying crucial work. Rest assured, your financial data is always protected with state-of-art, bank-level security measures, giving you complete peace of mind.</p>
+                        <a href="/Resources/Pricing-Finance.php" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More about Payments & Financing <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                 </div>
             </div>
@@ -1096,7 +928,7 @@ if (!$companyName) {
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All FAQs</a>
                 </div>
             </div>
         </section>
@@ -1119,7 +951,7 @@ if (!$companyName) {
                     </div>
                     <div class="contact-form-box animate-on-scroll delay-300">
                         <div class="flex mb-8">
-                            <button class="flex-1 py-3 px-4 rounded-lg font-semibold text-blue-custom border border-blue-custom bg-blue-50 w-full">Contact via email</button>
+                            <button onclick="showAIChat(''); return false;" class="flex-1 py-3 px-4 rounded-lg font-semibold text-blue-custom border border-blue-custom bg-blue-50 w-full">Chat with AI Assistant</button>
                         </div>
                         <form class="space-y-4">
                             <div>
@@ -1152,7 +984,7 @@ if (!$companyName) {
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Experience the future of equipment rentals. Get a free, no-obligation quote in seconds and streamline your project needs with <?php echo htmlspecialchars($companyName); ?>'s powerful, intuitive platform.
                 </p>
-                <a href="#contact-section" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 mb-16 animate-on-scroll delay-200">Get Started & Get a Quote</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 mb-16 animate-on-scroll delay-200">Get Started & Get a Quote</a>
 
                 <div class="bg-gray-100 p-12 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-center gap-10 animate-on-scroll delay-300">
                     <div class="icon-box bg-blue-custom text-white flex-shrink-0">
@@ -1177,20 +1009,8 @@ if (!$companyName) {
         </section>
     </main>
 
-    <div id="chat-bubble-floating">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-    </div>
-
-    <div id="chat-overlay">
-        <button id="chat-close-btn">&times;</button>
-        <div id="chat-widget-overlay" class="w-full max-w-lg mx-auto">
-             <div id="chat-header">AI Booking Assistant</div>
-             <div id="chat-messages-overlay" class="flex-grow overflow-y-auto p-6 flex flex-col gap-4 bg-white/80 backdrop-blur-md h-[60vh] max-h-[500px]"></div>
-             <form id="chat-form-overlay" class="flex p-6 border-t border-gray-200 bg-white/80 backdrop-blur-md rounded-b-2xl">
-                 <input type="text" id="chat-input-overlay" placeholder="e.g., 'I need a 20-yard dumpster for a week'" autocomplete="off" class="flex-grow border border-gray-300 rounded-lg py-2 px-4 mr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                 <button type="submit" id="chat-send-btn-overlay" class="bg-blue-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-blue-700 transition-colors">Send</button>
-             </form>
-        </div>
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
     </div>
 
 
@@ -1318,140 +1138,23 @@ if (!$companyName) {
                 typeWriter();
             }
 
-            // Chat Widget Functionality (Modified to call api/openai_chat.php)
-            const chatMessages = document.getElementById('chat-messages');
-            const chatForm = document.getElementById('chat-form');
-            const chatInput = document.getElementById('chat-input');
-
-            const chatOverlay = document.getElementById('chat-overlay');
-            const floatingBubble = document.getElementById('chat-bubble-floating');
-            const chatCloseBtn = document.getElementById('chat-close-btn');
-
-            const chatMessagesOverlay = document.getElementById('chat-messages-overlay');
-            const chatFormOverlay = document.getElementById('chat-form-overlay');
-            const chatInputOverlay = document.getElementById('chat-input-overlay');
-
-
-            const addMessage = (message, sender, container) => {
-    const bubble = document.createElement('div');
-    bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
-    // Use innerHTML and marked.parse() for rendering markdown
-    bubble.innerHTML = marked.parse(message); // Change here
-    container.appendChild(bubble);
-    container.scrollTop = container.scrollHeight;
-};
-
-            const showTypingIndicator = (container) => {
-                const indicator = document.createElement('div');
-                indicator.classList.add('chat-bubble', 'ai-bubble', 'typing-indicator');
-                indicator.innerHTML = '<span></span><span></span><span></span>';
-                container.appendChild(indicator);
-                container.scrollTop = container.scrollHeight;
-            }
-
-            const hideTypingIndicator = (container) => {
-                const indicator = container.querySelector('.typing-indicator');
-                if (indicator) {
-                    indicator.remove();
-                }
-            }
-
-            // Modified to send to api/openai_chat.php
-            const getAIResponse = async (userInput, container) => {
-                showTypingIndicator(container);
-                try {
-                    const formData = new FormData();
-                    formData.append('message', userInput);
-
-                    const response = await fetch('/api/openai_chat.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    hideTypingIndicator(container);
-
-                    let aiDisplayMessage = data.ai_response; // This will be the conversational response
-
-                    addMessage(aiDisplayMessage, 'ai', container);
-
-                    // If it's a final structured summary, redirect to customer dashboard (optional, or handle message for frontend)
-                    if (data.is_info_collected) {
-                        // Optionally, you might redirect the user to their new dashboard after a short delay
-                        // or provide a link for them to click.
-                        // For now, we'll just display the message.
-                        console.log("Customer info collected. User account created/updated.");
-                        // You could add a direct link here if desired:
-                        // setTimeout(() => { addMessage("You can now login to your dashboard here: <a href='/customer/dashboard.php' class='text-blue-600 underline'>Your Dashboard</a>", 'ai', container); }, 500);
-                    }
-
-
-                } catch (error) {
-                    console.error('Error fetching AI response:', error);
-                    hideTypingIndicator(container);
-                    addMessage("Oops! There was an error connecting to the AI. Please try again later.", 'ai', container);
-                }
-            };
-
-            chatForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const userMessage = chatInput.value.trim();
-                if (userMessage) {
-                    addMessage(userMessage, 'user', chatMessages);
-                    chatInput.value = '';
-                    getAIResponse(userMessage, chatMessages);
-                }
-            });
-
-            chatFormOverlay.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const userMessage = chatInputOverlay.value.trim();
-                if (userMessage) {
-                    addMessage(userMessage, 'user', chatMessagesOverlay);
-                    chatInputOverlay.value = '';
-                    getAIResponse(userMessage, chatMessagesOverlay);
-                }
-            });
-
-            // Initial AI message
-            setTimeout(() => {
-                 addMessage("Hello! I'm the <?php echo htmlspecialchars($companyName); ?> AI assistant. Tell me what you need, and I'll get you the best price from our local partners within 60 minutes!", 'ai', chatMessages);
-                 addMessage("Hello! I'm the <?php echo htmlspecialchars($companyName); ?> AI assistant. Tell me what you need, and I'll get you the best price from our local partners within 60 minutes!", 'ai', chatMessagesOverlay);
-            }, 1000);
-
-            // Floating bubble logic
+            // Floating chat trigger visibility
             const heroSection = document.getElementById('hero-section');
+            const floatingChatTrigger = document.getElementById('floating-chat-trigger');
+
             const heroObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        floatingBubble.classList.add('visible');
+                    if (entry.isIntersecting) {
+                        floatingChatTrigger.classList.remove('visible');
                     } else {
-                        floatingBubble.classList.remove('visible');
-                        chatOverlay.classList.remove('visible');
+                        floatingChatTrigger.classList.add('visible');
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { threshold: 0.1 }); // Adjust threshold as needed
 
-            heroObserver.observe(heroSection);
-
-            floatingBubble.addEventListener('click', () => {
-                chatOverlay.classList.add('visible');
-            });
-
-            chatCloseBtn.addEventListener('click', () => {
-                chatOverlay.classList.remove('visible');
-            });
-
-            chatOverlay.addEventListener('click', (e) => {
-                if (e.target === chatOverlay) {
-                    chatOverlay.classList.remove('visible');
-                }
-            });
-
+            if (heroSection && floatingChatTrigger) {
+                heroObserver.observe(heroSection);
+            }
         });
     </script>
 

@@ -6,6 +6,7 @@
     <title>Temporary Toilet Rentals - Catdump: Clean & Reliable Solutions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -335,6 +336,30 @@
             line-height: 1.6;
             color: #4a5568;
         }
+
+        /* Floating Chat Bubble for service pages */
+        #floating-chat-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            transform: scale(1); /* Always visible on service pages */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #floating-chat-trigger svg {
+            color: white;
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -351,7 +376,7 @@
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
                     Ensure comfort and sanitation with our wide range of portable toilets, perfectly suited for construction sites, outdoor events, and emergency needs.
                 </p>
-                <a href="#" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Portable Toilet Quote!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block animate-on-scroll delay-600">Get Your Portable Toilet Quote!</a>
             </div>
         </section>
 
@@ -444,7 +469,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">Unsure which type you need? Let our AI guide you!</a>
+                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-secondary inline-block">Unsure which type you need? Let our AI guide you!</a>
                 </div>
             </div>
         </section>
@@ -461,7 +486,7 @@
                             <p class="how-it-works-step-number">Step 1</p>
                             <h3 class="how-it-works-step-title">Specify Your Requirements</h3>
                             <p class="how-it-works-step-description">Use our AI chat to tell us your event type, number of guests/workers, and duration. We'll help determine the right number and type of temporary toilets for you.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Planning &rarr;</a>
+                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Planning &rarr;</a>
                         </div>
                     </div>
 
@@ -473,7 +498,7 @@
                             <p class="how-it-works-step-number">Step 2</p>
                             <h3 class="how-it-works-step-title">Get & Compare Top Local Quotes</h3>
                             <p class="how-it-works-step-description">Instantly receive competitive quotes from our trusted local portable toilet suppliers, ensuring you get the best deal for clean and reliable units.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Quotes &rarr;</a>
+                            <a href="/Resources/Pricing-Finance.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Quotes &rarr;</a>
                         </div>
                     </div>
 
@@ -485,7 +510,7 @@
                             <p class="how-it-works-step-number">Step 3</p>
                             <h3 class="how-it-works-step-title">Confirm, Deliver & Service</h3>
                             <p class="how-it-works-step-description">Book your chosen units, make a secure payment, and we'll handle the timely delivery and scheduled servicing, all managed from your dashboard.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Dashboard &rarr;</a>
+                            <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Dashboard &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -557,7 +582,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All Portable Toilet FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All Portable Toilet FAQs</a>
                 </div>
             </div>
         </section>
@@ -568,10 +593,14 @@
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Get clean, reliable portable toilets quickly and affordably. Catdump makes sanitation simple, so your event or project can focus on success.
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Portable Toilet Quote Today!</a>
+                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Portable Toilet Quote Today!</a>
             </div>
         </section>
     </main>
+
+    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+        <i class="fas fa-comment-dots"></i>
+    </div>
 
     <?php include '../includes/public_footer.php'; ?>
 
