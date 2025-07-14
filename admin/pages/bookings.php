@@ -13,11 +13,27 @@ if (!is_logged_in() || !has_role('admin')) {
     exit;
 }
 
-// --- Data Fetching ---
+// --- Data Fetching Variables ---
 $bookings = [];
 $booking_detail_view_data = null;
 $vendors = [];
-$filter_status = $_GET['status'] ?? 'all';
+
+// --- Pagination & Filter Variables ---
+$items_per_page_options = [10, 25, 50, 100];
+$items_per_page = filter_input(INPUT_GET, 'per_page', FILTER_VALIDATE_INT);
+if (!in_array($items_per_page, $items_per_page_options)) {
+    $items_per_page = 25; // Default items per page
+}
+
+$current_page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+if (!$current_page || $current_page < 1) {
+    $current_page = 1;
+}
+$offset = ($current_page - 1) * $items_per_page;
+
+$filter_status = $_GET['status'] ?? 'all'; // Default filter status
+$search_query = trim($_GET['search'] ?? ''); // Search query
+
 $requested_booking_id = filter_input(INPUT_GET, 'booking_id', FILTER_VALIDATE_INT);
 
 // Set a default timezone to ensure consistent date calculations
@@ -39,10 +55,11 @@ if ($requested_booking_id) {
             b.id, b.booking_number, b.service_type, b.status, b.start_date, b.end_date,
             b.delivery_location, b.pickup_location, b.delivery_instructions, b.pickup_instructions,
             b.total_price, b.created_at, b.live_load_requested, b.is_urgent,
-            b.equipment_details, b.junk_details, b.vendor_id,
+            b.equipment_details, b.junk_details, b.vendor_id, b.pickup_date, b.pickup_time,
             u.id as user_id, u.first_name, u.last_name, u.email, u.phone_number, u.address, u.city, u.state, u.zip_code,
             inv.invoice_number, inv.amount AS invoice_amount, inv.status AS invoice_status,
-            q.id AS quote_id, q.daily_rate,
+            q.id AS quote_id, q.daily_rate, q.swap_charge AS quote_swap_charge, q.relocation_charge AS quote_relocation_charge,
+            q.is_swap_included, q.is_relocation_included,
             v.name AS vendor_name, v.email AS vendor_email, v.phone_number AS vendor_phone,
             ext.id AS extension_request_id, ext.requested_days AS extension_requested_days, ext.status AS extension_status
         FROM bookings b
@@ -61,10 +78,33 @@ if ($requested_booking_id) {
         $booking_detail_view_data['equipment_details'] = json_decode($booking_detail_view_data['equipment_details'] ?? '[]', true);
         $booking_detail_view_data['junk_details'] = json_decode($booking_detail_view_data['junk_details'] ?? '{}', true);
 
+        // Fetch additional charges
+        $charge_stmt = $conn->prepare("SELECT charge_type, amount, description, created_at, invoice_id FROM booking_charges WHERE booking_id = ?");
+        $charge_stmt->bind_param("i", $booking_detail_view_data['id']);
+        $charge_stmt->execute();
+        $charge_result = $charge_stmt->get_result();
+        $booking_detail_view_data['additional_charges'] = [];
+        while($charge_row = $charge_result->fetch_assoc()){
+            $booking_detail_view_data['additional_charges'][] = $charge_row;
+        }
+        $charge_stmt->close();
+
+        // Fetch status history for the timeline
+        $history_stmt = $conn->prepare("SELECT status, status_time, notes FROM booking_status_history WHERE booking_id = ? ORDER BY status_time ASC, id ASC");
+        $history_stmt->bind_param("i", $booking_detail_view_data['id']);
+        $history_stmt->execute();
+        $history_result = $history_stmt->get_result();
+        $booking_detail_view_data['status_history'] = [];
+        while ($history_row = $history_result->fetch_assoc()) {
+            $booking_detail_view_data['status_history'][] = $history_row;
+        }
+        $history_stmt->close();
+
+
         // Safely calculate remaining days, handling potential NULL end_date
         if ($booking_detail_view_data && 
             in_array($booking_detail_view_data['status'], ['delivered', 'in_use', 'awaiting_pickup']) && 
-            !empty($booking_detail_view_data['end_date'])) { // The !empty check prevents processing if it's null or empty string
+            !empty($booking_detail_view_data['end_date'])) {
              try {
                 $endDate = new DateTime($booking_detail_view_data['end_date']);
                 $today = new DateTime('today');
@@ -75,37 +115,74 @@ if ($requested_booking_id) {
                     $booking_detail_view_data['remaining_days'] = 0;
                 }
             } catch (Exception $e) {
-                // Log the exception if needed, and set a fallback
                 error_log("DateTime conversion error for booking ID {$requested_booking_id}: {$e->getMessage()}");
                 $booking_detail_view_data['remaining_days'] = 'N/A';
             }
         } else {
-            $booking_detail_view_data['remaining_days'] = 'N/A'; // No remaining days if status is not applicable or end_date is missing
+            $booking_detail_view_data['remaining_days'] = 'N/A';
         }
     }
     $stmt_detail->close();
 } else {
-    // Fetch all bookings for the list view
-    $query = "
-        SELECT
-            b.id, b.booking_number, b.service_type, b.status, b.start_date,
-            u.first_name, u.last_name, v.name AS vendor_name,
-            (SELECT COUNT(*) FROM booking_extension_requests ext WHERE ext.booking_id = b.id AND ext.status = 'pending') AS pending_extensions
+    // --- Fetch all bookings for the list view with Filters, Search, and Pagination ---
+    $base_query = "
         FROM bookings b
         JOIN users u ON b.user_id = u.id
         LEFT JOIN vendors v ON b.vendor_id = v.id
     ";
+
+    $where_clauses = [];
     $params = [];
     $types = "";
 
+    // Status Filter
     if ($filter_status !== 'all') {
-        $query .= " WHERE b.status = ?";
+        $where_clauses[] = "b.status = ?";
         $params[] = $filter_status;
         $types .= "s";
     }
-    $query .= " ORDER BY pending_extensions DESC, b.created_at DESC";
 
-    $stmt_list = $conn->prepare($query);
+    // Search Query
+    if (!empty($search_query)) {
+        $search_term = '%' . $search_query . '%';
+        $where_clauses[] = "(b.booking_number LIKE ? OR u.email LIKE ? OR u.address LIKE ?)";
+        $params[] = $search_term;
+        $params[] = $search_term;
+        $params[] = $search_term;
+        $types .= "sss";
+    }
+
+    $where_sql = '';
+    if (!empty($where_clauses)) {
+        $where_sql = " WHERE " . implode(" AND ", $where_clauses);
+    }
+
+    // Get total count for pagination
+    $stmt_count = $conn->prepare("SELECT COUNT(*) " . $base_query . $where_sql);
+    if (!empty($params)) {
+        $stmt_count->bind_param($types, ...$params);
+    }
+    $stmt_count->execute();
+    $total_bookings_count = $stmt_count->get_result()->fetch_assoc()['COUNT(*)'];
+    $stmt_count->close();
+
+    $total_pages = ceil($total_bookings_count / $items_per_page);
+
+    // Main query for bookings list
+    $list_query = "
+        SELECT
+            b.id, b.booking_number, b.service_type, b.status, b.start_date,
+            u.first_name, u.last_name, v.name AS vendor_name,
+            (SELECT COUNT(*) FROM booking_extension_requests ext WHERE ext.booking_id = b.id AND ext.status = 'pending') AS pending_extensions
+    " . $base_query . $where_sql . "
+    ORDER BY pending_extensions DESC, b.created_at DESC
+    LIMIT ? OFFSET ?";
+
+    $params[] = $items_per_page;
+    $params[] = $offset;
+    $types .= "ii"; // Add types for LIMIT and OFFSET
+
+    $stmt_list = $conn->prepare($list_query);
     if (!empty($params)) {
         $stmt_list->bind_param($types, ...$params);
     }
@@ -131,12 +208,30 @@ function getAdminStatusBadgeClass($status) {
         case 'awaiting_pickup': return 'bg-pink-100 text-pink-800';
         case 'completed': return 'bg-gray-100 text-gray-800';
         case 'cancelled': return 'bg-red-100 text-red-800';
-        case 'relocation_requested': return 'bg-orange-100 text-orange-800'; // New status
-        case 'swap_requested': return 'bg-fuchsia-100 text-fuchsia-800';   // New status
-        case 'relocated': return 'bg-lime-100 text-lime-800';             // New status
-        case 'swapped': return 'bg-emerald-100 text-emerald-800';         // New status
-        case 'extended': return 'bg-cyan-100 text-cyan-800';              // New status (from functions.php)
+        case 'relocation_requested': return 'bg-orange-100 text-orange-800';
+        case 'swap_requested': return 'bg-fuchsia-100 text-fuchsia-800';
+        case 'relocated': return 'bg-lime-100 text-lime-800';
+        case 'swapped': return 'bg-emerald-100 text-emerald-800';
+        case 'extended': return 'bg-cyan-100 text-cyan-800';
         default: return 'bg-gray-100 text-gray-700';
+    }
+}
+function getTimelineIconClass($status) {
+     switch ($status) {
+        case 'pending': case 'scheduled': return 'fa-calendar-alt';
+        case 'assigned': return 'fa-user-check';
+        case 'out_for_delivery': return 'fa-truck';
+        case 'delivered': return 'fa-box-open';
+        case 'in_use': return 'fa-tools';
+        case 'awaiting_pickup': return 'fa-clock';
+        case 'completed': return 'fa-check-circle';
+        case 'cancelled': return 'fa-times-circle';
+        case 'relocation_requested': return 'fa-map-marker-alt';
+        case 'swap_requested': return 'fa-exchange-alt';
+        case 'relocated': return 'fa-truck-moving';
+        case 'swapped': return 'fa-sync-alt';
+        case 'extended': return 'fa-calendar-plus';
+        default: return 'fa-info-circle';
     }
 }
 ?>
@@ -144,32 +239,57 @@ function getAdminStatusBadgeClass($status) {
 <h1 class="text-3xl font-bold text-gray-800 mb-8">Booking Management</h1>
 
 <div class="bg-white p-6 rounded-lg shadow-md border border-blue-200 <?php echo $booking_detail_view_data ? 'hidden' : ''; ?>" id="bookings-list-section">
-    <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center"><i class="fas fa-book-open mr-2 text-blue-600"></i>All System Bookings</h2>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-700"><i class="fas fa-book-open mr-2 text-blue-600"></i>All System Bookings</h2>
+         <button id="bulk-delete-bookings-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md hidden">
+            <i class="fas fa-trash-alt mr-2"></i>Delete Selected
+        </button>
+    </div>
 
-    <div class="mb-4 flex flex-wrap gap-2">
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'all'})">All</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'pending'})">Pending</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'scheduled' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'scheduled'})">Scheduled</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'assigned' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'assigned'})">Assigned</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'out_for_delivery' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'out_for_delivery'})">Out for Delivery</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'delivered' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'delivered'})">Delivered</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'in_use' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'in_use'})">In Use</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'awaiting_pickup' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'awaiting_pickup'})">Awaiting Pickup</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'completed'})">Completed</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'cancelled' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'cancelled'})">Cancelled</button>
-        <!-- New filter buttons for specific requests -->
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'relocation_requested' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'relocation_requested'})">Relocation Req.</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'swap_requested' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'swap_requested'})">Swap Req.</button>
-        <button class="px-4 py-2 rounded-lg text-sm font-medium <?php echo $filter_status === 'extended' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'; ?>" onclick="loadAdminSection('bookings', {status: 'extended'})">Extended</button>
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+            <label for="status-filter" class="text-sm font-medium text-gray-700">Status:</label>
+            <select id="status-filter" onchange="applyFilters()"
+                    class="p-2 border border-gray-300 rounded-md text-sm">
+                <option value="all" <?php echo $filter_status === 'all' ? 'selected' : ''; ?>>All</option>
+                <option value="pending" <?php echo $filter_status === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                <option value="scheduled" <?php echo $filter_status === 'scheduled' ? 'selected' : ''; ?>>Scheduled</option>
+                <option value="assigned" <?php echo $filter_status === 'assigned' ? 'selected' : ''; ?>>Assigned</option>
+                <option value="out_for_delivery" <?php echo $filter_status === 'out_for_delivery' ? 'selected' : ''; ?>>Out for Delivery</option>
+                <option value="delivered" <?php echo $filter_status === 'delivered' ? 'selected' : ''; ?>>Delivered</option>
+                <option value="in_use" <?php echo $filter_status === 'in_use' ? 'selected' : ''; ?>>In Use</option>
+                <option value="awaiting_pickup" <?php echo $filter_status === 'awaiting_pickup' ? 'selected' : ''; ?>>Awaiting Pickup</option>
+                <option value="completed" <?php echo $filter_status === 'completed' ? 'selected' : ''; ?>>Completed</option>
+                <option value="cancelled" <?php echo $filter_status === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                <option value="relocation_requested" <?php echo $filter_status === 'relocation_requested' ? 'selected' : ''; ?>>Relocation Requested</option>
+                <option value="swap_requested" <?php echo $filter_status === 'swap_requested' ? 'selected' : ''; ?>>Swap Requested</option>
+                <option value="relocated" <?php echo $filter_status === 'relocated' ? 'selected' : ''; ?>>Relocated</option>
+                <option value="swapped" <?php echo $filter_status === 'swapped' ? 'selected' : ''; ?>>Swapped</option>
+                <option value="extended" <?php echo $filter_status === 'extended' ? 'selected' : ''; ?>>Extended</option>
+            </select>
+        </div>
+
+        <div class="flex-grow max-w-sm">
+            <input type="text" id="search-input" placeholder="Search by booking #, email, address..."
+                   class="p-2 border border-gray-300 rounded-md w-full text-sm"
+                   value="<?php echo htmlspecialchars($search_query); ?>"
+                   onkeydown="if(event.key === 'Enter') applyFilters()">
+        </div>
+        <button onclick="applyFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md text-sm">
+            Search
+        </button>
     </div>
 
     <?php if (empty($bookings)): ?>
-        <p class="text-gray-600 text-center p-4">No bookings found for this filter.</p>
+        <p class="text-gray-600 text-center p-4">No bookings found for the selected filters or search query.</p>
     <?php else: ?>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-blue-50">
                     <tr>
+                        <th class="px-6 py-3 text-left">
+                            <input type="checkbox" id="select-all-bookings" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Booking ID</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Customer</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Service Type</th>
@@ -182,6 +302,9 @@ function getAdminStatusBadgeClass($status) {
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php foreach ($bookings as $booking): ?>
                         <tr class="<?php echo $booking['pending_extensions'] > 0 ? 'bg-yellow-50' : '' ?>">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <input type="checkbox" class="booking-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" value="<?php echo htmlspecialchars($booking['id']); ?>">
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 #BK-<?php echo htmlspecialchars($booking['booking_number']); ?>
                                 <?php if ($booking['pending_extensions'] > 0): ?>
@@ -205,6 +328,64 @@ function getAdminStatusBadgeClass($status) {
                 </tbody>
             </table>
         </div>
+
+        <nav class="mt-4 flex items-center justify-between">
+            <div class="flex-1 flex justify-between sm:hidden">
+                <button onclick="loadAdminSection('bookings', {page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                       class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Previous
+                </button>
+                <button onclick="loadAdminSection('bookings', {page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                       class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Next
+                </button>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium"><?php echo $offset + 1; ?></span> to
+                        <span class="font-medium"><?php echo min($offset + $items_per_page, $total_bookings_count); ?></span> of
+                        <span class="font-medium"><?php echo $total_bookings_count; ?></span> results
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <button onclick="loadAdminSection('bookings', {page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                               class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <button onclick="loadAdminSection('bookings', {page: <?php echo $i; ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                                   class="<?php echo $i == $current_page ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?> relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                <?php echo $i; ?>
+                            </button>
+                        <?php endfor; ?>
+                        <button onclick="loadAdminSection('bookings', {page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                               class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 ml-4">
+                <span class="text-sm font-medium text-gray-700">Bookings per page:</span>
+                <select onchange="loadAdminSection('bookings', {page: 1, per_page: this.value, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                        class="p-2 border border-gray-300 rounded-md text-sm">
+                    <?php foreach ($items_per_page_options as $option): ?>
+                        <option value="<?php echo $option; ?>" <?php echo $items_per_page == $option ? 'selected' : ''; ?>>
+                            <?php echo $option; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </nav>
+
     <?php endif; ?>
 </div>
 
@@ -219,6 +400,7 @@ function getAdminStatusBadgeClass($status) {
                 <p class="text-gray-600"><span class="font-medium">Customer:</span> <?php echo htmlspecialchars($booking_detail_view_data['first_name'] . ' ' . $booking_detail_view_data['last_name']); ?></p>
                 <p class="text-gray-600"><span class="font-medium">Customer Email:</span> <?php echo htmlspecialchars($booking_detail_view_data['email']); ?></p>
                 <p class="text-gray-600"><span class="font-medium">Customer Phone:</span> <?php echo htmlspecialchars($booking_detail_view_data['phone_number']); ?></p>
+                <p class="text-gray-600"><span class="font-medium">Customer Address:</span> <?php echo htmlspecialchars($booking_detail_view_data['address'] . ', ' . $booking_detail_view_data['city'] . ', ' . $booking_detail_view_data['state'] . ' ' . $booking_detail_view_data['zip_code']); ?></p>
                 <p class="text-gray-600 mt-2"><a href="#" onclick="loadAdminSection('users', {user_id: '<?php echo $booking_detail_view_data['user_id'] ?? ''; ?>'}); return false;" class="text-blue-600 hover:underline"><i class="fas fa-external-link-alt mr-1"></i>View Customer Profile</a></p>
             </div>
             <div>
@@ -226,72 +408,120 @@ function getAdminStatusBadgeClass($status) {
                 <p class="text-gray-600"><span class="font-medium">Current Status:</span> <span class="px-2 py-1 rounded-full text-xs font-semibold <?php echo getAdminStatusBadgeClass($booking_detail_view_data['status']); ?>"><?php echo htmlspecialchars(strtoupper(str_replace('_', ' ', $booking_detail_view_data['status']))); ?></span></p>
                 <p class="text-gray-600"><span class="font-medium">Start Date:</span> <?php echo htmlspecialchars($booking_detail_view_data['start_date']); ?></p>
                  <p class="text-gray-600"><span class="font-medium">End Date:</span> <?php echo htmlspecialchars($booking_detail_view_data['end_date'] ?? 'N/A'); ?>
-                    <?php if (isset($booking_detail_view_data['remaining_days']) && $booking_detail_view_data['remaining_days'] !== 'N/A'): // Only show if remaining_days is calculated and not 'N/A' ?>
+                    <?php if (isset($booking_detail_view_data['remaining_days']) && $booking_detail_view_data['remaining_days'] !== 'N/A'): ?>
                         <span class="font-bold <?php echo $booking_detail_view_data['remaining_days'] < 3 ? 'text-red-500' : 'text-green-500'; ?>">
                             (<?php echo $booking_detail_view_data['remaining_days']; ?> days remaining)
                         </span>
                     <?php endif; ?>
                  </p>
+                 <p class="text-gray-600"><span class="font-medium">Delivery Location:</span> <?php echo htmlspecialchars($booking_detail_view_data['delivery_location']); ?></p>
+                <p class="text-gray-600"><span class="font-medium">Delivery Instructions:</span> <?php echo htmlspecialchars($booking_detail_view_data['delivery_instructions'] ?? 'None'); ?></p>
+                <?php if (!empty($booking_detail_view_data['pickup_date'])): ?>
+                    <p class="text-gray-600"><span class="font-medium">Scheduled Pickup Date:</span> <?php echo htmlspecialchars($booking_detail_view_data['pickup_date']); ?></p>
+                    <p class="text-gray-600"><span class="font-medium">Scheduled Pickup Time:</span> <?php echo htmlspecialchars($booking_detail_view_data['pickup_time']); ?></p>
+                    <p class="text-gray-600"><span class="font-medium">Pickup Location:</span> <?php echo htmlspecialchars($booking_detail_view_data['pickup_location'] ?? 'Same as delivery'); ?></p>
+                    <p class="text-gray-600"><span class="font-medium">Pickup Instructions:</span> <?php echo htmlspecialchars($booking_detail_view_data['pickup_instructions'] ?? 'None'); ?></p>
+                <?php endif; ?>
+                 <p class="text-gray-600"><span class="font-medium">Live Load Requested:</span> <?php echo $booking_detail_view_data['live_load_requested'] ? 'Yes' : 'No'; ?></p>
+                <p class="text-gray-600"><span class="font-medium">Urgent Request:</span> <?php echo $booking_detail_view_data['is_urgent'] ? 'Yes' : 'No'; ?></p>
             </div>
         </div>
 
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Admin Actions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-                <label for="booking-status-select" class="block text-sm font-medium text-gray-700 mb-2">Update Status</label>
-                <select id="booking-status-select" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
-                    <option value="pending" <?php echo ($booking_detail_view_data['status'] === 'pending') ? 'selected' : ''; ?>>Pending</option>
-                    <option value="scheduled" <?php echo ($booking_detail_view_data['status'] === 'scheduled') ? 'selected' : ''; ?>>Scheduled</option>
-                    <option value="assigned" <?php echo ($booking_detail_view_data['status'] === 'assigned') ? 'selected' : ''; ?>>Assigned</option>
-                    <option value="out_for_delivery" <?php echo ($booking_detail_view_data['status'] === 'out_for_delivery') ? 'selected' : ''; ?>>Out for Delivery</option>
-                    <option value="delivered" <?php echo ($booking_detail_view_data['status'] === 'delivered') ? 'selected' : ''; ?>>Delivered</option>
-                    <option value="in_use" <?php echo ($booking_detail_view_data['status'] === 'in_use') ? 'selected' : ''; ?>>In Use</option>
-                    <option value="awaiting_pickup" <?php echo ($booking_detail_view_data['status'] === 'awaiting_pickup') ? 'selected' : ''; ?>>Awaiting Pickup</option>
-                    <option value="completed" <?php echo ($booking_detail_view_data['status'] === 'completed') ? 'selected' : ''; ?>>Completed</option>
-                    <option value="cancelled" <?php echo ($booking_detail_view_data['status'] === 'cancelled') ? 'selected' : ''; ?>>Cancelled</option>
-                    <!-- New statuses for admin to set -->
-                    <option value="relocation_requested" <?php echo ($booking_detail_view_data['status'] === 'relocation_requested') ? 'selected' : ''; ?>>Relocation Requested</option>
-                    <option value="swap_requested" <?php echo ($booking_detail_view_data['status'] === 'swap_requested') ? 'selected' : ''; ?>>Swap Requested</option>
-                    <option value="relocated" <?php echo ($booking_detail_view_data['status'] === 'relocated') ? 'selected' : ''; ?>>Relocated</option>
-                    <option value="swapped" <?php echo ($booking_detail_view_data['status'] === 'swapped') ? 'selected' : ''; ?>>Swapped</option>
-                    <option value="extended" <?php echo ($booking_detail_view_data['status'] === 'extended') ? 'selected' : ''; ?>>Extended</option>
-                </select>
-                <button class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200" id="update-booking-status-btn" data-id="<?php echo htmlspecialchars($booking_detail_view_data['id']); ?>">Update Status</button>
-            </div>
-             <div>
-                <label for="assign-vendor-select" class="block text-sm font-medium text-gray-700 mb-2">Assign Vendor</label>
-                <select id="assign-vendor-select" class="mt-1 p-2 border border-gray-300 rounded-md w-full">
-                    <option value="">-- Select Vendor --</option>
-                    <?php foreach ($vendors as $vendor): ?>
-                        <option value="<?php echo htmlspecialchars($vendor['id']); ?>"
-                            <?php echo ($booking_detail_view_data['vendor_id'] == $vendor['id']) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($vendor['name']); ?>
-                        </option>
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Service Details</h3>
+        <?php if ($booking_detail_view_data['service_type'] === 'equipment_rental'): ?>
+            <h4 class="font-semibold mt-4 mb-2 text-gray-800">Equipment Booked:</h4>
+            <?php if (!empty($booking_detail_view_data['equipment_details'])): ?>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <?php foreach ($booking_detail_view_data['equipment_details'] as $item): ?>
+                        <li><strong><?php echo htmlspecialchars($item['quantity']); ?>x</strong> <?php echo htmlspecialchars($item['equipment_name']); ?> (<?php echo htmlspecialchars($item['duration_days']); ?> days)</li>
+                        <?php if (!empty($item['specific_needs'])): ?>
+                            <p class="text-xs text-gray-600 ml-4">- Needs: <?php echo htmlspecialchars($item['specific_needs']); ?></p>
+                        <?php endif; ?>
                     <?php endforeach; ?>
-                </select>
-                <button class="mt-3 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200" id="assign-vendor-btn" data-id="<?php echo htmlspecialchars($booking_detail_view_data['id']); ?>">Assign Vendor</button>
-            </div>
-            <div>
-                 <label class="block text-sm font-medium text-gray-700 mb-2">Additional Charges</label>
-                 <button class="mt-1 w-full px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200" id="add-charge-btn" data-id="<?php echo htmlspecialchars($booking_detail_view_data['id']); ?>">
-                    <i class="fas fa-plus-circle mr-2"></i>Add Charge
-                 </button>
-            </div>
-            <div>
-                 <label class="block text-sm font-medium text-gray-700 mb-2">Rental Extension</label>
-                 <?php if($booking_detail_view_data['extension_request_id']): ?>
-                    <button class="mt-1 w-full px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 animate-pulse" id="approve-extension-btn" 
-                        data-id="<?php echo htmlspecialchars($booking_detail_view_data['id']); ?>"
-                        data-request-id="<?php echo htmlspecialchars($booking_detail_view_data['extension_request_id']); ?>"
-                        data-requested-days="<?php echo htmlspecialchars($booking_detail_view_data['extension_requested_days']); ?>"
-                        data-daily-rate="<?php echo htmlspecialchars($booking_detail_view_data['daily_rate'] ?? '0.00'); ?>">
-                        <i class="fas fa-calendar-plus mr-2"></i>Approve Extension Request
-                    </button>
-                 <?php else: ?>
-                    <p class="text-sm text-gray-500 mt-2">No pending extension request from the customer.</p>
-                 <?php endif; ?>
+                </ul>
+            <?php else: ?>
+                <p class="text-gray-600">No specific equipment details found for this booking.</p>
+            <?php endif; ?>
+        <?php elseif ($booking_detail_view_data['service_type'] === 'junk_removal'): ?>
+            <h4 class="font-semibold mt-4 mb-2 text-gray-800">Junk Removal Details:</h4>
+            <?php if (!empty($booking_detail_view_data['junk_details'])): ?>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <?php if (!empty($booking_detail_view_data['junk_details']['junkItems'])): ?>
+                        <?php foreach ($booking_detail_view_data['junk_details']['junkItems'] as $item): ?>
+                            <li><?php echo htmlspecialchars($item['itemType'] ?? 'N/A'); ?> (Qty: <?php echo htmlspecialchars($item['quantity'] ?? 'N/A'); ?>)</li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No specific junk items detailed.</li>
+                    <?php endif; ?>
+                    <?php if (!empty($booking_detail_view_data['junk_details']['recommendedDumpsterSize'])): ?>
+                        <li>Recommended Dumpster Size: <?php echo htmlspecialchars($booking_detail_view_data['junk_details']['recommendedDumpsterSize']); ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($booking_detail_view_data['junk_details']['additionalComment'])): ?>
+                        <li>Additional Comments: <?php echo htmlspecialchars($booking_detail_view_data['junk_details']['additionalComment']); ?></li>
+                    <?php endif; ?>
+                    <?php if (!empty($booking_detail_view_data['junk_details']['media_urls'])): ?>
+                        <h5 class="text-md font-semibold text-gray-700 mt-2">Uploaded Media:</h5>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                            <?php foreach ($booking_detail_view_data['junk_details']['media_urls'] as $media_url): ?>
+                                <?php $fileExtension = pathinfo($media_url, PATHINFO_EXTENSION); ?>
+                                <?php if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                                    <img src="<?php echo htmlspecialchars($media_url); ?>" class="w-full h-24 object-cover rounded-lg cursor-pointer" onclick="showImageModal('<?php echo htmlspecialchars($media_url); ?>')">
+                                <?php elseif (in_array(strtolower($fileExtension), ['mp4', 'webm', 'ogg'])): ?>
+                                    <video src="<?php echo htmlspecialchars($media_url); ?>" controls class="w-full h-24 object-cover rounded-lg"></video>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </ul>
+            <?php else: ?>
+                <p class="text-gray-600">No specific junk removal details found for this booking.</p>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <h3 class="text-xl font-semibold text-gray-700 mb-4 mt-6">Financial Summary</h3>
+        <div class="space-y-2 text-gray-700">
+            <div class="flex justify-between"><span>Initial Booking Price:</span><span>$<?php echo number_format($booking_detail_view_data['total_price'], 2); ?></span></div>
+            <?php
+            $total_additional_charges = 0;
+            foreach ($booking_detail_view_data['additional_charges'] as $charge):
+                $total_additional_charges += $charge['amount'];
+            ?>
+                <div class="flex justify-between text-sm text-gray-500 pl-4">
+                    <span><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $charge['charge_type']))); ?>:</span>
+                    <span>$<?php echo number_format($charge['amount'], 2); ?>
+                        <?php if(!empty($charge['invoice_id'])): ?>
+                            (<a href="#" onclick="loadAdminSection('invoices', {invoice_id: <?php echo $charge['invoice_id']; ?>}); return false;" class="text-blue-500 hover:underline">View Invoice</a>)
+                        <?php endif; ?>
+                    </span>
+                </div>
+                <?php if (!empty($charge['description'])): ?>
+                    <p class="text-xs text-gray-500 ml-4">- <?php echo htmlspecialchars($charge['description']); ?></p>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <div class="flex justify-between font-bold border-t pt-2 mt-2">
+                <span>Total Billed:</span>
+                <span>$<?php echo number_format($booking_detail_view_data['total_price'] + $total_additional_charges, 2); ?></span>
             </div>
         </div>
+
+        <h3 class="text-xl font-semibold text-gray-700 mb-4 mt-6">Status History</h3>
+        <ol class="relative border-l-2 border-blue-200 ml-3">
+            <?php foreach ($booking_detail_view_data['status_history'] as $history): ?>
+                <li class="mb-6 ml-6">
+                    <span class="absolute flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full -left-4 ring-4 ring-white">
+                        <i class="fas <?php echo getTimelineIconClass($history['status']); ?> text-white"></i>
+                    </span>
+                    <div class="ml-4">
+                        <h4 class="text-md font-semibold text-gray-900"><?php echo htmlspecialchars(ucwords(str_replace('_', ' ', $history['status']))); ?></h4>
+                        <time class="block mb-1 text-xs font-normal text-gray-400"><?php echo (new DateTime($history['status_time']))->format('F j, Y, g:i A'); ?></time>
+                        <?php if(!empty($history['notes'])): ?>
+                            <p class="text-sm font-normal text-gray-500"><?php echo htmlspecialchars($history['notes']); ?></p>
+                        <?php endif; ?>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+
     <?php else: ?>
         <p class="text-center text-gray-600">Booking details not found or invalid ID.</p>
     <?php endif; ?>
@@ -368,16 +598,108 @@ function getAdminStatusBadgeClass($status) {
 
 
 <script>
+    // Function to load the admin bookings section with updated parameters
+    function loadAdminBookings(params = {}) {
+        const currentParams = new URLSearchParams(window.location.search);
+        const newParams = {
+            page: currentParams.get('page') || 1,
+            per_page: currentParams.get('per_page') || <?php echo $items_per_page; ?>,
+            status: currentParams.get('status') || 'all',
+            search: currentParams.get('search') || '',
+            ...params
+        };
+        window.loadAdminSection('bookings', newParams);
+    }
+
+    // Function to apply filters and search
+    function applyFilters() {
+        const statusFilter = document.getElementById('status-filter').value;
+        const searchInput = document.getElementById('search-input').value;
+        loadAdminBookings({ page: 1, status: statusFilter, search: searchInput });
+    }
+
     function showBookingDetails(bookingId) {
-        window.loadAdminSection('bookings', { booking_id: bookingId });
+        loadAdminBookings({ booking_id: bookingId });
     }
 
     function hideBookingDetails() {
-        const currentParams = new URLSearchParams(window.location.search);
-        const statusFilter = currentParams.get('status') || 'all';
-        window.loadAdminSection('bookings', { status: statusFilter });
+        loadAdminBookings({ booking_id: '' }); // Clear booking_id to show list
     }
 
+    // --- Bulk Delete Functionality ---
+    const selectAllBookingsCheckbox = document.getElementById('select-all-bookings');
+    const bulkDeleteBookingsBtn = document.getElementById('bulk-delete-bookings-btn');
+
+    function toggleBulkDeleteButtonVisibility() {
+        const anyChecked = document.querySelectorAll('.booking-checkbox:checked').length > 0;
+        if (bulkDeleteBookingsBtn) {
+            bulkDeleteBookingsBtn.classList.toggle('hidden', !anyChecked);
+        }
+    }
+
+    if (selectAllBookingsCheckbox) {
+        selectAllBookingsCheckbox.addEventListener('change', function() {
+            document.querySelectorAll('.booking-checkbox').forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            toggleBulkDeleteButtonVisibility();
+        });
+    }
+
+    document.body.addEventListener('change', function(event) {
+        if (event.target.classList.contains('booking-checkbox')) {
+            if (selectAllBookingsCheckbox && !event.target.checked) {
+                selectAllBookingsCheckbox.checked = false;
+            }
+            toggleBulkDeleteButtonVisibility();
+        }
+    });
+
+    if (bulkDeleteBookingsBtn) {
+        bulkDeleteBookingsBtn.addEventListener('click', function() {
+            const selectedIds = Array.from(document.querySelectorAll('.booking-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) {
+                window.showToast('Please select at least one booking to delete.', 'warning');
+                return;
+            }
+
+            window.showConfirmationModal(
+                'Delete Selected Bookings',
+                `Are you sure you want to delete ${selectedIds.length} selected booking(s)? This action cannot be undone and will delete associated data.`,
+                async (confirmed) => {
+                    if (confirmed) {
+                        window.showToast('Deleting bookings...', 'info');
+                        const formData = new FormData();
+                        formData.append('action', 'delete_bulk'); // Assuming an API action for bulk delete
+                        selectedIds.forEach(id => formData.append('booking_ids[]', id));
+
+                        try {
+                            // You'll need to create this /api/admin/bookings.php endpoint if it doesn't exist
+                            // or add a 'delete_bulk' action to an existing one.
+                            const response = await fetch('/api/admin/bookings.php', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const result = await response.json();
+                            if (result.success) {
+                                window.showToast(result.message, 'success');
+                                loadAdminBookings(); // Reload list after deletion
+                            } else {
+                                window.showToast('Error: ' + result.message, 'error');
+                            }
+                        } catch (error) {
+                            showToast('An unexpected error occurred during bulk delete.', 'error');
+                            console.error('Bulk delete bookings API Error:', error);
+                        }
+                    }
+                },
+                'Delete Selected',
+                'bg-red-600'
+            );
+        });
+    }
+
+    // --- Detail View Actions ---
     document.addEventListener('click', function(event) {
         const target = event.target.closest('button');
         if (!target) return;
@@ -393,12 +715,12 @@ function getAdminStatusBadgeClass($status) {
             const newStatus = statusSelect.value;
             const newStatusText = statusSelect.options[statusSelect.selectedIndex].text;
 
-            showConfirmationModal(
+            window.showConfirmationModal(
                 'Confirm Status Change',
                 `Are you sure you want to change the status to "${newStatusText}"?`,
                 async (confirmed) => {
                     if (confirmed) {
-                        showToast('Updating status...', 'info');
+                        window.showToast('Updating status...', 'info');
                         const formData = new FormData();
                         formData.append('action', 'update_status');
                         formData.append('booking_id', bookingId);
@@ -411,13 +733,13 @@ function getAdminStatusBadgeClass($status) {
                             });
                             const result = await response.json();
                             if (result.success) {
-                                showToast(result.message, 'success');
+                                window.showToast(result.message, 'success');
                                 showBookingDetails(bookingId);
                             } else {
-                                showToast('Error: ' + result.message, 'error');
+                                window.showToast('Error: ' + result.message, 'error');
                             }
                         } catch (error) {
-                            showToast('An unexpected error occurred.', 'error');
+                            window.showToast('An unexpected error occurred.', 'error');
                             console.error('Update status error:', error);
                         }
                     }
@@ -433,16 +755,16 @@ function getAdminStatusBadgeClass($status) {
             const newVendorId = vendorSelect.value;
 
             if (!newVendorId) {
-                showToast('Please select a vendor.', 'warning');
+                window.showToast('Please select a vendor.', 'warning');
                 return;
             }
 
-            showConfirmationModal(
+            window.showConfirmationModal(
                 'Confirm Vendor Assignment',
                 'Are you sure you want to assign this vendor to the booking?',
                 async (confirmed) => {
                     if(confirmed) {
-                        showToast('Assigning vendor...', 'info');
+                        window.showToast('Assigning vendor...', 'info');
                          const formData = new FormData();
                          formData.append('action', 'assign_vendor');
                          formData.append('booking_id', bookingId);
@@ -455,13 +777,13 @@ function getAdminStatusBadgeClass($status) {
                             });
                             const result = await response.json();
                             if(result.success){
-                                showToast(result.message, 'success');
+                                window.showToast(result.message, 'success');
                                 showBookingDetails(bookingId);
                             } else {
-                                showToast('Error: ' + result.message, 'error');
+                                window.showToast('Error: ' + result.message, 'error');
                             }
                          } catch(error) {
-                            showToast('An unexpected error occurred.', 'error');
+                            window.showToast('An unexpected error occurred.', 'error');
                          }
                     }
                 },
@@ -474,7 +796,7 @@ function getAdminStatusBadgeClass($status) {
             const bookingId = target.dataset.id;
             document.getElementById('add-charge-booking-id').value = bookingId;
             document.getElementById('add-charge-form').reset();
-            showModal('add-charge-modal');
+            window.showModal('add-charge-modal');
         }
 
         if (target.id === 'approve-extension-btn') {
@@ -493,7 +815,7 @@ function getAdminStatusBadgeClass($status) {
             const event = new Event('input', { bubbles: true, cancelable: true });
             dailyRateInput.dispatchEvent(event);
 
-            showModal('approve-extension-modal');
+            window.showModal('approve-extension-modal');
         }
     });
 
@@ -505,11 +827,11 @@ function getAdminStatusBadgeClass($status) {
             formData.append('action', 'add_charge');
 
             if (!formData.get('charge_type') || !formData.get('amount') || !formData.get('description')) {
-                showToast('All fields are required.', 'error');
+                window.showToast('All fields are required.', 'error');
                 return;
             }
 
-            showToast('Adding charge and generating invoice...', 'info');
+            window.showToast('Adding charge and generating invoice...', 'info');
 
             try {
                 const response = await fetch('/api/admin/bookings.php', {
@@ -518,14 +840,14 @@ function getAdminStatusBadgeClass($status) {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    showToast(result.message, 'success');
-                    hideModal('add-charge-modal');
+                    window.showToast(result.message, 'success');
+                    window.hideModal('add-charge-modal');
                     showBookingDetails(formData.get('booking_id'));
                 } else {
-                    showToast('Error: ' + result.message, 'error');
+                    window.showToast('Error: ' + result.message, 'error');
                 }
             } catch (error) {
-                showToast('An unexpected error occurred.', 'error');
+                window.showToast('An unexpected error occurred.', 'error');
             }
         });
     }
@@ -573,11 +895,11 @@ function getAdminStatusBadgeClass($status) {
             formData.append('pricing_option', pricingOption.value);
 
             if (!formData.get('extension_days')) {
-                showToast('Extension days are required.', 'error');
+                window.showToast('Extension days are required.', 'error');
                 return;
             }
 
-            showToast('Approving extension and generating invoice...', 'info');
+            window.showToast('Approving extension and generating invoice...', 'info');
             try {
                 const response = await fetch('/api/admin/bookings.php', {
                     method: 'POST',
@@ -585,14 +907,14 @@ function getAdminStatusBadgeClass($status) {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    showToast(result.message, 'success');
-                    hideModal('approve-extension-modal');
+                    window.showToast(result.message, 'success');
+                    window.hideModal('approve-extension-modal');
                     showBookingDetails(formData.get('booking_id'));
                 } else {
-                    showToast('Error: ' + result.message, 'error');
+                    window.showToast('Error: ' + result.message, 'error');
                 }
             } catch (error) {
-                showToast('An unexpected error occurred.', 'error');
+                window.showToast('An unexpected error occurred.', 'error');
             }
         });
     }
