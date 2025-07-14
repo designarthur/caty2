@@ -21,10 +21,27 @@ $csrf_token = $_SESSION['csrf_token'];
 
 $invoices = [];
 $invoice_detail_view_data = null;
-$requested_invoice_id = filter_input(INPUT_GET, 'invoice_id', FILTER_VALIDATE_INT);
+
+// --- Pagination & Filter Variables ---
+$items_per_page_options = [10, 25, 50, 100];
+$items_per_page = filter_input(INPUT_GET, 'per_page', FILTER_VALIDATE_INT);
+if (!in_array($items_per_page, $items_per_page_options)) {
+    $items_per_page = 25; // Default items per page
+}
+
+$current_page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+if (!$current_page || $current_page < 1) {
+    $current_page = 1;
+}
+$offset = ($current_page - 1) * $items_per_page;
+
+$filter_status = $_GET['status'] ?? 'all'; // Default filter status
+$search_query = trim($_GET['search'] ?? ''); // Search query
+$start_date_filter = $_GET['start_date'] ?? '';
+$end_date_filter = $_GET['end_date'] ?? '';
 
 
-if ($requested_invoice_id) {
+if ($requested_invoice_id = filter_input(INPUT_GET, 'invoice_id', FILTER_VALIDATE_INT)) {
     // --- Fetch data for the detail/edit view ---
     $stmt_detail = $conn->prepare("
         SELECT 
@@ -52,21 +69,84 @@ if ($requested_invoice_id) {
     }
 
 } else {
-    //--- Fetch all invoices for the list view ---
-    $stmt = $conn->prepare("
+    //--- Fetch all invoices for the list view with Filters, Search, and Pagination ---
+    $base_query = "
+        FROM invoices i
+        JOIN users u ON i.user_id = u.id
+    ";
+
+    $where_clauses = [];
+    $params = [];
+    $types = "";
+
+    // Status Filter
+    if ($filter_status !== 'all') {
+        $where_clauses[] = "i.status = ?";
+        $params[] = $filter_status;
+        $types .= "s";
+    }
+
+    // Search Query (Invoice Number or Customer Name)
+    if (!empty($search_query)) {
+        $search_term = '%' . $search_query . '%';
+        $where_clauses[] = "(i.invoice_number LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)";
+        $params[] = $search_term;
+        $params[] = $search_term;
+        $params[] = $search_term;
+        $types .= "sss";
+    }
+
+    // Date Range Filter
+    if (!empty($start_date_filter)) {
+        $where_clauses[] = "DATE(i.created_at) >= ?";
+        $params[] = $start_date_filter;
+        $types .= "s";
+    }
+    if (!empty($end_date_filter)) {
+        $where_clauses[] = "DATE(i.created_at) <= ?";
+        $params[] = $end_date_filter;
+        $types .= "s";
+    }
+
+    $where_sql = '';
+    if (!empty($where_clauses)) {
+        $where_sql = " WHERE " . implode(" AND ", $where_clauses);
+    }
+
+    // Get total count for pagination
+    $stmt_count = $conn->prepare("SELECT COUNT(*) " . $base_query . $where_sql);
+    if (!empty($params)) {
+        $stmt_count->bind_param($types, ...$params);
+    }
+    $stmt_count->execute();
+    $total_invoices_count = $stmt_count->get_result()->fetch_assoc()['COUNT(*)'];
+    $stmt_count->close();
+
+    $total_pages = ceil($total_invoices_count / $items_per_page);
+
+    // Main query for invoices list
+    $list_query = "
         SELECT 
             i.id, i.invoice_number, i.amount, i.status, i.created_at, i.due_date,
             u.first_name, u.last_name
-        FROM invoices i
-        JOIN users u ON i.user_id = u.id
-        ORDER BY i.created_at DESC
-    ");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
+    " . $base_query . $where_sql . "
+    ORDER BY i.created_at DESC
+    LIMIT ? OFFSET ?";
+
+    $params[] = $items_per_page;
+    $params[] = $offset;
+    $types .= "ii"; // Add types for LIMIT and OFFSET
+
+    $stmt_list = $conn->prepare($list_query);
+    if (!empty($params)) {
+        $stmt_list->bind_param($types, ...$params);
+    }
+    $stmt_list->execute();
+    $result_list = $stmt_list->get_result();
+    while ($row = $result_list->fetch_assoc()) {
         $invoices[] = $row;
     }
-    $stmt->close();
+    $stmt_list->close();
 }
 
 $conn->close();
@@ -97,8 +177,42 @@ function getAdminInvoiceStatusBadge($status) {
                 <i class="fas fa-trash-alt mr-2"></i>Delete Selected
             </button>
         </div>
+
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <label for="status-filter" class="text-sm font-medium text-gray-700">Status:</label>
+                <select id="status-filter" onchange="applyFilters()"
+                        class="p-2 border border-gray-300 rounded-md text-sm">
+                    <option value="all" <?php echo $filter_status === 'all' ? 'selected' : ''; ?>>All</option>
+                    <option value="pending" <?php echo $filter_status === 'pending' ? 'selected' : ''; ?>>Pending</option>
+                    <option value="paid" <?php echo $filter_status === 'paid' ? 'selected' : ''; ?>>Paid</option>
+                    <option value="partially_paid" <?php echo $filter_status === 'partially_paid' ? 'selected' : ''; ?>>Partially Paid</option>
+                    <option value="cancelled" <?php echo $filter_status === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <label for="start-date-filter" class="text-sm font-medium text-gray-700">From:</label>
+                <input type="date" id="start-date-filter" value="<?php echo htmlspecialchars($start_date_filter); ?>"
+                       class="p-2 border border-gray-300 rounded-md text-sm" onchange="applyFilters()">
+                <label for="end-date-filter" class="text-sm font-medium text-gray-700">To:</label>
+                <input type="date" id="end-date-filter" value="<?php echo htmlspecialchars($end_date_filter); ?>"
+                       class="p-2 border border-gray-300 rounded-md text-sm" onchange="applyFilters()">
+            </div>
+
+            <div class="flex-grow max-w-sm">
+                <input type="text" id="search-input" placeholder="Search invoice #, customer name..."
+                       class="p-2 border border-gray-300 rounded-md w-full text-sm"
+                       value="<?php echo htmlspecialchars($search_query); ?>"
+                       onkeydown="if(event.key === 'Enter') applyFilters()">
+            </div>
+            <button onclick="applyFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md text-sm">
+                Apply
+            </button>
+        </div>
+
         <?php if (empty($invoices)): ?>
-            <p class="text-gray-600 text-center p-4">No invoices found in the system.</p>
+            <p class="text-gray-600 text-center p-4">No invoices found for the selected filters or search query.</p>
         <?php else: ?>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -137,6 +251,63 @@ function getAdminInvoiceStatusBadge($status) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <nav class="mt-4 flex items-center justify-between">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <button onclick="loadAdminInvoices({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </button>
+                    <button onclick="loadAdminInvoices({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                           class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </button>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing <span class="font-medium"><?php echo $offset + 1; ?></span> to
+                            <span class="font-medium"><?php echo min($offset + $items_per_page, $total_invoices_count); ?></span> of
+                            <span class="font-medium"><?php echo $total_invoices_count; ?></span> results
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <button onclick="loadAdminInvoices({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <button onclick="loadAdminInvoices({page: <?php echo $i; ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                                       class="<?php echo $i == $current_page ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?> relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    <?php echo $i; ?>
+                                </button>
+                            <?php endfor; ?>
+                            <button onclick="loadAdminInvoices({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                                   class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </nav>
+            <div class="hidden sm:flex items-center gap-2 ml-4">
+                <span class="text-sm font-medium text-gray-700">Invoices per page:</span>
+                <select onchange="loadAdminInvoices({page: 1, per_page: this.value, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
+                        class="p-2 border border-gray-300 rounded-md text-sm">
+                    <?php foreach ($items_per_page_options as $option): ?>
+                        <option value="<?php echo $option; ?>" <?php echo $items_per_page == $option ? 'selected' : ''; ?>>
+                            <?php echo $option; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         <?php endif; ?>
     </div>
@@ -239,6 +410,43 @@ const listSection = document.getElementById('invoice-list-section');
 const editSection = document.getElementById('invoice-edit-section');
 
 /**
+ * Loads the admin invoices section with updated parameters (page, per_page, status, search, date range).
+ * This function is central for applying all filters and pagination.
+ * @param {object} params - Object containing new filter/pagination parameters.
+ */
+function loadAdminInvoices(params = {}) {
+    const currentParams = new URLSearchParams(window.location.search);
+    const newParams = {
+        page: currentParams.get('page') || 1,
+        per_page: currentParams.get('per_page') || <?php echo $items_per_page; ?>,
+        status: currentParams.get('status') || 'all',
+        search: currentParams.get('search') || '',
+        start_date: currentParams.get('start_date') || '',
+        end_date: currentParams.get('end_date') || '',
+        ...params // Override with any new parameters
+    };
+    window.loadAdminSection('invoices', newParams);
+}
+
+/**
+ * Applies filters and search query when triggered by user input.
+ */
+function applyFilters() {
+    const statusFilter = document.getElementById('status-filter').value;
+    const searchInput = document.getElementById('search-input').value;
+    const startDateFilter = document.getElementById('start-date-filter').value;
+    const endDateFilter = document.getElementById('end-date-filter').value;
+
+    loadAdminInvoices({
+        page: 1, // Always reset to first page when applying new filters
+        status: statusFilter,
+        search: searchInput,
+        start_date: startDateFilter,
+        end_date: endDateFilter
+    });
+}
+
+/**
  * Calculates and updates the subtotal, discount, tax, and grand total fields
  * in the invoice edit form.
  */
@@ -272,7 +480,7 @@ function calculateTotals() {
  * whether any invoice checkboxes are checked.
  */
 function toggleBulkDeleteButton() {
-    const anyChecked = document.querySelector('.invoice-checkbox:checked');
+    const anyChecked = document.querySelectorAll('.invoice-checkbox:checked').length > 0;
     document.getElementById('bulk-delete-invoices-btn').classList.toggle('hidden', !anyChecked);
 }
 
@@ -319,7 +527,7 @@ document.body.addEventListener('click', function(event) {
                         const result = await response.json();
                         if(result.success) {
                             showToast(result.message, 'success');
-                            window.loadAdminSection('invoices'); // Reload the invoices section to reflect changes.
+                            loadAdminInvoices(); // Reload the invoices section to reflect changes.
                         } else {
                             showToast(result.message, 'error');
                         }
@@ -384,7 +592,7 @@ document.body.addEventListener('click', function(event) {
                         const result = await response.json();
                         if (result.success) {
                             showToast(result.message, 'success');
-                            window.loadAdminSection('invoices', {invoice_id: invoiceId}); // Reload to show updated status
+                            loadAdminInvoices({invoice_id: invoiceId}); // Reload to show updated status
                         } else {
                             showToast(result.message, 'error');
                         }
@@ -445,7 +653,7 @@ if(editInvoiceForm) {
             if(result.success) {
                 showToast(result.message, 'success');
                 // Reload the invoice detail view to show updated data.
-                window.loadAdminSection('invoices', {invoice_id: formData.get('invoice_id')});
+                loadAdminInvoices({invoice_id: formData.get('invoice_id')});
             } else {
                 showToast(result.message, 'error');
             }
