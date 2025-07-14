@@ -465,12 +465,23 @@ $conn->close();
 
         // --- AI Chat Logic for Service Request Button (Made Global) ---
         window.showAIChat = async function(serviceType) {
+            // Get references to elements *inside* the function, ensuring they are present in the DOM.
+            const aiChatModal = document.getElementById('ai-chat-modal');
             const aiChatTitle = document.getElementById('ai-chat-title');
             const aiChatMessagesDiv = document.getElementById('ai-chat-messages');
             const aiChatInput = document.getElementById('ai-chat-input');
             const aiChatSendBtn = document.getElementById('ai-chat-send-btn');
             const aiChatFileInput = document.getElementById('ai-chat-file-input');
             const aiChatSelectedFilesDisplay = document.getElementById('ai-chat-selected-files');
+            const aiChatCameraBtn = document.getElementById('ai-chat-camera-btn');
+            const fileUploadSection = document.getElementById('ai-chat-file-upload-section');
+
+
+            if (!aiChatModal || !aiChatTitle || !aiChatMessagesDiv || !aiChatInput || !aiChatSendBtn || !aiChatCameraBtn || !fileUploadSection) {
+                console.error('AI Chat Modal elements not found in DOM.');
+                window.showToast('AI chat components not loaded. Please try refreshing the page.', 'error');
+                return;
+            }
 
 
             aiChatMessagesDiv.innerHTML = ''; // Clear previous messages
@@ -480,28 +491,28 @@ $conn->close();
             if (aiChatFileInput) aiChatFileInput.value = null; // Clear selected files
             if (aiChatSelectedFilesDisplay) aiChatSelectedFilesDisplay.textContent = ''; // Clear selected files display
 
+
             // Enable/disable file input based on service type
             if (serviceType === 'junk-removal-service') {
-                if (document.getElementById('ai-chat-file-upload-section')) {
-                    document.getElementById('ai-chat-file-upload-section').classList.remove('hidden');
-                }
+                fileUploadSection.classList.remove('hidden'); // Show for junk removal
+                aiChatCameraBtn.classList.remove('hidden');
                 if (aiChatFileInput) aiChatFileInput.setAttribute('accept', 'image/*,video/*'); // Accept images and videos
             } else {
-                if (document.getElementById('ai-chat-file-upload-section')) {
-                    document.getElementById('ai-chat-file-upload-section').classList.add('hidden');
-                }
+                fileUploadSection.classList.add('hidden'); // Hide for other services
+                aiChatCameraBtn.classList.add('hidden');
                 if (aiChatFileInput) aiChatFileInput.removeAttribute('accept');
             }
 
 
+            let initialAIMessage = "";
             if (serviceType === 'create-booking') {
-                aiChatTitle.textContent = 'AI Assistant - Create Booking';
-                addAIChatMessage("Hello! I can help you create a new equipment booking. Are you looking for a dumpster, temporary toilet, storage container, or handwash station? Is this for residential or commercial use?", 'ai');
+                aiChatTitle.textContent = 'AI Assistant - Equipment Rental';
+                initialAIMessage = "Hello! I can help you create a new equipment booking. Are you looking for a dumpster, temporary toilet, storage container, or handwash station? Is this for residential or commercial use?";
             } else if (serviceType === 'junk-removal-service') {
                 aiChatTitle.textContent = 'AI Assistant - Junk Removal';
-                addAIChatMessage("Hello! I can help you with junk removal. Please describe the items you need removed, or even better, upload some images or a short video!", 'ai');
+                initialAIMessage = "Hello! I can help you with junk removal. Please describe the items you need removed, or even better, upload some images or a short video!";
             }
-            showModal('ai-chat-modal');
+            addAIChatMessage(initialAIMessage, 'ai', aiChatMessagesDiv);
 
             // Add event listener for AI chat modal's send button
             aiChatSendBtn.onclick = () => {
@@ -564,6 +575,7 @@ $conn->close();
                     }
                 };
             }
+            showModal('ai-chat-modal');
         };
 
         function addAIChatMessage(message, sender, ) {

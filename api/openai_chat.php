@@ -4,9 +4,9 @@
 // --- Setup & Includes ---
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
-ini_set('error_log', __DIR__ . '/../../logs/php_errors.log');
-if (!file_exists(__DIR__ . '/../../logs')) {
-    mkdir(__DIR__ . '/../../logs', 0775, true);
+ini_set('error_log', __DIR__ . '/../logs/php_errors.log');
+if (!file_exists(__DIR__ . '/../logs')) {
+    mkdir(__DIR__ . '/../logs', 0775, true);
 }
 
 
@@ -65,7 +65,7 @@ function getOpenAIResponse(array $messages, array $tools, string $apiKey, string
     return $responseData;
 }
 
-// --- File Upload Handler (New Function) ---
+// --- File Upload Handler ---
 function handleFileUploads(): array {
     $uploaded_urls = [];
     $uploadDir = __DIR__ . '/../uploads/junk_removal_media/';
@@ -84,7 +84,7 @@ function handleFileUploads(): array {
                 if (move_uploaded_file($fileTmpPath, $destPath)) {
                     $uploaded_urls[] = '/uploads/junk_removal_media/' . $newFileName;
                 } else {
-                    error_log("Failed to move uploaded file: " . $fileTmpPath);
+                    error_log("Failed to move uploaded file: " . $_FILES['media_files']['error'][$key]);
                 }
             } else {
                 error_log("File upload error: " . $_FILES['media_files']['error'][$key]);
@@ -124,38 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_conv->close();
     }
 
-        $system_prompt = <<<PROMPT
-You are a helpful assistant for {$companyName} helping customers with Equipment Rentals or Junk Removal. Your process must be followed precisely.
+    // --- Dynamic loading of system prompt and tools ---
+    // Initialize with a generic fallback in case service file is missing or doesn't define them
+    $system_prompt = "You are a helpful assistant for {$companyName}. Please let me know what service you are interested in (e.g., Equipment Rental, Junk Removal).";
+    $tools = []; 
 
----
-🟢 EQUIPMENT RENTAL DETAILS:
-(Your existing equipment rental instructions are fine and can remain here)
----
-
-🟧 JUNK REMOVAL DETAILS:
-This is a strict two-step process. Do not combine the steps.
-
-**STEP 1: ITEM IDENTIFICATION & CONFIRMATION**
-- If the user uploads an image or provides a description, your FIRST task is to analyze it and list all identifiable items.
-- For EACH item identified, You MUST use this exact format:
-🟥 Item: [Item Name]
-📏 Size: [Your best estimate of the dimensions, e.g., "3x2x2 ft"]
-⚖️ Weight: [Your best estimate of the weight, e.g., "approx. 50 lbs"]
-
-- After listing ALL items, your response MUST end with this exact question: **"Is this list correct, or do you need to make any changes?"**
-- **IMPORTANT: DO NOT ask for the customer's name, email, phone, or address in this step.**
-
-**STEP 2: GATHER CUSTOMER INFO & SUBMIT**
-- **IF the user confirms the list is correct** (e.g., they say "yes", "correct", "that's it", "looks good"), you MUST immediately proceed to ask for the required customer information:
-    - Full Name
-    - Email Address
-    - Phone Number
-    - Service Location (full address)
-    - Preferred Date
-    - Preferred Time
-- **IF the user wants to make changes** (e.g., "add a fridge", "remove the chair"), you must update the list, present the complete, updated list again, and go back to the end of STEP 1 to ask for confirmation.
-- Once you have the final, confirmed item list AND all the customer information, summarize everything for a final review before using the 'submit_quote_request' tool.
-PROMPT;
+    $service_file = __DIR__ . '/services/' . $initialServiceType . '.php'; // Use initialServiceType as the filename
+    if (!empty($initialServiceType) && file_exists($service_file)) {
+        require_once $service_file; // This file is expected to define $system_prompt and $tools
+    }
+    
+    // Ensure $system_prompt and $tools are actually defined after includes
+    // If the service file was included but failed to define them, throw an error.
+    if (!isset($system_prompt) || !isset($tools)) {
+        throw new Exception("Service file for '{$initialServiceType}' did not properly define \$system_prompt or \$tools.");
+    }
 
     $messages = [['role' => 'system', 'content' => $system_prompt]];
     $stmt_fetch = $conn->prepare("SELECT role, content FROM chat_messages WHERE conversation_id = ? ORDER BY created_at ASC");
@@ -174,77 +157,6 @@ PROMPT;
         $message_content[] = ['type' => 'image_url', 'image_url' => ['url' => $full_url]];
     }
     $messages[] = ['role' => 'user', 'content' => $message_content];
-
-
-    // --- AI Tool Definition (Updated for structured junk_items and media_urls) ---
-    $tools = [
-        [
-            'type' => 'function',
-            'function' => [
-                'name' => 'submit_quote_request',
-                'description' => 'Submits the collected information to create a quote request. Requires all essential details for the service type.',
-                'parameters' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'service_type' => ['type' => 'string', 'enum' => ['equipment_rental', 'junk_removal'], 'description' => 'The type of service requested.'],
-                        'customer_type' => ['type' => 'string', 'enum' => ['Residential', 'Commercial'], 'description' => 'The type of customer.'],
-                        'customer_name' => ['type' => 'string', 'description' => 'Full name of the customer.'],
-                        'customer_email' => ['type' => 'string', 'description' => 'Email address of the customer.'],
-                        'customer_phone' => ['type' => 'string', 'description' => 'Phone number of the customer.'],
-                        'location' => ['type' => 'string', 'description' => 'Full address or detailed location for the service.'],
-                        'service_date' => ['type' => 'string', 'description' => 'The preferred date for the service in YYYY-MM-DD format.'],
-                        'service_time' => ['type' => 'string', 'description' => 'The preferred time for the service (e.g., "morning", "afternoon", "10:00 AM").'],
-                        'is_urgent' => ['type' => 'boolean', 'description' => 'True if the request is urgent, false otherwise.'],
-                        'live_load_needed' => ['type' => 'boolean', 'description' => 'True if a live load is needed for equipment rental, false otherwise.'],
-                        'driver_instructions' => ['type' => 'string', 'description' => 'Any specific instructions for the driver.'],
-                        'equipment_details' => [
-                            'type' => 'array',
-                            'description' => 'A list of all equipment items for an equipment rental request.',
-                            'items' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'equipment_name' => ['type' => 'string', 'description' => 'The name and size of the equipment, e.g., "15-yard dumpster", "temporary toilet".'],
-                                    'quantity' => ['type' => 'integer', 'description' => 'The number of units required for this specific item.'],
-                                    'duration_days' => ['type' => 'integer', 'description' => 'The total number of days for the rental period for this item.'],
-                                    'specific_needs' => ['type' => 'string', 'description' => 'Any other specific requirements or details for this equipment item.']
-                                ],
-                                'required' => ['equipment_name', 'quantity', 'duration_days']
-                            ]
-                        ],
-                        'junk_details' => [
-                            'type' => 'object',
-                            'description' => 'Details for a junk removal request, including inferred items from media analysis.',
-                             'properties' => [
-                                'junk_items' => [
-                                    'type' => 'array',
-                                    'description' => 'List of junk items, inferred from description or uploaded media.',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'itemType' => ['type' => 'string', 'description' => 'Type of junk item, e.g., "Sofa", "Refrigerator", "Construction Debris".'],
-                                            'quantity' => ['type' => 'integer', 'description' => 'Estimated quantity of the item.'],
-                                            'estDimensions' => ['type' => 'string', 'description' => 'Estimated dimensions, e.g., "8x3x3 ft", "Large".'],
-                                            'estWeight' => ['type' => 'string', 'description' => 'Estimated weight, e.g., "100kg", "Heavy".']
-                                        ],
-                                        'required' => ['itemType', 'quantity']
-                                    ]
-                                ],
-                                'recommended_dumpster_size' => ['type' => 'string', 'description' => 'Recommended dumpster size if applicable, e.g., "20-yard".'],
-                                'additional_comment' => ['type' => 'string', 'description' => 'Any additional comments or specific requests regarding the removal.'],
-                                'media_urls' => [
-                                    'type' => 'array',
-                                    'description' => 'URLs of uploaded images or video frames for junk removal, if provided by the user.',
-                                    'items' => ['type' => 'string']
-                                ]
-                            ],
-                            'required' => ['junk_items']
-                        ]
-                    ],
-                    'required' => ['service_type', 'customer_type', 'customer_name', 'customer_email', 'customer_phone', 'location', 'service_date', 'service_time']
-                ]
-            ]
-        ]
-    ];
     
     // --- Call OpenAI API ---
     $apiResponse = getOpenAIResponse($messages, $tools, $openaiApiKey, $aiModel);
@@ -259,16 +171,15 @@ PROMPT;
         if ($toolCall['name'] === 'submit_quote_request') {
            $arguments = json_decode($toolCall['arguments'], true);
 
-// Check if JSON decoding was successful before proceeding
-if (json_last_error() !== JSON_ERROR_NONE) {
-    // Log the error and the invalid data for debugging
-    error_log("Failed to decode JSON from tool_call arguments. Raw data: " . $toolCall['arguments']);
-    // Throw a new exception to be caught by your handler
-    throw new Exception("The AI returned an invalid data format. Could not process the request.");
-}
+            // Check if JSON decoding was successful before proceeding
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                // Log the error and the invalid data for debugging
+                error_log("Failed to decode JSON from tool_call arguments. Raw data: " . $toolCall['arguments']);
+                // Throw a new exception to be caught by your handler
+                throw new Exception("The AI returned an invalid data format. Could not process the request.");
+            }
 
-// ... rest of your code to process the arguments
-$conn->begin_transaction();
+            $conn->begin_transaction();
             try {
                 // Determine the initial status for the quote
                 $quote_status = 'pending'; // Default for equipment rental
@@ -292,7 +203,7 @@ $conn->begin_transaction();
                     $lastName = $name_parts[1] ?? '';
                     $temp_password = generateToken(8);
                     $hashed_password = hashPassword($temp_password);
-                    $stmt_create_user = $conn->prepare("INSERT INTO users (first_name, last_name, email, phone_number, password, role) VALUES (?, ?, ?, ?, ?, 'customer')");
+                    $stmt_create_user = $conn->prepare("INSERT INTO users (first_name, last_name, email, phone_number, password_hash, role) VALUES (?, ?, ?, ?, ?, 'customer')");
                     $stmt_create_user->bind_param("sssss", $firstName, $lastName, $arguments['customer_email'], $arguments['customer_phone'], $hashed_password);
                     $stmt_create_user->execute();
                     $userId = $conn->insert_id;
@@ -306,12 +217,12 @@ $conn->begin_transaction();
                 $delivery_date = $arguments['service_type'] === 'equipment_rental' ? ($arguments['service_date'] ?? null) : null;
                 $removal_date = $arguments['service_type'] === 'junk_removal' ? ($arguments['service_date'] ?? null) : null;
                 $delivery_time = $arguments['service_type'] === 'equipment_rental' ? ($arguments['service_time'] ?? null) : null;
-                $removal_time = $arguments['service_type'] === 'junk_removal' ? ($arguments['service_time'] ?? null) : null;
+                $removal_time = $arguments['service_type'] === 'junk_removal' ? ($arguments['service_time'] ?? null) : null; // CORRECTED LINE HERE
                 $live_load = (int)($arguments['live_load_needed'] ?? 0);
                 $is_urgent = (int)($arguments['is_urgent'] ?? 0);
-                
-                // Corrected bind_param string: 'isssssssiiss' was 12, needs to be 13 characters for 13 variables
-                $stmt_quote->bind_param("isssssssiisss", $userId, $arguments['service_type'], $quote_status, $customer_type, $arguments['location'], $delivery_date, $removal_date, $delivery_time, $removal_time, $live_load, $is_urgent, $arguments['driver_instructions'], $details_json);
+                $driver_instructions = $arguments['driver_instructions'] ?? null;
+
+                $stmt_quote->bind_param("isssssssiisss", $userId, $arguments['service_type'], $quote_status, $customer_type, $arguments['location'], $delivery_date, $removal_date, $delivery_time, $removal_time, $live_load, $is_urgent, $driver_instructions, $details_json);
                 $stmt_quote->execute();
                 $quoteId = $conn->insert_id;
                 $stmt_quote->close();
@@ -331,12 +242,9 @@ $conn->begin_transaction();
                 } elseif ($arguments['service_type'] === 'junk_removal' && !empty($arguments['junk_details'])) {
                     $stmt_junk = $conn->prepare("INSERT INTO junk_removal_details (quote_id, junk_items_json, recommended_dumpster_size, additional_comment, media_urls_json) VALUES (?, ?, ?, ?, ?)");
                     
-                    // Ensure junk_items is properly encoded as JSON
                     $junk_items_json = json_encode($arguments['junk_details']['junk_items'] ?? []);
                     $recommended_dumpster_size = $arguments['junk_details']['recommended_dumpster_size'] ?? null;
                     $additional_comment = $arguments['junk_details']['additional_comment'] ?? null;
-                    
-                    // Store media URLs from the tool call (prioritize tool's URLs, fallback to directly uploaded)
                     $media_urls_json = json_encode($arguments['junk_details']['media_urls'] ?? $uploadedMediaUrls);
 
                     $stmt_junk->bind_param("issss", $quoteId, $junk_items_json, $recommended_dumpster_size, $additional_comment, $media_urls_json);
@@ -356,7 +264,7 @@ $conn->begin_transaction();
                     $aiResponseText = "Thank you! Your quote request (#Q{$quoteId}) has been successfully submitted. Our team will review the details and send you the best price within the hour.";
                     $jsonResponse['is_info_collected'] = true;
                     $jsonResponse['ai_response'] = $aiResponseText;
-                    $jsonResponse['redirect_url'] = "/customer/dashboard.php#quotes?quote_id=" . $quoteId; // Redirect to quotes for equipment rental
+                    $jsonResponse['redirect_url'] = "/customer/dashboard.php#quotes?quote_id=" . $quoteId;
                 }
                 
                 unset($_SESSION['conversation_id']);
@@ -385,3 +293,4 @@ $conn->begin_transaction();
     
     exit;
 }
+?>
