@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Resources - Catdump: Your Hub for Equipment Rental Success</title>
+    <title>Customer Resources - Catdump: Guides & Support</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -92,7 +92,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/d8eaf0/1a73e8?text=Customer+Resources+Hero');
+            background-image: url('https://placehold.co/1920x900/d0e9e9/1a73e8?text=Customer+Resources+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -172,131 +172,6 @@
         .testimonial-source {
             color: #718096;
             font-size: 0.9rem;
-        }
-
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
         }
 
         .how-it-works-container {
@@ -436,11 +311,6 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%; /* Ensures cards in a grid have equal height */
         }
         .resource-card:hover {
             transform: translateY(-5px);
@@ -448,7 +318,7 @@
         }
         .resource-card .icon-large {
             font-size: 3.5rem;
-            color: #1a73e8; /* Blue for resource icons */
+            color: #1a73e8; /* Blue for resources */
             margin-bottom: 1.5rem;
         }
         .resource-card h3 {
@@ -466,74 +336,18 @@
 </head>
 <body class="antialiased">
 
-   <?php include '../includes/public_header.php'; ?>
+    <?php include '../includes/public_header.php'; ?>
 
-
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="catdumphome.html" class="text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="how-it-works.html" class="text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="dumpster-rentals.html">Dumpster Rentals</a>
-                        <a href="temporary-toilets.html">Temporary Toilets</a>
-                        <a href="storage-containers.html">Storage Containers</a>
-                        <a href="junk-removal.html">Junk Removal</a>
-                        <a href="relocation-swap.html">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="about-us.html">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="sustainability.html">Sustainability</a>
-                        <a href="testimonials.html">Testimonials</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-blue-custom font-bold" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center open">
-                        <a href="#">Pricing & Finance</a>
-                        <a href="#" class="font-bold text-blue-custom">Customer Resources</a>
-                        <a href="#">Blog/News</a>
-                        <a href="#">FAQs</a>
-                        <a href="#">Support Center</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-                <a href="#" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
 
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Your Hub for Success: <span class="text-blue-custom">Catdump Customer Resources</span>
+                    Customer Resources: <span class="text-blue-custom">Guides, Support & Tools</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    Empowering you with all the tools, guides, and support you need for a seamless and efficient equipment rental experience, from start to finish.
+                    Access a comprehensive suite of resources designed to help you streamline your projects, understand our services, and get the most out of Catdump.
                 </p>
                 <a href="#resource-categories" class="btn-primary inline-block animate-on-scroll delay-600">Explore Resources</a>
             </div>
@@ -541,92 +355,43 @@
 
         <section id="resource-categories" class="container-box py-20 md:py-32">
             <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Essential Resources at Your Fingertips</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Your Go-To Hub for All Things Catdump</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <a href="faqs.html" class="resource-card animate-on-scroll delay-100">
-                        <div class="icon-large">❓</div>
-                        <h3>Frequently Asked Questions</h3>
-                        <p>Find quick answers to common questions about our services, billing, processes, and more.</p>
-                    </a>
-                    <a href="how-it-works.html" class="resource-card animate-on-scroll delay-200">
-                        <div class="icon-large">⚙️</div>
-                        <h3>How It Works</h3>
-                        <p>A detailed step-by-step guide to understanding our innovative equipment rental process.</p>
-                    </a>
-                    <a href="pricing-finance.html" class="resource-card animate-on-scroll delay-300">
-                        <div class="icon-large">💲</div>
-                        <h3>Pricing & Finance</h3>
-                        <p>Understand our transparent pricing model and explore available financing and payment options.</p>
-                    </a>
-                    <a href="customer-portal-guide.html" class="resource-card animate-on-scroll delay-400">
-                        <div class="icon-large">🖥️</div>
-                        <h3>Customer Portal Guide</h3>
-                        <p>Learn how to navigate and make the most of your personalized Catdump dashboard for order management.</p>
-                    </a>
-                    <a href="support-center.html" class="resource-card animate-on-scroll delay-500">
-                        <div class="icon-large">📞</div>
-                        <h3>Support Center</h3>
-                        <p>Access direct support channels, submit a ticket, or get immediate assistance from our team.</p>
-                    </a>
-                    <a href="blog-news.html" class="resource-card animate-on-scroll delay-600">
-                        <div class="icon-large">📰</div>
-                        <h3>Blog & News</h3>
-                        <p>Stay updated with industry insights, company news, tips, and best practices for your projects.</p>
-                    </a>
-                    <a href="safety-guidelines.html" class="resource-card animate-on-scroll delay-700">
-                        <div class="icon-large">🛡️</div>
-                        <h3>Safety Guidelines</h3>
-                        <p>Important safety information and best practices for handling and using various types of rented equipment.</p>
-                    </a>
-                    <a href="permit-information.html" class="resource-card animate-on-scroll delay-800">
-                        <div class="icon-large">📄</div>
-                        <h3>Permit Information</h3>
-                        <p>General guidance on when and how to obtain necessary permits for equipment placement in your area.</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box flex flex-col lg:flex-row items-center justify-between gap-16">
-                <div class="lg:w-1/2 animate-on-scroll delay-100">
-                    <img src="https://placehold.co/600x400/1a73e8/ffffff?text=Customer+Dashboard" alt="Catdump Customer Dashboard" class="rounded-2xl shadow-xl border border-gray-200">
-                </div>
-                <div class="lg:w-1/2 text-center lg:text-left animate-on-scroll delay-200">
-                    <span class="text-blue-custom text-lg font-semibold uppercase">Your Control Center</span>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2 mb-8">Master Your Rentals with Your Personalized Dashboard</h2>
-                    <p class="text-lg text-gray-700 mb-6">
-                        Your Catdump Customer Portal is more than just an account page; it's your comprehensive control center. Seamlessly manage all your active and past rentals, view detailed invoices, track delivery statuses in real-time, and communicate directly with suppliers—all from one intuitive interface. Reorder past services with a single click and stay on top of your project logistics effortlessly.
-                    </p>
-                    <a href="#" class="btn-primary inline-block">Access Your Customer Portal!</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Helpful Guides & Downloadable Resources</h2>
-                <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Explore our collection of practical guides designed to help you get the most out of your equipment and manage your projects efficiently.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="resource-card animate-on-scroll delay-100">
+                        <div class="icon-large">📚</div>
+                        <h3>Guides & How-Tos</h3>
+                        <p>Detailed articles and step-by-step guides on choosing equipment, optimizing your rental period, managing waste, and more.</p>
+                        <a href="/Resources/Blog.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Read Guides &rarr;</a>
+                    </div>
                     <div class="resource-card animate-on-scroll delay-200">
-                        <div class="icon-large">⬇️</div>
-                        <h3>Dumpster Loading Tips PDF</h3>
-                        <p>Download our comprehensive guide for safe and efficient loading of your dumpster rentals.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Download Guide &rarr;</a>
+                        <div class="icon-large">❓</div>
+                        <h3>FAQs & Help Center</h3>
+                        <p>Find quick answers to common questions about pricing, delivery, payments, specific equipment, and troubleshooting tips.</p>
+                        <a href="/Resources/FAQs.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Visit Help Center &rarr;</a>
                     </div>
                     <div class="resource-card animate-on-scroll delay-300">
-                        <div class="icon-large">⬇️</div>
-                        <h3>Portable Toilet Care Best Practices</h3>
-                        <p>Learn how to maintain optimal hygiene and extend the life of your temporary toilet rentals.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Download Guide &rarr;</a>
+                        <div class="icon-large">📞</div>
+                        <h3>Direct Support</h3>
+                        <p>Connect with our friendly and knowledgeable support team via chat, email, or phone for personalized assistance with your rentals.</p>
+                        <a href="/Resources/Contact.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Contact Support &rarr;</a>
                     </div>
                     <div class="resource-card animate-on-scroll delay-400">
-                        <div class="icon-large">⬇️</div>
-                        <h3>Storage Container Security Checklist</h3>
-                        <p>A checklist to ensure maximum security for your on-site storage containers and their contents.</p>
-                        <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Download Checklist &rarr;</a>
+                        <div class="icon-large">📊</div>
+                        <h3>Pricing & Financing Details</h3>
+                        <p>Understand our transparent pricing model, explore flexible payment options, and learn about financing solutions for larger projects.</p>
+                        <a href="/Resources/Pricing-Finance.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Pricing & Finance &rarr;</a>
+                    </div>
+                    <div class="resource-card animate-on-scroll delay-500">
+                        <div class="icon-large">✍️</div>
+                        <h3>Blog & News</h3>
+                        <p>Stay updated with the latest industry trends, company news, expert tips, and insights on equipment rental and waste management.</p>
+                        <a href="/Resources/Blog.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Explore Blog &rarr;</a>
+                    </div>
+                    <div class="resource-card animate-on-scroll delay-600">
+                        <div class="icon-large">📄</div>
+                        <h3>Terms & Policies</h3>
+                        <p>Access our comprehensive terms and conditions, privacy policy, and other legal documents for full transparency and understanding.</p>
+                        <a href="/Terms and Conditions.html" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Read Policies &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -634,78 +399,66 @@
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Still Have Questions? We're Here to Help!</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Frequently Asked Questions</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="accordion-item animate-on-scroll delay-100">
+                        <div class="accordion-header" data-accordion-toggle="faq-1">
+                            How do I get an instant quote for equipment rental?
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div id="faq-1" class="accordion-content">
+                            <p>You can get an instant quote by simply chatting with our AI assistant on the homepage. Tell it what you need, and it will gather details and provide competitive offers from local suppliers, often within minutes.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item animate-on-scroll delay-200">
+                        <div class="accordion-header" data-accordion-toggle="faq-2">
+                            Can I manage all my rentals from one place?
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div id="faq-2" class="accordion-content">
+                            <p>Yes! Our customer dashboard provides a centralized hub where you can track active rentals, view past orders, manage invoices, schedule extensions or pickups, and communicate directly with suppliers.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item animate-on-scroll delay-300">
+                        <div class="accordion-header" data-accordion-toggle="faq-3">
+                            What kind of support is available if I have issues?
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div id="faq-3" class="accordion-content">
+                            <p>We offer comprehensive support including an extensive FAQ section, detailed guides, and a dedicated support team accessible via chat, email, or phone. Our goal is to ensure your project runs smoothly.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item animate-on-scroll delay-400">
+                        <div class="accordion-header" data-accordion-toggle="faq-4">
+                            How does Catdump ensure equipment reliability?
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div id="faq-4" class="accordion-content">
+                            <p>We partner exclusively with pre-vetted, reputable local suppliers who are known for their well-maintained equipment and reliable service. Customer feedback is continuously monitored to ensure high standards are upheld.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-16 animate-on-scroll delay-600">
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All FAQs</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-box py-20 md:py-32">
+            <div class="section-box-alt text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Need More Assistance?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Our dedicated support team is ready to assist you with any inquiries not covered in our resources.
+                    Our team is here to help you navigate every aspect of your equipment rental needs. Don't hesitate to reach out!
                 </p>
-                <a href="#" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Contact Our Support Team</a>
+                <a href="/Resources/Contact.php" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Contact Our Support Team</a>
             </div>
         </section>
     </main>
 
     <?php include '../includes/public_footer.php'; ?>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-
-            // Check if elements exist before adding event listeners
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
-                });
-            }
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
-                });
-            }
-
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
-                    });
-                });
-            }
-
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
-
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
-                    }
-                });
-            });
-
-
             const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -736,32 +489,65 @@
                 });
             }
             
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
+            // Accordion functionality for FAQs and Quick Solutions
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);
                     const isActive = header.classList.contains('active');
 
-                    // Close all open accordions first
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                    // Close all open accordions first (within the same section to prevent unintended closing)
+                    // This logic assumes you only want one accordion open at a time within its immediate parent group
+                    const parentSection = header.closest('.faq-category-section') || header.closest('.section-box') || header.closest('.section-box-alt');
+                    parentSection.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+                        if (activeHeader !== header) { // Don't close the currently clicked one
+                            activeHeader.classList.remove('active');
+                            document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                        }
                     });
 
-                    // If the clicked accordion was not active, open it
+                    // Toggle the clicked accordion
                     if (!isActive) {
                         header.classList.add('active');
                         content.classList.add('open');
                     }
                 });
+            });
+
+            // Counter animation for stats section (if applicable)
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const endValue = parseFloat(target.dataset.target); // Use parseFloat for percentages
+                        const duration = 2000;
+                        let startTimestamp = null;
+
+                        const step = (timestamp) => {
+                            if (!startTimestamp) startTimestamp = timestamp;
+                            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                            let currentValue;
+                            let textSuffix = '';
+
+                            if (target.dataset.target.includes('%')) {
+                                currentValue = Math.floor(progress * endValue);
+                                textSuffix = '%';
+                            } else {
+                                currentValue = Math.floor(progress * endValue);
+                            }
+                            target.textContent = currentValue.toLocaleString() + textSuffix;
+
+                            if (progress < 1) {
+                                window.requestAnimationFrame(step);
+                            }
+                        };
+                        window.requestAnimationFrame(step);
+                        observer.unobserve(target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('[data-target]').forEach(counter => {
+                counterObserver.observe(counter);
             });
         });
     </script>

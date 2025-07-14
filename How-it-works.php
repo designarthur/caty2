@@ -174,131 +174,6 @@
             font-size: 0.9rem;
         }
 
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
-        }
-
         .how-it-works-container {
             display: flex;
             flex-direction: column;
@@ -470,7 +345,7 @@
                         <div class="how-it-works-content">
                             <p class="how-it-works-step-number">Step 2</p>
                             <h3 class="how-it-works-step-title">Instantly Compare Top Local Offers</h3>
-                            <p class="how-it-works-step-description">Once your requirements are clear, our proprietary AI engine gets to work. It instantly analyzes real-time availability and pricing from our extensive, vetted network of local suppliers in your area. Within moments, the system presents you with the best-matched, most competitive quotes directly within your personalized Catdump dashboard. You'll see transparent pricing, supplier details, and service terms, allowing you to easily compare options and choose the perfect fit for your budget and needs. No more waiting for callbacks or sifting through multiple quotes.</p>
+                            <p class="how-it-works-step-description">Once your requirements are clear, our proprietary AI engine gets to work. It instantly analyzes real-time availability and pricing from our extensive, vetted network of local suppliers. Within moments, the system presents you with the best-matched, most competitive quotes directly within your personalized Catdump dashboard. You'll see transparent pricing, supplier details, and service terms, allowing you to easily compare options and choose the perfect fit for your budget and needs. No more waiting for callbacks or sifting through multiple quotes.</p>
                             <a href="/customer/dashboard.php" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Live Quotes &rarr;</a>
                         </div>
                     </div>
@@ -622,118 +497,139 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+            const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
+            const mobileServicesPanel = document.getElementById('mobile-services-panel');
+            const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
+            const mobileCompanyPanel = document.getElementById('mobile-company-panel');
+            const servicesDropdownButton = document.getElementById('services-dropdown-button');
+            const servicesFlyoutMenu = document.getElementById('services-flyout-menu');
+            const companyDropdownButton = document.getElementById('company-dropdown-button');
+            const companyFlyoutMenu = document.getElementById('company-flyout-menu');
+            const mainHeader = document.getElementById('main-header');
 
-            // Check if elements exist before adding event listeners
+            // Timeout variables for hover delays
+            let servicesTimeout;
+            let companyTimeout;
+            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
+
+            // Function to show a desktop flyout menu
+            function showDesktopFlyout(button, menu) {
+                clearTimeout(servicesTimeout);
+                clearTimeout(companyTimeout); // Clear any pending hide for the other menu
+                
+                // Hide the other menu if it's open
+                if (menu === servicesFlyoutMenu) {
+                    companyFlyoutMenu.classList.remove('visible');
+                    companyDropdownButton.setAttribute('aria-expanded', 'false');
+                    companyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                } else {
+                    servicesFlyoutMenu.classList.remove('visible');
+                    servicesDropdownButton.setAttribute('aria-expanded', 'false');
+                    servicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                }
+
+                menu.classList.add('visible');
+                button.setAttribute('aria-expanded', 'true');
+                button.querySelector('svg').classList.add('rotate-180');
+            }
+
+            // Function to hide a desktop flyout menu with a delay
+            function hideDesktopFlyout(button, menu, timeoutVar) {
+                timeoutVar = setTimeout(() => {
+                    menu.classList.remove('visible');
+                    button.setAttribute('aria-expanded', 'false');
+                    button.querySelector('svg').classList.remove('rotate-180');
+                }, hoverDelay);
+                return timeoutVar;
+            }
+
+            // --- Mobile Menu Drawer Logic ---
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
+                    mobileMenuDrawer.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
                 });
             }
 
             if (closeMobileMenuButton) {
                 closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
+                    mobileMenuDrawer.classList.add('hidden');
+                    document.body.style.overflow = ''; // Restore body scrolling
                 });
             }
 
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
+            // Close mobile menu when a link is clicked inside it
+            if (mobileMenuDrawer) {
+                mobileMenuDrawer.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
+                        mobileMenuDrawer.classList.add('hidden');
+                        document.body.style.overflow = '';
                     });
                 });
             }
 
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
+            // --- Mobile Services Dropdown (Accordion style) ---
+            if (mobileServicesDropdownButton) {
+                mobileServicesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileServicesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
+                    // Close other mobile dropdowns if open
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
-                });
-            });
-
-
-            const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Apply delay if specified, otherwise add immediately
-                        const delay = parseFloat(getComputedStyle(entry.target).transitionDelay || 0);
-                        if (delay > 0) {
-                            setTimeout(() => {
-                                entry.target.classList.add('is-visible');
-                            }, delay * 1000); // Convert seconds to milliseconds
-                        } else {
-                            entry.target.classList.add('is-visible');
-                        }
-                        observer.unobserve(entry.target); // Stop observing once visible
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-            animateOnScrollElements.forEach(element => {
-                observer.observe(element);
-            });
-
-            const heroSection = document.getElementById('hero-section');
-            if (heroSection) {
-                window.addEventListener('scroll', () => {
-                    const scrollPosition = window.pageYOffset;
-                    heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px';
                 });
             }
-            
-            const mainHeader = document.getElementById('main-header');
+
+            // --- Mobile Company Dropdown (Accordion style) ---
+            if (mobileCompanyDropdownButton) {
+                mobileCompanyDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileCompanyPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
+
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
+            }
+
+            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
+            if (servicesDropdownButton && servicesFlyoutMenu) {
+                servicesDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
+                servicesFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu)); // Keep open if mouse enters menu
+
+                servicesDropdownButton.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+                servicesFlyoutMenu.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+            }
+
+            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
+            if (companyDropdownButton && companyFlyoutMenu) {
+                companyDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
+                companyFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu)); // Keep open if mouse enters menu
+
+                companyDropdownButton.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+                companyFlyoutMenu.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+            }
+
+            // --- Header Scroll Effect (Sticky header background change) ---
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
+                if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
                     mainHeader.classList.add('header-scrolled');
                 } else {
                     mainHeader.classList.remove('header-scrolled');
                 }
-            });
-
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const content = document.getElementById(header.dataset.accordionToggle);
-                    const isActive = header.classList.contains('active');
-
-                    // Close all open accordions first
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
-                    });
-
-                    // If the clicked accordion was not active, open it
-                    if (!isActive) {
-                        header.classList.add('active');
-                        content.classList.add('open');
-                    }
-                });
             });
         });
     </script>

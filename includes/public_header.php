@@ -117,10 +117,13 @@ if (!$companyName) {
 </head>
 <body class="antialiased">
 
-    <header class="bg-white py-3 shadow-md sticky top-0 z-50 transition-all duration-300 ease-in-out" id="main-header"> <nav class="container-box mx-auto flex items-center justify-between p-3" aria-label="Global"> <div class="flex lg:flex-1">
+    <header class="bg-white py-3 shadow-md sticky top-0 z-50 transition-all duration-300 ease-in-out" id="main-header">
+        <nav class="container-box mx-auto flex items-center justify-between p-3" aria-label="Global">
+            <div class="flex lg:flex-1">
                 <a href="/index.php" class="-m-1.5 p-1.5">
                     <span class="sr-only"><?php echo htmlspecialchars($companyName); ?></span>
-                    <img class="h-12 w-auto mr-4 rounded-full shadow-lg" src="/assets/images/logo.png" alt="<?php echo htmlspecialchars($companyName); ?> Logo" /> </a>
+                    <img class="h-12 w-auto mr-4 rounded-full shadow-lg" src="/assets/images/logo.png" alt="<?php echo htmlspecialchars($companyName); ?> Logo" />
+                </a>
             </div>
             <div class="flex lg:hidden">
                 <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" id="mobile-menu-button">
@@ -133,143 +136,103 @@ if (!$companyName) {
             <div class="hidden lg:flex lg:gap-x-12">
                 <a href="/How-it-works.php" class="<?php echo isActive('How-it-works.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">How It Works</a>
                 
-                <div class="relative" id="services-menu-desktop"> <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="services-dropdown-button">
+                <div class="relative" id="services-menu-desktop">
+                    <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="services-dropdown-button">
                         Services
                         <svg class="size-5 flex-none text-gray-400 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                             <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                         </svg>
                     </button>
-
                     <div id="services-flyout-menu" class="desktop-flyout-menu absolute left-1/2 z-10 top-full pt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                         <div class="p-4">
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-dumpster size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Services/Dumpster-Rentals.php" class="block text-gray-900">
-                                        Dumpster Rentals
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Efficient waste management solutions</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-dumpster size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Services/Dumpster-Rentals.php" class="block text-gray-900">Dumpster Rentals<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Efficient waste management solutions</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-restroom size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Services/Temporary-Toilets.php" class="block text-gray-900">
-                                        Temporary Toilets
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Clean & reliable portable sanitation</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-restroom size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Services/Temporary-Toilets.php" class="block text-gray-900">Temporary Toilets<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Clean & reliable portable sanitation</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-warehouse size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Services/Storage-Containers.php" class="block text-gray-900">
-                                        Storage Containers
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Secure on-site storage solutions</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-warehouse size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Services/Storage-Containers.php" class="block text-gray-900">Storage Containers<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Secure on-site storage solutions</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-fire size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Services/Junk-Removal.php" class="block text-gray-900">
-                                        Junk Removal
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Effortless disposal of unwanted items</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-fire size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Services/Junk-Removal.php" class="block text-gray-900">Junk Removal<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Effortless disposal of unwanted items</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-truck-moving size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Services/Relocation-&-Swap.php" class="block text-gray-900">
-                                        Relocation & Swap
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Flexible solutions for changing project needs</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-truck-moving size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Services/Relocation-&-Swap.php" class="block text-gray-900">Relocation & Swap<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Flexible solutions for changing project needs</p></div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
-                            <a href="/Resources/Contact.php" class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
-                                <i class="fas fa-phone size-5 flex-none text-gray-400"></i>
-                                Contact Sales
-                            </a>
-                            <a href="/Resources/Customer-Resources.php" class="flex items-center justify-center gap-x-2.5 p-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-100">
-                                <i class="fas fa-question-circle size-5 flex-none text-gray-400"></i>
-                                Customer Resources
-                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative" id="company-menu-desktop"> <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="company-dropdown-button">
+                <div class="relative" id="company-menu-desktop">
+                    <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900" aria-expanded="false" id="company-dropdown-button">
                         Company
                         <svg class="size-5 flex-none text-gray-400 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                             <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                         </svg>
                     </button>
-
                     <div id="company-flyout-menu" class="desktop-flyout-menu absolute left-1/2 z-10 top-full pt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                         <div class="p-4">
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-info-circle size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Company/About-Us.php" class="block text-gray-900">
-                                        About Us
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Learn about our mission and values</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-info-circle size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Company/About-Us.php" class="block text-gray-900">About Us<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Learn about our mission and values</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-leaf size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Company/Sustainability.php" class="block text-gray-900">
-                                        Sustainability
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Our commitment to a greener future</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-leaf size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Company/Sustainability.php" class="block text-gray-900">Sustainability<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Our commitment to a greener future</p></div>
                             </div>
                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
-                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                    <i class="fas fa-star size-6 text-gray-600 group-hover:text-indigo-600"></i>
-                                </div>
-                                <div class="flex-auto">
-                                    <a href="/Company/Testimonials.php" class="block text-gray-900">
-                                        Testimonials
-                                        <span class="absolute inset-0"></span>
-                                    </a>
-                                    <p class="mt-1 text-sm text-gray-600">Hear from our happy customers</p>
-                                </div>
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-star size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Company/Testimonials.php" class="block text-gray-900">Testimonials<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Hear from our happy customers</p></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <a href="/Resources/Blog.php" class="<?php echo isActive('Resources/Blog.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">Blog</a>
+                <div class="relative" id="resources-menu-desktop">
+                    <button type="button" class="flex items-center gap-x-1 text-base/7 font-semibold text-gray-900 <?php echo isActive('Resources', $currentDir); ?>" aria-expanded="false" id="resources-dropdown-button">
+                        Resources
+                        <svg class="size-5 flex-none text-gray-400 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div id="resources-flyout-menu" class="desktop-flyout-menu absolute left-1/2 z-10 top-full pt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
+                        <div class="p-4">
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-dollar-sign size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Resources/Pricing-Finance.php" class="block text-gray-900">Pricing & Finance<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Transparent costs and flexible options</p></div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-book-open size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Resources/Customer-Resources.php" class="block text-gray-900">Customer Resources<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Guides and tools for your success</p></div>
+                            </div>
+                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-newspaper size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Resources/Blog.php" class="block text-gray-900">Blog/News<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Industry insights and updates</p></div>
+                            </div>
+                            <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-question-circle size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Resources/FAQs.php" class="block text-gray-900">FAQs<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Quick answers to common questions</p></div>
+                            </div>
+                             <div class="group relative flex items-center gap-x-6 rounded-lg p-4 text-base font-semibold hover:bg-gray-50">
+                                <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white"><i class="fas fa-headset size-6 text-gray-600 group-hover:text-indigo-600"></i></div>
+                                <div class="flex-auto"><a href="/Resources/Support-Center.php" class="block text-gray-900">Support Center<span class="absolute inset-0"></span></a><p class="mt-1 text-sm text-gray-600">Get help from our expert team</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="/Resources/Contact.php" class="<?php echo isActive('Resources/Contact.php', $currentPage); ?> text-base/7 font-semibold transition duration-300">Contact</a>
             </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4"> <a href="/customer/login.php" class="btn-header-secondary">Log in</a>
-                <a href="/customer/login.php" class="btn-header-primary">Sign up</a> </div>
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
+                <a href="/customer/login.php" class="btn-header-secondary">Log in</a>
+                <a href="/customer/login.php" class="btn-header-primary">Sign up</a>
+            </div>
         </nav>
         <div class="mobile-menu-drawer fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-md hidden" role="dialog" aria-modal="true" id="mobile-menu-drawer">
             <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
@@ -317,12 +280,27 @@ if (!$companyName) {
                                     <a href="/Company/Testimonials.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Testimonials</a>
                                 </div>
                             </div>
-                            <a href="/Resources/Blog.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 <?php echo isActive('Resources/Blog.php', $currentPage); ?>">Blog</a>
+                             <div class="-mx-3">
+                                <button type="button" class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50" aria-controls="mobile-resources-panel" aria-expanded="false" id="mobile-resources-dropdown-button">
+                                    Resources
+                                    <svg class="size-5 flex-none" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="mt-2 space-y-2 hidden" id="mobile-resources-panel">
+                                    <a href="/Resources/Pricing-Finance.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Pricing & Finance</a>
+                                    <a href="/Resources/Customer-Resources.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Customer Resources</a>
+                                    <a href="/Resources/Blog.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Blog/News</a>
+                                    <a href="/Resources/FAQs.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">FAQs</a>
+                                    <a href="/Resources/Support-Center.php" class="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50">Support Center</a>
+                                </div>
+                            </div>
                             <a href="/Resources/Contact.php" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 <?php echo isActive('Resources/Contact.php', $currentPage); ?>">Contact</a>
                         </div>
                         <div class="py-6">
                             <a href="/customer/login.php" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Log in</a>
-                            <a href="/customer/login.php" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Sign up</a> </div>
+                            <a href="/customer/login.php" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Sign up</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -334,68 +312,69 @@ if (!$companyName) {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
             const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+            
             const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
             const mobileServicesPanel = document.getElementById('mobile-services-panel');
             const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
             const mobileCompanyPanel = document.getElementById('mobile-company-panel');
+            const mobileResourcesDropdownButton = document.getElementById('mobile-resources-dropdown-button');
+            const mobileResourcesPanel = document.getElementById('mobile-resources-panel');
+
             const servicesDropdownButton = document.getElementById('services-dropdown-button');
             const servicesFlyoutMenu = document.getElementById('services-flyout-menu');
             const companyDropdownButton = document.getElementById('company-dropdown-button');
             const companyFlyoutMenu = document.getElementById('company-flyout-menu');
+            const resourcesDropdownButton = document.getElementById('resources-dropdown-button');
+            const resourcesFlyoutMenu = document.getElementById('resources-flyout-menu');
             const mainHeader = document.getElementById('main-header');
 
-            // Timeout variables for hover delays
-            let servicesTimeout;
-            let companyTimeout;
-            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
+            let servicesTimeout, companyTimeout, resourcesTimeout;
+            const hoverDelay = 100;
 
-            // Function to show a desktop flyout menu
             function showDesktopFlyout(button, menu) {
                 clearTimeout(servicesTimeout);
-                clearTimeout(companyTimeout); // Clear any pending hide for the other menu
+                clearTimeout(companyTimeout);
+                clearTimeout(resourcesTimeout);
                 
-                // Hide the other menu if it's open
-                if (menu === servicesFlyoutMenu) {
-                    companyFlyoutMenu.classList.remove('visible');
-                    companyDropdownButton.setAttribute('aria-expanded', 'false');
-                    companyDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                } else {
-                    servicesFlyoutMenu.classList.remove('visible');
-                    servicesDropdownButton.setAttribute('aria-expanded', 'false');
-                    servicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                }
+                // Hide all other menus
+                [servicesFlyoutMenu, companyFlyoutMenu, resourcesFlyoutMenu].forEach(m => {
+                    if (m !== menu) m.classList.remove('visible');
+                });
+                [servicesDropdownButton, companyDropdownButton, resourcesDropdownButton].forEach(b => {
+                    if (b !== button) {
+                        b.setAttribute('aria-expanded', 'false');
+                        b.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
 
                 menu.classList.add('visible');
                 button.setAttribute('aria-expanded', 'true');
                 button.querySelector('svg').classList.add('rotate-180');
             }
 
-            // Function to hide a desktop flyout menu with a delay
-            function hideDesktopFlyout(button, menu, timeoutVar) {
-                timeoutVar = setTimeout(() => {
+            function hideDesktopFlyout(button, menu) {
+                return setTimeout(() => {
                     menu.classList.remove('visible');
                     button.setAttribute('aria-expanded', 'false');
                     button.querySelector('svg').classList.remove('rotate-180');
                 }, hoverDelay);
-                return timeoutVar;
             }
 
-            // --- Mobile Menu Drawer Logic ---
+            // Mobile Menu Drawer Logic
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', () => {
                     mobileMenuDrawer.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
+                    document.body.style.overflow = 'hidden';
                 });
             }
 
             if (closeMobileMenuButton) {
                 closeMobileMenuButton.addEventListener('click', () => {
                     mobileMenuDrawer.classList.add('hidden');
-                    document.body.style.overflow = ''; // Restore body scrolling
+                    document.body.style.overflow = '';
                 });
             }
 
-            // Close mobile menu when a link is clicked inside it
             if (mobileMenuDrawer) {
                 mobileMenuDrawer.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
@@ -405,63 +384,49 @@ if (!$companyName) {
                 });
             }
 
-            // --- Mobile Services Dropdown (Accordion style) ---
-            if (mobileServicesDropdownButton) {
-                mobileServicesDropdownButton.addEventListener('click', () => {
-                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
-                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileServicesPanel.classList.toggle('hidden');
-                    // Toggle the rotate class for the SVG icon
-                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
-
-                    // Close other mobile dropdowns if open
-                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
-                        mobileCompanyPanel.classList.add('hidden');
-                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
+            // Mobile Accordion Logic
+            function setupMobileAccordion(button, panel) {
+                if(button && panel) {
+                    button.addEventListener('click', () => {
+                        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                        button.setAttribute('aria-expanded', !isExpanded);
+                        panel.classList.toggle('hidden');
+                        button.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
+                        // Close other panels
+                        [mobileServicesPanel, mobileCompanyPanel, mobileResourcesPanel].forEach(p => {
+                           if(p !== panel) {
+                               p.classList.add('hidden');
+                               const otherButton = document.getElementById(p.id.replace('panel','dropdown-button'));
+                               if(otherButton) {
+                                   otherButton.setAttribute('aria-expanded','false');
+                                   otherButton.querySelector('svg').classList.remove('rotate-180');
+                               }
+                           }
+                        });
+                    });
+                }
             }
+            setupMobileAccordion(mobileServicesDropdownButton, mobileServicesPanel);
+            setupMobileAccordion(mobileCompanyDropdownButton, mobileCompanyPanel);
+            setupMobileAccordion(mobileResourcesDropdownButton, mobileResourcesPanel);
 
-            // --- Mobile Company Dropdown (Accordion style) ---
-            if (mobileCompanyDropdownButton) {
-                mobileCompanyDropdownButton.addEventListener('click', () => {
-                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
-                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
-                    mobileCompanyPanel.classList.toggle('hidden');
-                    // Toggle the rotate class for the SVG icon
-                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
-
-                    // Close other mobile dropdowns if open
-                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
-                        mobileServicesPanel.classList.add('hidden');
-                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
-                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
-                    }
-                });
+            // Desktop Flyout Logic
+            function setupDesktopFlyout(button, menu) {
+                let timeoutVar;
+                if(button && menu) {
+                    button.addEventListener('mouseenter', () => showDesktopFlyout(button, menu));
+                    menu.addEventListener('mouseenter', () => clearTimeout(timeoutVar));
+                    button.addEventListener('mouseleave', () => { timeoutVar = hideDesktopFlyout(button, menu); });
+                    menu.addEventListener('mouseleave', () => { timeoutVar = hideDesktopFlyout(button, menu); });
+                }
             }
+            setupDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu);
+            setupDesktopFlyout(companyDropdownButton, companyFlyoutMenu);
+            setupDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu);
 
-            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
-            if (servicesDropdownButton && servicesFlyoutMenu) {
-                servicesDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
-                servicesFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu)); // Keep open if mouse enters menu
-
-                servicesDropdownButton.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
-                servicesFlyoutMenu.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
-            }
-
-            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
-            if (companyDropdownButton && companyFlyoutMenu) {
-                companyDropdownButton.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
-                companyFlyoutMenu.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu)); // Keep open if mouse enters menu
-
-                companyDropdownButton.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
-                companyFlyoutMenu.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
-            }
-
-            // --- Header Scroll Effect (Sticky header background change) ---
+            // Header Scroll Effect
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
+                if (window.pageYOffset > 50) {
                     mainHeader.classList.add('header-scrolled');
                 } else {
                     mainHeader.classList.remove('header-scrolled');

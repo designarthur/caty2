@@ -468,62 +468,6 @@
 
    <?php include '../includes/public_header.php'; ?>
 
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="catdumphome.html" class="text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="how-it-works.html" class="text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="dumpster-rentals.html">Dumpster Rentals</a>
-                        <a href="temporary-toilets.html">Temporary Toilets</a>
-                        <a href="storage-containers.html">Storage Containers</a>
-                        <a href="junk-removal.html">Junk Removal</a>
-                        <a href="relocation-swap.html">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="about-us.html">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="sustainability.html">Sustainability</a>
-                        <a href="testimonials.html">Testimonials</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-blue-custom font-bold" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center open">
-                        <a href="pricing-finance.html">Pricing & Finance</a>
-                        <a href="customer-resources.html">Customer Resources</a>
-                        <a href="blog-news.html">Blog/News</a>
-                        <a href="faqs.html">FAQs</a>
-                        <a href="#" class="font-bold text-blue-custom">Support Center</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-                <a href="#" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
@@ -542,33 +486,33 @@
             <div class="section-box-alt">
                 <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Your Options for Quick Assistance</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <a href="faqs.html" class="support-option-card animate-on-scroll delay-100">
+                    <a href="/Resources/FAQs.php" class="support-option-card animate-on-scroll delay-100">
                         <div class="icon-large">❓</div>
                         <h3>Search Our FAQs</h3>
                         <p>Browse our extensive database of frequently asked questions to find immediate answers to common inquiries.</p>
                     </a>
-                    <a href="#" class="support-option-card animate-on-scroll delay-200">
+                    <a href="/customer/dashboard.php" class="support-option-card animate-on-scroll delay-200">
                         <div class="icon-large">🖥️</div>
                         <h3>Access Customer Portal</h3>
                         <p>Manage your active rentals, view invoices, track orders, and communicate with suppliers directly through your dashboard.</p>
                     </a>
-                    <a href="#" class="support-option-card animate-on-scroll delay-300">
+                    <a href="/Resources/Contact.php" class="support-option-card animate-on-scroll delay-300">
                         <div class="icon-large">📝</div>
                         <h3>Submit a Support Ticket</h3>
                         <p>For non-urgent issues or detailed inquiries, submit a ticket and our team will get back to you promptly via email.</p>
                     </a>
-                    <a href="#" class="support-option-card animate-on-scroll delay-400">
+                    <a href="/Resources/Contact.php" class="support-option-card animate-on-scroll delay-400">
                         <div class="icon-large">💬</div>
                         <h3>Live Chat Support</h3>
                         <p>Connect with a support agent in real-time for immediate assistance during business hours. (Availability may vary)</p>
                     </a>
-                    <a href="#" class="support-option-card animate-on-scroll delay-500">
+                    <a href="tel:[Your Phone Number]" class="support-option-card animate-on-scroll delay-500">
                         <div class="icon-large">📞</div>
                         <h3>Call Us</h3>
                         <p>For urgent matters or direct assistance, speak to a member of our support team over the phone.</p>
                         <p class="text-blue-custom font-semibold mt-2">[Your Phone Number]</p>
                     </a>
-                    <a href="#" class="support-option-card animate-on-scroll delay-600">
+                    <a href="mailto:[Your Support Email]" class="support-option-card animate-on-scroll delay-600">
                         <div class="icon-large">📧</div>
                         <h3>Email Support</h3>
                         <p>Send us an email with your question or concern, and we'll reply as quickly as possible.</p>
@@ -605,7 +549,7 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="issue-1" class="accordion-content">
-                            <p>You can easily extend your rental period directly from your <a href="#" class="text-blue-custom underline">Customer Portal</a>. Navigate to your active rental, select the 'Extend Rental' option, and follow the prompts to choose new dates and confirm any updated pricing.</p>
+                            <p>You can easily extend your rental period directly from your <a href="/customer/dashboard.php" class="text-blue-custom underline">Customer Portal</a>. Navigate to your active rental, select the 'Extend Rental' option, and follow the prompts to choose new dates and confirm any updated pricing.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-200">
@@ -614,7 +558,7 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="issue-2" class="accordion-content">
-                            <p>To schedule a pickup for your full dumpster, simply log into your <a href="#" class="text-blue-custom underline">Customer Portal</a>. Find your active dumpster rental and select 'Request Pickup'. Confirm the details, and our team will coordinate with the supplier for timely removal.</p>
+                            <p>To schedule a pickup for your full dumpster, simply log into your <a href="/customer/dashboard.php" class="text-blue-custom underline">Customer Portal</a>. Find your active dumpster rental and select 'Request Pickup'. Confirm the details, and our team will coordinate with the supplier for timely removal.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-300">
@@ -623,7 +567,7 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="issue-3" class="accordion-content">
-                            <p>If you're experiencing login issues, please try resetting your password using the 'Forgot Password' link on the login page. If the problem persists, or if you don't receive a reset email, please <a href="#contact-form-section" class="text-blue-custom underline">submit a support ticket</a> or use our live chat for immediate assistance.</p>
+                            <p>If you're experiencing login issues, please try resetting your password using the 'Forgot Password' link on the login page. If the problem persists, or if you don't receive a reset email, please <a href="/Resources/Contact.php" class="text-blue-custom underline">submit a support ticket</a> or use our live chat for immediate assistance.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-400">
@@ -632,12 +576,12 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="issue-4" class="accordion-content">
-                            <p>You can get an instant, transparent quote by using our AI-powered chat right on our <a href="catdumphome.html" class="text-blue-custom underline">homepage</a>. Simply tell the AI your needs, and it will guide you through the quick quoting process.</p>
+                            <p>You can get an instant, transparent quote by using our AI-powered chat right on our <a href="/index.php" class="text-blue-custom underline">homepage</a>. Simply tell the AI your needs, and it will guide you through the quick quoting process.</p>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-500">
-                    <a href="faqs.html" class="btn-secondary inline-block">View All FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All FAQs</a>
                 </div>
             </div>
         </section>
@@ -679,128 +623,185 @@
    <?php include '../includes/public_footer.php'; ?>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // IIFE for header JS to ensure it runs immediately
+        (function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+            const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
+            const mobileServicesPanel = document.getElementById('mobile-services-panel');
+            const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
+            const mobileCompanyPanel = document.getElementById('mobile-company-panel');
+            const mobileResourcesDropdownButton = document.getElementById('mobile-resources-dropdown-button');
+            const mobileResourcesPanel = document.getElementById('mobile-resources-panel');
+            const mainHeader = document.getElementById('main-header');
 
-            // Check if elements exist before adding event listeners
+            // Timeout variables for hover delays
+            let servicesTimeout;
+            let companyTimeout;
+            let resourcesTimeout;
+            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
+
+            // Function to show a desktop flyout menu
+            function showDesktopFlyout(button, menu) {
+                clearTimeout(servicesTimeout);
+                clearTimeout(companyTimeout);
+                clearTimeout(resourcesTimeout); // Clear any pending hide for all menus
+                
+                // Hide all other menus
+                document.querySelectorAll('.desktop-flyout-menu.visible').forEach(openMenu => {
+                    openMenu.classList.remove('visible');
+                });
+                document.querySelectorAll('[aria-expanded="true"]').forEach(expandedButton => {
+                    expandedButton.setAttribute('aria-expanded', 'false');
+                    expandedButton.querySelector('svg')?.classList.remove('rotate-180');
+                });
+
+                menu.classList.add('visible');
+                button.setAttribute('aria-expanded', 'true');
+                button.querySelector('svg')?.classList.add('rotate-180');
+            }
+
+            // Function to hide a desktop flyout menu with a delay
+            function hideDesktopFlyout(button, menu, timeoutRef) {
+                // Use the passed timeoutRef to assign the timeout ID
+                timeoutRef = setTimeout(() => {
+                    menu.classList.remove('visible');
+                    button.setAttribute('aria-expanded', 'false');
+                    button.querySelector('svg')?.classList.remove('rotate-180');
+                }, hoverDelay);
+                return timeoutRef; // Return the new timeout ID
+            }
+
+
+            // --- Mobile Menu Drawer Logic ---
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
+                    mobileMenuDrawer.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
                 });
             }
 
             if (closeMobileMenuButton) {
                 closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
+                    mobileMenuDrawer.classList.add('hidden');
+                    document.body.style.overflow = ''; // Restore body scrolling
                 });
             }
 
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
+            // Close mobile menu when a link is clicked inside it
+            if (mobileMenuDrawer) {
+                mobileMenuDrawer.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
+                        mobileMenuDrawer.classList.add('hidden');
+                        document.body.style.overflow = '';
                     });
                 });
             }
 
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
+            // --- Mobile Services Dropdown (Accordion style) ---
+            if (mobileServicesDropdownButton) {
+                mobileServicesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileServicesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
+                    // Close other mobile dropdowns if open
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileResourcesDropdownButton.id) {
+                        mobileResourcesPanel.classList.add('hidden');
+                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
                 });
-            });
+            }
 
+            // --- Mobile Company Dropdown (Accordion style) ---
+            if (mobileCompanyDropdownButton) {
+                mobileCompanyDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileCompanyPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-            const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Apply delay if specified, otherwise add immediately
-                        const delay = parseFloat(getComputedStyle(entry.target).transitionDelay || 0);
-                        if (delay > 0) {
-                            setTimeout(() => {
-                                entry.target.classList.add('is-visible');
-                            }, delay * 1000); // Convert seconds to milliseconds
-                        } else {
-                            entry.target.classList.add('is-visible');
-                        }
-                        observer.unobserve(entry.target); // Stop observing once visible
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileResourcesDropdownButton.id) {
+                        mobileResourcesPanel.classList.add('hidden');
+                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
                 });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            }
 
-            animateOnScrollElements.forEach(element => {
-                observer.observe(element);
-            });
+            // --- Mobile Resources Dropdown (Accordion style) ---
+            if (mobileResourcesDropdownButton) {
+                mobileResourcesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileResourcesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileResourcesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileResourcesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileResourcesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-            const heroSection = document.getElementById('hero-section');
-            if (heroSection) {
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
+            }
+
+
+            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const servicesMenuDesktop = document.getElementById('services-menu-desktop');
+            if (servicesMenuDesktop) {
+                servicesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
+                servicesMenuDesktop.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+            }
+
+            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const companyMenuDesktop = document.getElementById('company-menu-desktop');
+            if (companyMenuDesktop) {
+                companyMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
+                companyMenuDesktop.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+            }
+
+            // --- Desktop Resources Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const resourcesMenuDesktop = document.getElementById('resources-menu-desktop');
+            if (resourcesMenuDesktop) {
+                resourcesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu));
+                resourcesMenuDesktop.addEventListener('mouseleave', () => { resourcesTimeout = hideDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu, resourcesTimeout); });
+            }
+
+
+            // --- Header Scroll Effect (Sticky header background change) ---
+            if (mainHeader) {
                 window.addEventListener('scroll', () => {
-                    const scrollPosition = window.pageYOffset;
-                    heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px';
-                });
-            }
-            
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
-            // Accordion functionality for FAQs and Quick Solutions
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const content = document.getElementById(header.dataset.accordionToggle);
-                    const isActive = header.classList.contains('active');
-
-                    // Close all open accordions first (within the same section to prevent unintended closing)
-                    // This logic assumes you only want one accordion open at a time within its immediate parent group
-                    const parentSection = header.closest('.faq-category-section') || header.closest('.section-box') || header.closest('.section-box-alt');
-                    parentSection.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        if (activeHeader !== header) { // Don't close the currently clicked one
-                            activeHeader.classList.remove('active');
-                            document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
-                        }
-                    });
-
-                    // Toggle the clicked accordion
-                    if (!isActive) {
-                        header.classList.add('active');
-                        content.classList.add('open');
+                    if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
+                        mainHeader.classList.add('header-scrolled');
+                    } else {
+                        mainHeader.classList.remove('header-scrolled');
                     }
                 });
-            });
-        });
+            }
+        })(); // Immediately invoked function expression
     </script>
 </body>
 </html>

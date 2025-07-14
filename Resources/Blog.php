@@ -544,62 +544,6 @@
     <?php include '../includes/public_header.php'; ?>
 
 
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="catdumphome.html" class="text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="how-it-works.html" class="text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="dumpster-rentals.html">Dumpster Rentals</a>
-                        <a href="temporary-toilets.html">Temporary Toilets</a>
-                        <a href="storage-containers.html">Storage Containers</a>
-                        <a href="junk-removal.html">Junk Removal</a>
-                        <a href="relocation-swap.html">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="about-us.html">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="sustainability.html">Sustainability</a>
-                        <a href="testimonials.html">Testimonials</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-blue-custom font-bold" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center open">
-                        <a href="pricing-finance.html">Pricing & Finance</a>
-                        <a href="customer-resources.html">Customer Resources</a>
-                        <a href="#" class="font-bold text-blue-custom">Blog/News</a>
-                        <a href="#">FAQs</a>
-                        <a href="#">Support Center</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-                <a href="#" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
-
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>

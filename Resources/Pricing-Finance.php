@@ -92,7 +92,7 @@
         }
 
         .hero-background {
-            background-image: url('https://placehold.co/1920x900/e0e0e0/1a73e8?text=Pricing+Finance+Hero');
+            background-image: url('https://placehold.co/1920x900/d4e4f0/1a73e8?text=Pricing+Finance+Hero');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -172,131 +172,6 @@
         .testimonial-source {
             color: #718096;
             font-size: 0.9rem;
-        }
-
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
         }
 
         .how-it-works-container {
@@ -428,13 +303,7 @@
             color: #1a73e8;
         }
 
-        .payment-method-icon {
-            font-size: 3rem;
-            color: #4a5568;
-            margin: 0.5rem;
-        }
-
-        .price-factor-card {
+        .pricing-model-card {
             background-color: #ffffff;
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -443,22 +312,54 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
         }
-        .price-factor-card:hover {
+        .pricing-model-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
-        .price-factor-card .icon-large {
+        .pricing-model-card .icon-large {
             font-size: 3.5rem;
-            color: #1a73e8;
+            color: #1a73e8; /* Blue for pricing icons */
             margin-bottom: 1.5rem;
         }
-        .price-factor-card h3 {
+        .pricing-model-card h3 {
             font-size: 2rem;
             font-weight: 700;
             color: #2d3748;
             margin-bottom: 0.75rem;
         }
-        .price-factor-card p {
+        .pricing-model-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        .finance-option-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .finance-option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        .finance-option-card .icon-large {
+            font-size: 3.5rem;
+            color: #34a853; /* Green for finance icons */
+            margin-bottom: 1.5rem;
+        }
+        .finance-option-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+        }
+        .finance-option-card p {
             font-size: 1rem;
             line-height: 1.6;
             color: #4a5568;
@@ -467,200 +368,89 @@
 </head>
 <body class="antialiased">
 
-   <?php include '../includes/public_header.php'; ?>
+    <?php include '../includes/public_header.php'; ?>
 
-
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="catdumphome.html" class="text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="how-it-works.html" class="text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="dumpster-rentals.html">Dumpster Rentals</a>
-                        <a href="temporary-toilets.html">Temporary Toilets</a>
-                        <a href="storage-containers.html">Storage Containers</a>
-                        <a href="junk-removal.html">Junk Removal</a>
-                        <a href="relocation-swap.html">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="about-us.html">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="sustainability.html">Sustainability</a>
-                        <a href="testimonials.html">Testimonials</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-blue-custom font-bold" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center open">
-                        <a href="#" class="font-bold text-blue-custom">Pricing & Finance</a>
-                        <a href="customer-resources.html">Customer Resources</a>
-                        <a href="#">Blog/News</a>
-                        <a href="#">FAQs</a>
-                        <a href="#">Support Center</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-                <a href="#" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
 
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
             <div class="hero-overlay"></div>
             <div class="container-box hero-content text-center">
                 <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight mb-8 animate-on-scroll">
-                    Transparent Pricing & Flexible Finance: <span class="text-blue-custom">Solutions for Every Budget</span>
+                    Transparent Pricing & Flexible Finance <span class="text-blue-custom">for Every Project</span>
                 </h1>
                 <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 max-w-5xl mx-auto animate-on-scroll delay-300">
-                    At Catdump, clarity meets affordability. Understand how our pricing works, explore convenient payment methods, and discover flexible financing options designed for projects of all sizes.
+                    Understand how Catdump provides competitive, upfront pricing for all equipment rentals and explore our adaptable financing solutions to power your projects.
                 </p>
-                <a href="#pricing-model" class="btn-primary inline-block animate-on-scroll delay-600">Get an Instant Quote!</a>
+                <a href="#payment-options" class="btn-primary inline-block animate-on-scroll delay-600">Explore Payment Options</a>
             </div>
         </section>
 
         <section id="pricing-model" class="container-box py-20 md:py-32">
             <div class="section-box-alt">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Understanding Catdump's Transparent Pricing</h2>
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-16">
-                    <div class="lg:w-1/2 text-center lg:text-left animate-on-scroll delay-100">
-                        <span class="text-blue-custom text-lg font-semibold uppercase">Fairness & Value</span>
-                        <h3 class="text-4xl font-extrabold text-gray-800 mt-2 mb-8">AI-Driven Competitive Pricing at Your Fingertips</h3>
-                        <p class="text-lg text-gray-700 mb-6">
-                            Our unique pricing model is built on transparency and competition. When you request a quote, our advanced AI system instantly taps into our extensive network of local, vetted suppliers. These suppliers then provide competitive bids for your specific equipment needs, ensuring you always receive the best possible market rate. This eliminates the guesswork and negotiation, providing you with confirmed, clear pricing.
-                        </p>
-                        <p class="text-lg text-gray-700 font-semibold text-green-custom">
-                            What you see is what you pay. We pride ourselves on having no hidden fees. All costs, including delivery, pickup, and rental duration, are clearly itemized in your personalized quote.
-                        </p>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Our Transparent Pricing Model</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="pricing-model-card animate-on-scroll delay-100">
+                        <div class="icon-large">💰</div>
+                        <h3>Competitive Marketplace</h3>
+                        <p>Our platform leverages a vast network of vetted local suppliers who bid competitively on your rental requests, ensuring you always get the best possible price.</p>
                     </div>
-                    <div class="lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-10 animate-on-scroll delay-200">
-                        <div class="price-factor-card">
-                            <div class="icon-large">📏</div>
-                            <h3>Equipment Type & Size</h3>
-                            <p>The type of equipment (dumpster, toilet, container) and its specific size are primary determinants of cost.</p>
-                        </div>
-                        <div class="price-factor-card">
-                            <div class="icon-large">🗓️</div>
-                            <h3>Rental Duration</h3>
-                            <p>Prices are calculated based on the length of time you need the equipment, with options for daily, weekly, or monthly rates.</p>
-                        </div>
-                        <div class="price-factor-card">
-                            <div class="icon-large">📍</div>
-                            <h3>Location & Proximity</h3>
-                            <p>Delivery and pickup costs are influenced by your location and its distance from our nearest qualified suppliers.</p>
-                        </div>
-                        <div class="price-factor-card">
-                            <div class="icon-large">⚖️</div>
-                            <h3>Waste Type/Weight (Dumpsters)</h3>
-                            <p>For dumpsters, the type of waste and estimated weight can affect pricing due to disposal regulations and fees.</p>
-                        </div>
+                    <div class="pricing-model-card animate-on-scroll delay-200">
+                        <div class="icon-large">🔍</div>
+                        <h3>Upfront & Clear Quotes</h3>
+                        <p>No hidden fees or surprises. Our quotes are comprehensive, detailing all costs, including delivery, pickup, rental duration, and any applicable taxes or environmental fees.</p>
+                    </div>
+                    <div class="pricing-model-card animate-on-scroll delay-300">
+                        <div class="icon-large">⚡</div>
+                        <h3>AI-Powered Pricing</h3>
+                        <p>Our advanced AI analyzes real-time market data, equipment availability, and your specific project needs to provide instant, accurate, and fair pricing.</p>
+                    </div>
+                    <div class="pricing-model-card animate-on-scroll delay-400">
+                        <div class="icon-large">⚖️</div>
+                        <h3>Value for Money</h3>
+                        <p>We focus on delivering not just low prices, but exceptional value. Our streamlined process and reliable partners ensure efficiency and peace of mind, saving you more than just money.</p>
+                    </div>
+                    <div class="pricing-model-card animate-on-scroll delay-500">
+                        <div class="icon-large">🔄</div>
+                        <h3>Flexible Adjustments</h3>
+                        <p>Need to extend, swap, or relocate a rental? Our transparent policies for these adjustments ensure you always know the cost upfront, adapting to your project's evolution.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="container-box py-20 md:py-32">
+        <section id="payment-options" class="container-box py-20 md:py-32">
             <div class="section-box">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Your Path to a Transparent Quote</h2>
-                <div class="how-it-works-container">
-                    <div class="how-it-works-row animate-on-scroll delay-100">
-                        <div class="how-it-works-image-box">
-                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=AI+Chat+for+Quote" alt="AI Chat for Quote">
-                        </div>
-                        <div class="how-it-works-content">
-                            <p class="how-it-works-step-number">Step 1</p>
-                            <h3 class="how-it-works-step-title">AI Chat Your Requirements</h3>
-                            <p class="how-it-works-step-description">Begin by chatting with our AI assistant. Provide details about the equipment you need, dates, and location. This quick interaction gathers all necessary information for an accurate quote.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Getting a Quote &rarr;</a>
-                        </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-20 animate-on-scroll">Flexible Payment & Financing Options</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="finance-option-card animate-on-scroll delay-100">
+                        <div class="icon-large">💳</div>
+                        <h3>Major Credit Cards</h3>
+                        <p>We accept all major credit cards, including Visa, MasterCard, American Express, and Discover, for quick and secure online payments through your dashboard.</p>
                     </div>
-
-                    <div class="how-it-works-row animate-on-scroll delay-300">
-                        <div class="how-it-works-image-box">
-                            <img src="https://placehold.co/300x200/e0e7ff/34a853?text=Compare+Best+Offers" alt="Compare Best Offers">
-                        </div>
-                        <div class="how-it-works-content">
-                            <p class="how-it-works-step-number">Step 2</p>
-                            <h3 class="how-it-works-step-title">Compare Best Local Offers</h3>
-                            <p class="how-it-works-step-description">Our system instantly presents you with competitive quotes from vetted local suppliers directly on your personalized Catdump dashboard. Review options and choose what fits your budget.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">View Your Quotes &rarr;</a>
-                        </div>
+                    <div class="finance-option-card animate-on-scroll delay-200">
+                        <div class="icon-large">🏦</div>
+                        <h3>ACH Bank Transfers</h3>
+                        <p>For larger transactions or corporate accounts, we offer secure Automated Clearing House (ACH) bank transfer options, providing a direct and efficient payment method.</p>
                     </div>
-
-                    <div class="how-it-works-row animate-on-scroll delay-500">
-                        <div class="how-it-works-image-box">
-                            <img src="https://placehold.co/300x200/e0e7ff/1a73e8?text=Book+with+Confidence" alt="Book with Confidence">
-                        </div>
-                        <div class="how-it-works-content">
-                            <p class="how-it-works-step-number">Step 3</p>
-                            <h3 class="how-it-works-step-title">Book with Confidence</h3>
-                            <p class="how-it-works-step-description">Confirm your selection, pay securely through your dashboard, and receive a confirmed booking. Your transparent invoice is always accessible, giving you total peace of mind.</p>
-                            <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Access Your Dashboard &rarr;</a>
-                        </div>
+                    <div class="finance-option-card animate-on-scroll delay-300">
+                        <div class="icon-large">📈</div>
+                        <h3>Flexible Financing Plans</h3>
+                        <p>Need financing for large-scale or long-term projects? We partner with leading financial institutions to offer tailored financing solutions that fit your budget and cash flow needs, allowing you to acquire equipment without upfront capital strain.</p>
+                        <a href="#" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Learn More About Financing &rarr;</a>
+                    </div>
+                    <div class="finance-option-card animate-on-scroll delay-400">
+                        <div class="icon-large">🔒</div>
+                        <h3>Secure Online Payments</h3>
+                        <p>All online payments are processed through encrypted, industry-standard secure gateways, ensuring your financial information is protected with bank-level security at all times.</p>
+                    </div>
+                    <div class="finance-option-card animate-on-scroll delay-500">
+                        <div class="icon-large">🧾</div>
+                        <h3>Centralized Invoicing</h3>
+                        <p>All your invoices are accessible through your personalized Catdump dashboard, making it easy to track payments, view past transactions, and manage your accounts efficiently.</p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box-alt text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-20 animate-on-scroll">Convenient & Secure Payment Solutions</h2>
-                <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Catdump makes paying for your equipment rentals simple and secure. We accept a variety of payment methods to suit your preferences.
-                </p>
-                <div class="flex flex-wrap justify-center items-center gap-10 animate-on-scroll delay-200">
-                    <span class="payment-method-icon">💳</span>
-                    <span class="payment-method-icon">VISA</span>
-                    <span class="payment-method-icon">Mastercard</span>
-                    <span class="payment-method-icon">AmEx</span>
-                    <span class="payment-method-icon">Discover</span>
-                    <span class="payment-method-icon">🏦</span>
-                    <span class="payment-method-icon">ACH Transfer</span>
-                </div>
-                <p class="text-lg text-gray-700 mt-12 animate-on-scroll delay-300">
-                    All transactions are processed using state-of-the-art, bank-level encryption to ensure your financial data is always protected.
-                </p>
-            </div>
-        </section>
-
-        <section class="container-box py-20 md:py-32">
-            <div class="section-box">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-16">
-                    <div class="lg:w-1/2 animate-on-scroll delay-100">
-                        <img src="https://placehold.co/600x400/34a853/ffffff?text=Finance+Options" alt="Financing Options" class="rounded-2xl shadow-xl border border-gray-200">
-                    </div>
-                    <div class="lg:w-1/2 text-center lg:text-left animate-on-scroll delay-200">
-                        <span class="text-green-custom text-lg font-semibold uppercase">Manage Your Budget</span>
-                        <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mt-2 mb-8">Flexible Financing for Larger Projects</h2>
-                        <p class="text-lg text-gray-700 mb-6">
-                            For extensive projects or businesses looking to manage cash flow effectively, Catdump offers flexible financing plans. Our solutions allow you to acquire the equipment you need without significant upfront capital, spreading costs over a period that suits your budget. This means you can start or continue large-scale work without financial strain.
-                        </p>
-                        <p class="text-lg text-gray-700 mb-6">
-                            Applying is quick and straightforward, with competitive rates designed to help your project succeed. Let us help you unlock the equipment you need faster.
-                        </p>
-                        <a href="#" class="btn-primary inline-block">Apply for Financing</a>
-                    </div>
+                <div class="text-center mt-20 animate-on-scroll delay-600">
+                    <a href="/Resources/Contact.php" class="btn-secondary inline-block">Questions about payments? Contact our team!</a>
                 </div>
             </div>
         </section>
@@ -671,190 +461,240 @@
                 <div class="max-w-3xl mx-auto">
                     <div class="accordion-item animate-on-scroll delay-100">
                         <div class="accordion-header" data-accordion-toggle="faq-1">
-                            How is my equipment rental quote calculated?
+                            How does Catdump ensure I get the best price?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-1" class="accordion-content">
-                            <p>Your quote is calculated based on several factors including the type and size of equipment, rental duration, delivery location, and specific project requirements (e.g., waste type for dumpsters). Our AI system processes these details and gathers competitive bids from local suppliers to present you with the best available price.</p>
+                            <p>Our platform connects you with a broad network of vetted local suppliers. When you request a quote, these suppliers compete to offer you the best pricing. Our AI further optimizes this by considering real-time market data and availability, ensuring you receive the most competitive offer available.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-200">
                         <div class="accordion-header" data-accordion-toggle="faq-2">
-                            Are there any hidden fees in Catdump's pricing?
+                            Are there any hidden fees or charges?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-2" class="accordion-content">
-                            <p>Absolutely not. Transparency is a core value at Catdump. All costs, including delivery fees, rental rates, and any potential surcharges (like overweight fees for dumpsters, if applicable), are clearly outlined in your detailed quote before you finalize your booking. We believe in honest, upfront pricing.</p>
+                            <p>Absolutely not. Transparency is a core value at Catdump. All our quotes are comprehensive and clearly itemize every cost, including rental fees, delivery, pickup, fuel surcharges, and applicable taxes or environmental fees. What you see in your quote is what you pay.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-300">
                         <div class="accordion-header" data-accordion-toggle="faq-3">
-                            What payment methods do you accept?
+                            How does the financing option work for large projects?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-3" class="accordion-content">
-                            <p>We accept all major credit cards (Visa, Mastercard, American Express, Discover) and offer convenient ACH bank transfers. All payments are processed securely through our encrypted platform to protect your financial information.</p>
+                            <p>For qualifying large-scale or long-term projects, we offer flexible financing solutions through our trusted lending partners. After receiving your quote, you can apply for financing directly through our platform. Our partners will assess your needs and offer customized payment plans to help manage your project budget effectively.</p>
                         </div>
                     </div>
                     <div class="accordion-item animate-on-scroll delay-400">
                         <div class="accordion-header" data-accordion-toggle="faq-4">
-                            How long is my quote valid?
+                            Can I get a custom quote for specialized equipment or long-term rentals?
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                         <div id="faq-4" class="accordion-content">
-                            <p>The validity period of a quote can vary depending on market conditions and supplier availability. Typically, quotes are valid for a specific duration, which will be clearly indicated on your quote details in the Catdump dashboard. We recommend booking quickly to lock in the price.</p>
-                        </div>
-                    </div>
-                    <div class="accordion-item animate-on-scroll delay-500">
-                        <div class="accordion-header" data-accordion-toggle="faq-5">
-                            Can I get financing for my rental, and what's the process?
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                        <div id="faq-5" class="accordion-content">
-                            <p>Yes, we offer flexible financing options for larger projects. The process typically involves a quick online application, where you provide some basic financial information. Our financing partners will then review your application and provide terms and rates. You can learn more and apply directly from our "Financing Solutions" section on this page.</p>
+                            <p>Yes, our AI system is designed to handle a wide range of requests, including specialized equipment and long-term rental needs. Simply provide detailed information through our AI chat, and we will generate a tailored quote. For highly complex or unique requirements, our sales team is also available to provide personalized assistance.</p>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-16 animate-on-scroll delay-600">
-                    <a href="#" class="btn-secondary inline-block">View All Pricing & Finance FAQs</a>
+                    <a href="/Resources/FAQs.php" class="btn-secondary inline-block">View All FAQs</a>
                 </div>
             </div>
         </section>
 
         <section class="container-box py-20 md:py-32">
             <div class="section-box text-center">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready to Get Your Project Budgeted?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 animate-on-scroll">Ready for Transparent Pricing & Flexible Options?</h2>
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
-                    Experience seamless, transparent pricing and flexible payment solutions with Catdump. Get your instant, no-obligation quote today!
+                    Get an instant, comprehensive quote and explore payment solutions that fit your project needs. Catdump simplifies your budgeting process.
                 </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-6 animate-on-scroll delay-200">
-                    <a href="#" class="btn-primary inline-block">Get an Instant Quote!</a>
-                    <a href="#" class="btn-secondary inline-block">Contact Sales for Large Projects</a>
-                </div>
+                <a href="/customer/dashboard.php" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 animate-on-scroll delay-200">Get Your Free Quote Today!</a>
             </div>
         </section>
     </main>
 
-   <?php include '../includes/public_footer.php'; ?>
+    <?php include '../includes/public_footer.php'; ?>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // IIFE for header JS to ensure it runs immediately
+        (function() {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+            const mobileServicesDropdownButton = document.getElementById('mobile-services-dropdown-button');
+            const mobileServicesPanel = document.getElementById('mobile-services-panel');
+            const mobileCompanyDropdownButton = document.getElementById('mobile-company-dropdown-button');
+            const mobileCompanyPanel = document.getElementById('mobile-company-panel');
+            const mobileResourcesDropdownButton = document.getElementById('mobile-resources-dropdown-button'); // New
+            const mobileResourcesPanel = document.getElementById('mobile-resources-panel'); // New
+            const mainHeader = document.getElementById('main-header');
 
-            // Check if elements exist before adding event listeners
+            // Timeout variables for hover delays
+            let servicesTimeout;
+            let companyTimeout;
+            let resourcesTimeout; // New
+            const hoverDelay = 100; // Milliseconds to wait before hiding dropdown
+
+            // Function to show a desktop flyout menu
+            function showDesktopFlyout(button, menu) {
+                clearTimeout(servicesTimeout);
+                clearTimeout(companyTimeout);
+                clearTimeout(resourcesTimeout); // Clear any pending hide for all menus
+                
+                // Hide all other menus
+                document.querySelectorAll('.desktop-flyout-menu.visible').forEach(openMenu => {
+                    openMenu.classList.remove('visible');
+                });
+                document.querySelectorAll('[aria-expanded="true"]').forEach(expandedButton => {
+                    expandedButton.setAttribute('aria-expanded', 'false');
+                    expandedButton.querySelector('svg')?.classList.remove('rotate-180');
+                });
+
+                menu.classList.add('visible');
+                button.setAttribute('aria-expanded', 'true');
+                button.querySelector('svg')?.classList.add('rotate-180');
+            }
+
+            // Function to hide a desktop flyout menu with a delay
+            function hideDesktopFlyout(button, menu, timeoutRef) {
+                // Use the passed timeoutRef to assign the timeout ID
+                timeoutRef = setTimeout(() => {
+                    menu.classList.remove('visible');
+                    button.setAttribute('aria-expanded', 'false');
+                    button.querySelector('svg')?.classList.remove('rotate-180');
+                }, hoverDelay);
+                return timeoutRef; // Return the new timeout ID
+            }
+
+
+            // --- Mobile Menu Drawer Logic ---
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
+                    mobileMenuDrawer.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling body when drawer is open
                 });
             }
 
             if (closeMobileMenuButton) {
                 closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
+                    mobileMenuDrawer.classList.add('hidden');
+                    document.body.style.overflow = ''; // Restore body scrolling
                 });
             }
 
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
+            // Close mobile menu when a link is clicked inside it
+            if (mobileMenuDrawer) {
+                mobileMenuDrawer.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
+                        mobileMenuDrawer.classList.add('hidden');
+                        document.body.style.overflow = '';
                     });
                 });
             }
 
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
+            // --- Mobile Services Dropdown (Accordion style) ---
+            if (mobileServicesDropdownButton) {
+                mobileServicesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileServicesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileServicesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileServicesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileServicesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
+                    // Close other mobile dropdowns if open
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileServicesDropdownButton.id !== mobileResourcesDropdownButton.id) {
+                        mobileResourcesPanel.classList.add('hidden');
+                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
                 });
-            });
+            }
 
+            // --- Mobile Company Dropdown (Accordion style) ---
+            if (mobileCompanyDropdownButton) {
+                mobileCompanyDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileCompanyDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileCompanyDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileCompanyPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileCompanyDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-            const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Apply delay if specified, otherwise add immediately
-                        const delay = parseFloat(getComputedStyle(entry.target).transitionDelay || 0);
-                        if (delay > 0) {
-                            setTimeout(() => {
-                                entry.target.classList.add('is-visible');
-                            }, delay * 1000); // Convert seconds to milliseconds
-                        } else {
-                            entry.target.classList.add('is-visible');
-                        }
-                        observer.unobserve(entry.target); // Stop observing once visible
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileResourcesPanel && !mobileResourcesPanel.classList.contains('hidden') && mobileCompanyDropdownButton.id !== mobileResourcesDropdownButton.id) {
+                        mobileResourcesPanel.classList.add('hidden');
+                        mobileResourcesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileResourcesDropdownButton.querySelector('svg').classList.remove('rotate-180');
                     }
                 });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            }
 
-            animateOnScrollElements.forEach(element => {
-                observer.observe(element);
-            });
+            // --- Mobile Resources Dropdown (Accordion style) ---
+            if (mobileResourcesDropdownButton) {
+                mobileResourcesDropdownButton.addEventListener('click', () => {
+                    const isExpanded = mobileResourcesDropdownButton.getAttribute('aria-expanded') === 'true';
+                    mobileResourcesDropdownButton.setAttribute('aria-expanded', !isExpanded);
+                    mobileResourcesPanel.classList.toggle('hidden');
+                    // Toggle the rotate class for the SVG icon
+                    mobileResourcesDropdownButton.querySelector('svg').classList.toggle('rotate-180', !isExpanded);
 
-            const heroSection = document.getElementById('hero-section');
-            if (heroSection) {
+                    // Close other mobile dropdowns if open
+                    if (mobileServicesPanel && !mobileServicesPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileServicesDropdownButton.id) {
+                        mobileServicesPanel.classList.add('hidden');
+                        mobileServicesDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileServicesDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                    if (mobileCompanyPanel && !mobileCompanyPanel.classList.contains('hidden') && mobileResourcesDropdownButton.id !== mobileCompanyDropdownButton.id) {
+                        mobileCompanyPanel.classList.add('hidden');
+                        mobileCompanyDropdownButton.setAttribute('aria-expanded', 'false');
+                        mobileCompanyDropdownButton.querySelector('svg').classList.remove('rotate-180');
+                    }
+                });
+            }
+
+
+            // --- Desktop Services Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const servicesMenuDesktop = document.getElementById('services-menu-desktop');
+            if (servicesMenuDesktop) {
+                servicesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu));
+                servicesMenuDesktop.addEventListener('mouseleave', () => { servicesTimeout = hideDesktopFlyout(servicesDropdownButton, servicesFlyoutMenu, servicesTimeout); });
+            }
+
+            // --- Desktop Company Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const companyMenuDesktop = document.getElementById('company-menu-desktop');
+            if (companyMenuDesktop) {
+                companyMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(companyDropdownButton, companyFlyoutMenu));
+                companyMenuDesktop.addEventListener('mouseleave', () => { companyTimeout = hideDesktopFlyout(companyDropdownButton, companyFlyoutMenu, companyTimeout); });
+            }
+
+            // --- Desktop Resources Flyout Menu (Hover to toggle with JS for smoothness) ---
+            const resourcesMenuDesktop = document.getElementById('resources-menu-desktop');
+            if (resourcesMenuDesktop) {
+                resourcesMenuDesktop.addEventListener('mouseenter', () => showDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu));
+                resourcesMenuDesktop.addEventListener('mouseleave', () => { resourcesTimeout = hideDesktopFlyout(resourcesDropdownButton, resourcesFlyoutMenu, resourcesTimeout); });
+            }
+
+
+            // --- Header Scroll Effect (Sticky header background change) ---
+            if (mainHeader) {
                 window.addEventListener('scroll', () => {
-                    const scrollPosition = window.pageYOffset;
-                    heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px';
-                });
-            }
-            
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const content = document.getElementById(header.dataset.accordionToggle);
-                    const isActive = header.classList.contains('active');
-
-                    // Close all open accordions first
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
-                    });
-
-                    // If the clicked accordion was not active, open it
-                    if (!isActive) {
-                        header.classList.add('active');
-                        content.classList.add('open');
+                    if (window.pageYOffset > 50) { // Adjust scroll threshold as needed
+                        mainHeader.classList.add('header-scrolled');
+                    } else {
+                        mainHeader.classList.remove('header-scrolled');
                     }
                 });
-            });
-        });
+            }
+        })(); // Immediately invoked function expression
     </script>
 </body>
 </html>

@@ -174,131 +174,6 @@
             font-size: 0.9rem;
         }
 
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-content {
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            transform: translateY(-50px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .mobile-nav-overlay.open .mobile-nav-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .mobile-nav-content a {
-            color: #2d3748;
-            transition: color 0.3s ease;
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .mobile-nav-content a:hover {
-            color: #1a73e8;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ffffff;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-
-        .dropdown-content a {
-            color: #2d3748;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #eef2f6;
-            color: #1a73e8;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mobile-dropdown-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .mobile-dropdown-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .mobile-dropdown-content a {
-            padding: 0.75rem 0;
-            color: #4a5568;
-            font-size: 1.5rem;
-        }
-        .mobile-dropdown-content a:hover {
-            color: #1a73e8;
-        }
-
-        .header-scrolled {
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .header-logo-text {
-            font-size: 2.5rem;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-        }
-        .header-logo-text img {
-            height: 3.5rem;
-            width: 3.5rem;
-            margin-right: 0.75rem;
-        }
-
         .how-it-works-container {
             display: flex;
             flex-direction: column;
@@ -461,64 +336,8 @@
 </head>
 <body class="antialiased">
 
-   <?php include '../includes/public_header.php'; ?>
+    <?php include '../includes/public_header.php'; ?>
 
-
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <div class="mobile-nav-content">
-            <button id="close-mobile-menu" class="absolute top-6 right-6 p-3 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-custom">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <nav class="flex flex-col space-y-8">
-                <a href="catdumphome.html" class="text-gray-700 hover:text-blue-custom">Home</a>
-                <a href="how-it-works.html" class="text-gray-700 hover:text-blue-custom">How It Works</a>
-                
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-services-dropdown">
-                        Services
-                        <svg data-dropdown-arrow="mobile-services-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-services-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="dumpster-rentals.html">Dumpster Rentals</a>
-                        <a href="temporary-toilets.html">Temporary Toilets</a>
-                        <a href="storage-containers.html">Storage Containers</a>
-                        <a href="junk-removal.html">Junk Removal</a>
-                        <a href="relocation-swap.html">Relocation & Swap</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-blue-custom font-bold" data-dropdown-toggle="mobile-company-dropdown">
-                        Company
-                        <svg data-dropdown-arrow="mobile-company-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-company-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center open">
-                        <a href="about-us.html">About Us</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Press/Media</a>
-                        <a href="#" class="font-bold text-blue-custom">Sustainability</a>
-                        <a href="#">Testimonials</a>
-                    </div>
-                </div>
-
-                <div>
-                    <a href="#" class="flex items-center justify-center text-gray-700 hover:text-blue-custom" data-dropdown-toggle="mobile-resources-dropdown">
-                        Resources
-                        <svg data-dropdown-arrow="mobile-resources-dropdown" class="w-6 h-6 ml-2 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </a>
-                    <div id="mobile-resources-dropdown" class="mobile-dropdown-content text-gray-700 flex flex-col items-center">
-                        <a href="#">Pricing & Finance</a>
-                        <a href="#">Customer Resources</a>
-                        <a href="#">Blog/News</a>
-                        <a href="#">FAQs</a>
-                        <a href="#">Support Center</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-                <a href="#" class="btn-primary py-2.5 px-5 text-base shadow-md hover:shadow-lg transition duration-300">Customer Portal</a>
-            </nav>
-        </div>
-    </div>
 
     <main>
         <section id="hero-section" class="hero-background py-32 md:py-48 relative">
@@ -669,64 +488,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const closeMobileMenuButton = document.getElementById('close-mobile-menu');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-
-            // Check if elements exist before adding event listeners
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.add('open');
-                });
-            }
-
-            if (closeMobileMenuButton) {
-                closeMobileMenuButton.addEventListener('click', () => {
-                    mobileNavOverlay.classList.remove('open');
-                });
-            }
-
-            if (mobileNavOverlay) {
-                mobileNavOverlay.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileNavOverlay.classList.remove('open');
-                    });
-                });
-            }
-
-            // Mobile dropdown toggles
-            document.querySelectorAll('[data-dropdown-toggle]').forEach(toggle => {
-                toggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = toggle.dataset.dropdownToggle;
-                    const targetContent = document.getElementById(targetId);
-                    const arrowIcon = toggle.querySelector('[data-dropdown-arrow]');
-
-                    if (targetContent) {
-                        const isOpen = targetContent.classList.contains('open');
-
-                        // Close all other open dropdowns
-                        document.querySelectorAll('.mobile-dropdown-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) { // Only close others
-                                openContent.classList.remove('open');
-                                const openArrow = document.querySelector(`[data-dropdown-arrow="${openContent.id}"]`);
-                                if (openArrow) openArrow.classList.remove('rotate-180');
-                            }
-                        });
-
-                        // Toggle current dropdown
-                        if (isOpen) {
-                            targetContent.classList.remove('open');
-                            if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                        } else {
-                            targetContent.classList.add('open');
-                            if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                        }
-                    }
-                });
-            });
-
-
             const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -757,27 +518,23 @@
                 });
             }
             
-            const mainHeader = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 50) {
-                    mainHeader.classList.add('header-scrolled');
-                } else {
-                    mainHeader.classList.remove('header-scrolled');
-                }
-            });
-
+            // Accordion functionality for FAQs and Quick Solutions
             document.querySelectorAll('.accordion-header').forEach(header => {
                 header.addEventListener('click', () => {
                     const content = document.getElementById(header.dataset.accordionToggle);
                     const isActive = header.classList.contains('active');
 
-                    // Close all open accordions first
-                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
-                        activeHeader.classList.remove('active');
-                        document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                    // Close all open accordions first (within the same section to prevent unintended closing)
+                    // This logic assumes you only want one accordion open at a time within its immediate parent group
+                    const parentSection = header.closest('.faq-category-section') || header.closest('.section-box') || header.closest('.section-box-alt');
+                    parentSection.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+                        if (activeHeader !== header) { // Don't close the currently clicked one
+                            activeHeader.classList.remove('active');
+                            document.getElementById(activeHeader.dataset.accordionToggle).classList.remove('open');
+                        }
                     });
 
-                    // If the clicked accordion was not active, open it
+                    // Toggle the clicked accordion
                     if (!isActive) {
                         header.classList.add('active');
                         content.classList.add('open');
