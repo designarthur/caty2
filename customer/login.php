@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Please fill in all fields.");
         }
 
-        $stmt = $conn->prepare("SELECT id, first_name, password_hash, is_active FROM users WHERE email = ?");
+        // Fetch first_name, last_name, password_hash, is_active, AND role
+        $stmt = $conn->prepare("SELECT id, first_name, last_name, password_hash, is_active, role FROM users WHERE email = ?");
         if (!$stmt) {
             throw new Exception("Database prepare error: " . $conn->error);
         }
@@ -34,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['is_active']) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_first_name'] = $user['first_name'];
+                $_SESSION['user_last_name'] = $user['last_name'];
                 $_SESSION['user_email'] = $email;
+                $_SESSION['user_role'] = $user['role']; // Store user role in session
                 // Log login success
                 // insert_audit_log($user['id'], 'login', 'User logged in successfully');
                 redirect('dashboard.php');
@@ -218,10 +221,12 @@ $csrf_token = generate_csrf_token();
                     <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
                 </div>
                 <div class="flex items-center justify-between text-sm mb-6">
-                    <a href="forgot_password.php" class="text-blue-custom hover:underline">Forgot Password?</a> </div>
+                    <a href="forgot_password.php" class="text-blue-custom hover:underline">Forgot Password?</a>
+                </div>
                 <button type="submit" class="btn-submit">Log In</button>
             </form>
-            <p class="mt-8 text-gray-700">Don't have an account? <a href="register.php" class="text-blue-custom font-semibold hover:underline">Sign Up</a></p> <p class="privacy-text">By logging in, you agree to our <a href="../PrivacyPolicy.html">Privacy Policy</a> and <a href="../Terms and Conditions.html">Terms and Conditions</a>.</p>
+            <p class="mt-8 text-gray-700">Don't have an account? <a href="register.php" class="text-blue-custom font-semibold hover:underline">Sign Up</a></p>
+            <p class="privacy-text">By logging in, you agree to our <a href="../PrivacyPolicy.html">Privacy Policy</a> and <a href="../Terms and Conditions.html">Terms and Conditions</a>.</p>
         </div>
     </main>
 
