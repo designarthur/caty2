@@ -52,6 +52,9 @@ try {
         case 'update_items_only': // New action to update only item details
             handleUpdateItemsOnly($conn);
             break;
+        case 'update_status': // New action to update quote status for junk removal
+            handleUpdateStatus($conn);
+            break;
         default:
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Invalid action specified.']);
@@ -422,6 +425,82 @@ function handleDeleteBulk($conn) {
     } catch (Exception $e) {
         $conn->rollback();
         error_log("Bulk delete error: " . $e->getMessage());
+        throw $e;
+    }
+}
+
+/**
+ * Handles updating the status of a single quote (e.g., from pending to quoted or cancelled).
+ * This is used specifically by the junk_removal admin page to update quote status.
+ *
+ * @param mysqli $conn The database connection object.
+ * @return array Response array with success status and message.
+ * @throws Exception If parameters are invalid, quote not found, or database error occurs.
+ */
+function handleUpdateStatus($conn) {
+    $quote_id = filter_input(INPUT_POST, 'quote_id', FILTER_VALIDATE_INT);
+    $new_status = $_POST['status'] ?? '';
+
+    if (!$quote_id || empty($new_status)) {
+        throw new Exception('Quote ID and new status are required.');
+    }
+    
+    // Validate the new status to ensure it's one of the allowed enum values
+    $allowed_statuses = ['pending', 'quoted', 'accepted', 'rejected', 'converted_to_booking', 'cancelled'];
+    if (!in_array($new_status, $allowed_statuses)) {
+        throw new Exception('Invalid status provided.');
+    }
+
+    $conn->begin_transaction();
+
+    try {
+        // 1. Fetch current quote and customer details for notification
+        $stmt_fetch = $conn->prepare("
+            SELECT q.status AS old_status, u.id as user_id, u.first_name, u.email
+            FROM quotes q 
+            JOIN users u ON q.user_id = u.id 
+            WHERE q.id = ?
+        ");
+        $stmt_fetch->bind_param("i", $quote_id);
+        $stmt_fetch->execute();
+        $quote_data = $stmt_fetch->get_result()->fetch_assoc();
+        $stmt_fetch->close();
+
+        if (!$quote_data) {
+            throw new Exception('Quote or associated user not found.');
+        }
+        if ($quote_data['old_status'] === $new_status) {
+            $conn->rollback();
+            return ['success' => true, 'message' => 'Quote status is already set. No update needed.'];
+        }
+
+        // 2. Update the quote status
+        $stmt_update = $conn->prepare("UPDATE quotes SET status = ? WHERE id = ?");
+        $stmt_update->bind_param("si", $new_status, $quote_id);
+        if (!$stmt_update->execute()) {
+            throw new Exception("Database error on status update: " . $stmt_update->error);
+        }
+        $stmt_update->close();
+
+        // 3. Notify Customer about status update
+        $email_subject = "Update on your quote #Q{$quote_id}";
+        $email_body = "<p>Dear {$quote_data['first_name']},</p><p>The status for your quote #<strong>Q{$quote_id}</strong> has been updated to: <strong>" . strtoupper(str_replace('_', ' ', $new_status)) . "</strong>.</p>";
+        sendEmail($quote_data['email'], $email_subject, $email_body);
+
+        // 4. Create system notification
+        $notification_message = "Your quote #Q{$quote_id} status has been updated to: " . ucwords(str_replace('_', ' ', $new_status)) . ".";
+        $notification_link = "quotes?quote_id={$quote_id}";
+        $stmt_notify = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, 'quote_status_update', ?, ?)"); // Using a generic 'quote_status_update' type
+        $stmt_notify->bind_param("iss", $quote_data['user_id'], $notification_message, $notification_link);
+        $stmt_notify->execute();
+        $stmt_notify->close();
+
+        $conn->commit();
+        return ['success' => true, 'message' => "Quote status updated to '{$new_status}' and customer notified."];
+
+    } catch (Exception $e) {
+        $conn->rollback();
+        error_log("Update quote status error for quote_id: $quote_id, status: $new_status - " . $e->getMessage());
         throw $e;
     }
 }

@@ -10,16 +10,12 @@ header('Content-Type: application/json');
 
 // Security check: Ensure user is a logged-in admin
 if (!is_logged_in() || !has_role('admin')) {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized access.']);
-    exit;
+    die(json_encode(['success' => false, 'message' => 'Unauthorized access.']));
 }
 
 // Ensure it's a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
-    exit;
+    die(json_encode(['success' => false, 'message' => 'Invalid request method.']));
 }
 
 $action = $_POST['action'] ?? '';

@@ -145,11 +145,12 @@ if ($requested_booking_id) {
     // Search Query
     if (!empty($search_query)) {
         $search_term = '%' . $search_query . '%';
-        $where_clauses[] = "(b.booking_number LIKE ? OR u.email LIKE ? OR u.address LIKE ?)";
+        $where_clauses[] = "(b.booking_number LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ? OR b.delivery_location LIKE ?)";
         $params[] = $search_term;
         $params[] = $search_term;
         $params[] = $search_term;
-        $types .= "sss";
+        $params[] = $search_term;
+        $types .= "ssss";
     }
 
     $where_sql = '';

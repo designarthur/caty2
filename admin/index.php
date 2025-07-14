@@ -82,7 +82,7 @@ if (!$companyName) {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             opacity: 0;
             transform: translateY(100%);
-            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            transition: all 0.3s ease-out; /* Updated transition property */
             min-width: 250px;
             max-width: 350px;
         }
@@ -105,7 +105,7 @@ if (!$companyName) {
 
         <main id="main-content-area" class="p-6 md:p-8">
             <div class="flex items-center justify-center h-full min-h-[300px] text-gray-500 text-lg">
-                <i class="fas fa-spinner fa-spin mr-3 text-blue-500 text-2xl"></i> Loading Dashboard...
+                <i class="fas fa-spinner fa-spin mr-3 text-blue-500 text-3xl"></i> Loading Dashboard...
             </div>
         </main>
     </div>
@@ -113,8 +113,8 @@ if (!$companyName) {
     <?php include __DIR__ . '/includes/footer.php'; // Corrected path ?>
 
     <script>
-        // --- Global Helper Functions for Toast and Modals ---
-        function showToast(message, type = 'info') {
+        // --- Global Helper Functions (Toast, Modals) ---
+        window.showToast = function(message, type = 'info') {
             const toastContainer = document.getElementById('toast-container') || (() => {
                 const div = document.createElement('div');
                 div.id = 'toast-container';
@@ -131,155 +131,123 @@ if (!$companyName) {
 
             toast.className = `toast ${bgColorClass}`;
             toast.textContent = message;
-
             toastContainer.appendChild(toast);
-
-            // Trigger reflow to enable transition
-            void toast.offsetWidth;
-
+            void toast.offsetWidth; // Trigger reflow
             toast.classList.add('show');
-
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.addEventListener('transitionend', () => toast.remove());
             }, 3000);
-        }
+        };
 
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
+        window.showModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) modal.classList.remove('hidden');
+        };
 
-        function hideModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        // --- Custom Confirmation Modal Logic (Admin Version) ---
+        window.hideModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) modal.classList.add('hidden');
+        };
+        
         let confirmationCallback = null;
-
-        function showConfirmationModal(title, message, callback, confirmBtnText = 'Confirm', confirmBtnColor = 'bg-red-600') {
+        window.showConfirmationModal = function(title, message, callback, confirmBtnText = 'Confirm', confirmBtnColor = 'bg-red-600') {
             document.getElementById('admin-confirmation-modal-title').textContent = title;
             document.getElementById('admin-confirmation-modal-message').textContent = message;
             const confirmBtn = document.getElementById('admin-confirmation-modal-confirm');
             confirmBtn.textContent = confirmBtnText;
-            confirmBtn.classList.remove('bg-red-600', 'bg-green-600', 'bg-blue-600', 'bg-orange-600', 'bg-indigo-600', 'bg-purple-600', 'bg-teal-600');
-            confirmBtn.classList.add(confirmBtnColor);
-
+            confirmBtn.className = `px-4 py-2 text-white rounded-lg hover:opacity-90 ${confirmBtnColor}`; // Directly set class
             confirmationCallback = callback;
             showModal('admin-confirmation-modal');
-        }
+        };
 
         document.getElementById('admin-confirmation-modal-confirm').addEventListener('click', () => {
             hideModal('admin-confirmation-modal');
-            if (confirmationCallback) {
-                confirmationCallback(true);
-            }
+            if (confirmationCallback) confirmationCallback(true);
             confirmationCallback = null;
         });
 
         document.getElementById('admin-confirmation-modal-cancel').addEventListener('click', () => {
             hideModal('admin-confirmation-modal');
-            if (confirmationCallback) {
-                confirmationCallback(false);
-            }
+            if (confirmationCallback) confirmationCallback(false);
             confirmationCallback = null;
         });
 
-
         // --- Core Navigation and Content Loading Logic ---
-        const mainContentArea = document.getElementById('main-content-area');
-        const navLinks = document.querySelectorAll('.nav-link-desktop, .nav-link-mobile'); // Select both types of links
-
-        /**
-         * Loads content into the main content area dynamically via AJAX.
-         * @param {string} sectionId The ID of the section to load (e.g., 'dashboard', 'users').
-         * @param {object} [params={}] Optional parameters to pass to the loaded page.
-         */
-        window.loadAdminSection = async function(sectionId, params = {}) { // Made global
-            let url = `/admin/pages/${sectionId}.php`;
-            let queryString = new URLSearchParams(params).toString();
-            if (queryString) {
-                url += '?' + queryString;
-            }
-
-            // Handle logout action locally before fetching page
+        window.loadAdminSection = async function(sectionId, params = {}) {
+            const mainContentArea = document.getElementById('main-content-area');
+            const navLinks = document.querySelectorAll('.nav-link-desktop, .nav-link-mobile');
+            
             if (sectionId === 'logout') {
                 showModal('admin-logout-modal');
                 return;
             }
 
+            let url = `/admin/pages/${sectionId}.php`;
+            const queryString = new URLSearchParams(params).toString();
+            if (queryString) url += '?' + queryString;
+
             try {
                 mainContentArea.innerHTML = `
                     <div class="flex items-center justify-center h-full min-h-[300px] text-gray-500 text-lg">
-                        <i class="fas fa-spinner fa-spin mr-3 text-blue-500 text-2xl"></i> Loading ${sectionId.replace('-', ' ')}...
+                        <i class="fas fa-spinner fa-spin mr-3 text-blue-500 text-3xl"></i> Loading ${sectionId.replace('-', ' ')}...
                     </div>
                 `;
-
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const htmlContent = await response.text();
-                mainContentArea.innerHTML = htmlContent;
+                if (!response.ok) throw new Error(`Failed to load content: ${response.statusText}`);
+                mainContentArea.innerHTML = await response.text();
 
-                // Update active class for navigation links
-                navLinks.forEach(link => link.classList.remove('active')); // Remove from all
-                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active'); // Add to the current one
-                }
-
-                // Update URL hash for direct linking and browser history
-                history.pushState({ section: sectionId, params: params }, '', `#${sectionId}`);
-
+                navLinks.forEach(link => link.classList.toggle('active', link.dataset.section === sectionId));
+                history.pushState({ section: sectionId, params }, '', `#${sectionId}${queryString ? '?' + queryString : ''}`);
+                
                 // Re-run scripts in the loaded content
                 mainContentArea.querySelectorAll('script').forEach(oldScript => {
                     const newScript = document.createElement('script');
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                    newScript.textContent = oldScript.textContent;
+                    // Append and immediately remove to re-execute
+                    document.body.appendChild(newScript).parentNode.removeChild(newScript);
                 });
 
             } catch (error) {
                 console.error('Error loading admin section:', error);
-                mainContentArea.innerHTML = `
-                    <div class="flex flex-col items-center justify-center h-full min-h-[300px] text-red-500 text-lg">
-                        <i class="fas fa-exclamation-triangle mr-3 text-red-600 text-2xl"></i>
-                        Failed to load section: ${sectionId.replace('-', ' ')}. Please try again.
-                        <p class="text-sm text-gray-500 mt-2">Details: ${error.message}</p>
-                    </div>
-                `;
+                mainContentArea.innerHTML = `<div class="text-red-500 p-8 text-center">Failed to load content. Please try again.</div>`;
                 showToast(`Failed to load ${sectionId.replace('-', ' ')}`, 'error');
             }
-        }
+        };
 
-        // Add event listeners to navigation links
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const section = this.dataset.section;
-                window.loadAdminSection(section);
+        // --- GLOBAL EVENT DELEGATION ---
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+            const action = target.dataset.action;
+
+            if (action) {
+                if (window.adminPageActions && typeof window.adminPageActions[action] === 'function') {
+                    window.adminPageActions[action](target);
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial page load logic
+            const hash = window.location.hash.substring(1).split('?')[0];
+            const searchParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const params = Object.fromEntries(searchParams.entries());
+            const initialSection = hash || 'dashboard';
+            window.loadAdminSection(initialSection, params);
+
+            // Sidebar/Nav link listeners
+            document.querySelectorAll('.nav-link-desktop, .nav-link-mobile').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    window.loadAdminSection(this.dataset.section);
+                });
             });
         });
 
-        // Handle browser back/forward buttons for dynamic content
         window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.section) {
-                window.loadAdminSection(event.state.section, event.state.params);
-            } else {
-                window.loadAdminSection('dashboard'); // Default to dashboard if no state
-            }
-        });
-
-        // Initial page load based on URL hash or default to dashboard
-        document.addEventListener('DOMContentLoaded', () => {
-            const initialHash = window.location.hash.substring(1);
-            if (initialHash && document.querySelector(`[data-section="${initialHash}"]`)) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const params = Object.fromEntries(urlParams.entries()); // Convert URLSearchParams to object
-                window.loadAdminSection(initialHash, params);
-            } else {
-                window.loadAdminSection('dashboard'); // Default page
-            }
+            const section = event.state?.section || 'dashboard';
+            const params = event.state?.params || {};
+            window.loadAdminSection(section, params);
         });
     </script>
 </body>

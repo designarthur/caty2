@@ -37,6 +37,9 @@ $offset = ($current_page - 1) * $items_per_page;
 
 $filter_status = $_GET['status'] ?? 'all'; // Default filter status
 $search_query = trim($_GET['search'] ?? ''); // Search query
+$start_date_filter = $_GET['start_date'] ?? ''; // New: Date range filter start date
+$end_date_filter = $_GET['end_date'] ?? '';   // New: Date range filter end date
+
 
 $requested_request_id = filter_input(INPUT_GET, 'request_id', FILTER_VALIDATE_INT);
 
@@ -101,6 +104,18 @@ if ($requested_request_id) {
         $params[] = $search_term;
         $params[] = $search_term;
         $types .= "ssss";
+    }
+
+    // Date Range Filter
+    if (!empty($start_date_filter)) {
+        $where_clauses[] = "DATE(q.created_at) >= ?";
+        $params[] = $start_date_filter;
+        $types .= "s";
+    }
+    if (!empty($end_date_filter)) {
+        $where_clauses[] = "DATE(q.created_at) <= ?";
+        $params[] = $end_date_filter;
+        $types .= "s";
     }
 
     $where_sql = '';
@@ -185,6 +200,15 @@ function getJunkRemovalStatusBadgeClass($status) {
                 </select>
             </div>
 
+            <div class="flex items-center gap-2">
+                <label for="start-date-filter" class="text-sm font-medium text-gray-700">From:</label>
+                <input type="date" id="start-date-filter" value="<?php echo htmlspecialchars($start_date_filter); ?>"
+                       class="p-2 border border-gray-300 rounded-md text-sm" onchange="applyJunkRemovalFilters()">
+                <label for="end-date-filter" class="text-sm font-medium text-gray-700">To:</label>
+                <input type="date" id="end-date-filter" value="<?php echo htmlspecialchars($end_date_filter); ?>"
+                       class="p-2 border border-gray-300 rounded-md text-sm" onchange="applyJunkRemovalFilters()">
+            </div>
+
             <div class="flex-grow max-w-sm">
                 <input type="text" id="search-input" placeholder="Search by Request ID, Customer, Location..."
                        class="p-2 border border-gray-300 rounded-md w-full text-sm"
@@ -240,11 +264,11 @@ function getJunkRemovalStatusBadgeClass($status) {
 
             <nav class="mt-4 flex items-center justify-between">
                 <div class="flex-1 flex justify-between sm:hidden">
-                    <button onclick="loadAdminJunkRemoval({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                    <button onclick="loadAdminJunkRemoval({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         Previous
                     </button>
-                    <button onclick="loadAdminJunkRemoval({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                    <button onclick="loadAdminJunkRemoval({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         Next
                     </button>
@@ -259,7 +283,7 @@ function getJunkRemovalStatusBadgeClass($status) {
                     </div>
                     <div>
                         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                            <button onclick="loadAdminJunkRemoval({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                            <button onclick="loadAdminJunkRemoval({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                 <span class="sr-only">Previous</span>
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -267,12 +291,12 @@ function getJunkRemovalStatusBadgeClass($status) {
                                 </svg>
                             </button>
                             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <button onclick="loadAdminJunkRemoval({page: <?php echo $i; ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                                <button onclick="loadAdminJunkRemoval({page: <?php echo $i; ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                                        class="<?php echo $i == $current_page ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?> relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                                     <?php echo $i; ?>
                                 </button>
                             <?php endfor; ?>
-                            <button onclick="loadAdminJunkRemoval({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                            <button onclick="loadAdminJunkRemoval({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                 <span class="sr-only">Next</span>
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -284,7 +308,7 @@ function getJunkRemovalStatusBadgeClass($status) {
                 </div>
                  <div class="hidden sm:flex items-center gap-2 ml-4">
                     <span class="text-sm font-medium text-gray-700">Requests per page:</span>
-                    <select onchange="loadAdminJunkRemoval({page: 1, per_page: this.value, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>'})"
+                    <select onchange="loadAdminJunkRemoval({page: 1, per_page: this.value, status: '<?php echo $filter_status; ?>', search: '<?php echo htmlspecialchars($search_query); ?>', start_date: '<?php echo htmlspecialchars($start_date_filter); ?>', end_date: '<?php echo htmlspecialchars($end_date_filter); ?>'})"
                             class="p-2 border border-gray-300 rounded-md text-sm">
                         <?php foreach ($items_per_page_options as $option): ?>
                             <option value="<?php echo $option; ?>" <?php echo $items_per_page == $option ? 'selected' : ''; ?>>
@@ -382,7 +406,7 @@ function getJunkRemovalStatusBadgeClass($status) {
             <div class="lg:col-span-1">
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 sticky top-24">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Actions</h3>
-                    <?php if ($request_detail_view_data['status'] === 'pending'): ?>
+                    <?php if ($request_detail_view_data['status'] === 'pending' || $request_detail_view_data['status'] === 'customer_draft'): ?>
                         <form id="quote-request-form">
                             <input type="hidden" name="request_id" value="<?php echo htmlspecialchars($request_detail_view_data['id']); ?>">
                             <input type="hidden" name="action" value="set_price_and_status">
@@ -440,6 +464,8 @@ function getJunkRemovalStatusBadgeClass($status) {
             per_page: currentParams.get('per_page') || <?php echo $items_per_page; ?>,
             status: currentParams.get('status') || 'all',
             search: currentParams.get('search') || '',
+            start_date: currentParams.get('start_date') || '',
+            end_date: currentParams.get('end_date') || '',
             ...params
         };
         window.loadAdminSection('junk_removal', newParams);
@@ -449,7 +475,9 @@ function getJunkRemovalStatusBadgeClass($status) {
     function applyJunkRemovalFilters() {
         const statusFilter = document.getElementById('status-filter').value;
         const searchInput = document.getElementById('search-input').value;
-        loadAdminJunkRemoval({ page: 1, status: statusFilter, search: searchInput });
+        const startDateFilter = document.getElementById('start-date-filter').value;
+        const endDateFilter = document.getElementById('end-date-filter').value;
+        loadAdminJunkRemoval({ page: 1, status: statusFilter, search: searchInput, start_date: startDateFilter, end_date: endDateFilter });
     }
 
     // Function to show individual request details
@@ -503,6 +531,7 @@ function getJunkRemovalStatusBadgeClass($status) {
                         const formData = new FormData();
                         // This action will delete quotes that are service_type 'junk_removal'
                         formData.append('action', 'delete_bulk'); // Re-use existing quotes bulk delete API
+                        formData.append('csrf_token', '<?php echo htmlspecialchars($csrf_token); ?>'); // Add CSRF token here
                         selectedIds.forEach(id => formData.append('quote_ids[]', id)); // Send as quote_ids
 
                         try {

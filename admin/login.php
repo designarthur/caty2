@@ -32,15 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $login_error = 'Please enter a valid email address.';
     } else {
-        $stmt = $conn->prepare("SELECT id, first_name, last_name, email, password, role FROM users WHERE email = ?");
+        // Correctly select 'password_hash' instead of 'password'
+        $stmt = $conn->prepare("SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            // Verify password and check role
-            if (verifyPassword($password, $user['password']) && $user['role'] === 'admin') {
+            // Verify password using 'password_hash' and check role
+            if (verifyPassword($password, $user['password_hash']) && $user['role'] === 'admin') {
                 // Admin login successful
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_email'] = $user['email'];
@@ -49,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_role'] = $user['role'];
 
                 redirect('/admin/index.php');
-            } elseif (verifyPassword($password, $user['password']) && $user['role'] !== 'admin') {
+            } elseif (verifyPassword($password, $user['password_hash']) && $user['role'] !== 'admin') {
                 // User is not an admin, redirect to customer dashboard
                 redirect('/customer/dashboard.php');
             } else {

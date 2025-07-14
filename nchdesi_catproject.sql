@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 13, 2025 at 08:13 PM
+-- Generation Time: Jul 14, 2025 at 04:58 AM
 -- Server version: 8.0.42-0ubuntu0.22.04.2
 -- PHP Version: 7.4.33
 
@@ -94,7 +94,6 @@ INSERT INTO `bookings` (`id`, `invoice_id`, `user_id`, `vendor_id`, `booking_num
 (10, 17, 1, NULL, 'BOOK-D762B7', 'equipment_rental', 'delivered', '2025-07-11', NULL, 'Dallas, Texas 7110', NULL, NULL, NULL, 0, 0, NULL, NULL, 1001.00, NULL, '2025-07-11 16:39:02', '2025-07-11 17:07:42', NULL, NULL),
 (11, 18, 1, NULL, 'BOOK-484480', 'equipment_rental', 'delivered', '2025-07-11', NULL, 'dallas texas 7110', NULL, NULL, NULL, 0, 0, NULL, NULL, 302.00, NULL, '2025-07-11 16:56:48', '2025-07-11 17:03:36', NULL, NULL),
 (12, 24, 1, NULL, 'BOOK-802DD2', 'junk_removal', 'scheduled', '2025-07-12', NULL, 'Dallas, Texas', NULL, NULL, NULL, 0, 0, NULL, NULL, 492.00, NULL, '2025-07-12 02:29:31', '2025-07-12 02:29:31', NULL, NULL),
-(13, 25, 1, NULL, 'BOOK-CA372E', 'junk_removal', 'assigned', '2025-07-12', NULL, 'Dallas, Texas', NULL, NULL, NULL, 0, 0, NULL, NULL, 425.00, NULL, '2025-07-12 08:20:08', '2025-07-12 08:22:29', NULL, NULL),
 (14, 26, 1, NULL, 'BOOK-AA82BE', 'equipment_rental', 'completed', '2025-07-12', NULL, 'Dallas, Texas 7110', NULL, NULL, NULL, 0, 0, NULL, NULL, 508.00, NULL, '2025-07-12 08:30:42', '2025-07-12 08:37:41', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -123,7 +122,7 @@ INSERT INTO `booking_charges` (`id`, `booking_id`, `invoice_id`, `charge_type`, 
 (2, 5, 21, 'rental_extension', 20.00, 'tental', 3, '2025-07-11 17:08:23'),
 (3, 10, 22, 'rental_extension', 100.00, 'Rental extension of 10 days approved by admin.', 3, '2025-07-11 17:09:06'),
 (4, 10, 23, 'tonnage_overage', 50.00, '2 ton extra', 3, '2025-07-11 17:14:33'),
-(5, 14, 27, 'rental_extension', 50.00, 'Rental extension of 5 days approved by admin.', 3, '2025-07-12 08:33:40'),
+(5, 14, NULL, 'rental_extension', 50.00, 'Rental extension of 5 days approved by admin.', 3, '2025-07-12 08:33:40'),
 (6, 14, 29, 'tonnage_overage', 10.00, 'overweight', 3, '2025-07-12 08:36:32');
 
 -- --------------------------------------------------------
@@ -194,9 +193,6 @@ INSERT INTO `booking_status_history` (`id`, `booking_id`, `status`, `status_time
 (22, 11, 'delivered', '2025-07-11 17:03:36', 'Status updated to Delivered by admin.'),
 (23, 5, 'extended', '2025-07-11 17:04:21', 'Booking extended by 2 days due to paid invoice #INV-EXT-466BF4.'),
 (24, 10, 'delivered', '2025-07-11 17:07:42', 'Status updated to Delivered by admin.'),
-(25, 13, 'assigned', '2025-07-12 08:20:46', 'Status updated to Assigned by admin.'),
-(26, 13, 'delivered', '2025-07-12 08:21:11', 'Status updated to Delivered by admin.'),
-(27, 13, 'assigned', '2025-07-12 08:22:29', 'Status updated to Assigned by admin.'),
 (28, 14, 'assigned', '2025-07-12 08:31:25', 'Status updated to Assigned by admin.'),
 (29, 14, 'out_for_delivery', '2025-07-12 08:31:37', 'Status updated to Out For Delivery by admin.'),
 (30, 14, 'delivered', '2025-07-12 08:31:46', 'Status updated to Delivered by admin.'),
@@ -576,7 +572,98 @@ INSERT INTO `chat_messages` (`id`, `conversation_id`, `role`, `content`, `create
 (347, 33, 'user', 'Hello', '2025-07-13 18:28:29'),
 (348, 33, 'assistant', 'Hello again! How can I assist you today? If you would like to place an order for equipment rental or junk removal, please let me know!', '2025-07-13 18:28:29'),
 (349, 33, 'user', 'hey', '2025-07-13 18:28:35'),
-(350, 33, 'assistant', 'Hey there! How can I help you today? If you need assistance with equipment rentals or junk removal, just let me know!', '2025-07-13 18:28:35');
+(350, 33, 'assistant', 'Hey there! How can I help you today? If you need assistance with equipment rentals or junk removal, just let me know!', '2025-07-13 18:28:35'),
+(351, 34, 'user', 'Hello', '2025-07-14 02:55:47'),
+(352, 34, 'assistant', 'Hello! How can I assist you today? Are you looking for equipment rentals or junk removal services?', '2025-07-14 02:55:47'),
+(353, 34, 'user', 'hello', '2025-07-14 02:57:39'),
+(354, 34, 'assistant', 'Hello again! How can I assist you today? If you have any questions or need help with equipment rentals or junk removal, feel free to let me know!', '2025-07-14 02:57:39'),
+(355, 34, 'user', 'hello', '2025-07-14 03:00:33'),
+(356, 34, 'assistant', 'Hello! It seems like you\'re trying to get my attention. How can I assist you today? If you have any specific inquiries or need help, just let me know!', '2025-07-14 03:00:33'),
+(357, 34, 'user', 'Hello', '2025-07-14 03:01:02'),
+(358, 34, 'assistant', 'Hello! How can I help you today? If you\'re looking for equipment rentals or junk removal services, just let me know what you need!', '2025-07-14 03:01:02'),
+(359, 34, 'user', 'hello', '2025-07-14 03:03:22'),
+(360, 34, 'assistant', 'Hello! It looks like you\'re reaching out multiple times. How can I help you? If you need assistance with equipment rentals or junk removal, just let me know!', '2025-07-14 03:03:22'),
+(361, 34, 'user', 'hello', '2025-07-14 03:07:59'),
+(362, 34, 'assistant', 'Hello! How can I assist you today? If you have any questions or need help with services such as equipment rentals or junk removal, feel free to share!', '2025-07-14 03:07:59'),
+(363, 35, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 05:25:49');
+INSERT INTO `chat_messages` (`id`, `conversation_id`, `role`, `content`, `created_at`) VALUES
+(364, 35, 'assistant', 'Let\'s start by confirming the details of your equipment rental request.\n\n🟢 EQUIPMENT RENTAL DETAILS:\n🟥 Item: 15-yard dumpster\n📏 Size: Approx. 15x8x6 ft\n⚖️ Weight: Approx. 2,000 lbs\n\n🟥 Item: 20-yard dumpster\n📏 Size: Approx. 20x8x4.5 ft\n⚖️ Weight: Approx. 3,000 lbs\n\n🟥 Item: Temporary toilet\n📏 Size: Approx. 7x7x7 ft\n⚖️ Weight: Approx. 300 lbs\n\nNow, to summarize your request:\n- **2 x 15-yard dumpsters** for 14 days\n- **1 x 20-yard dumpster** for 14 days\n- **2 x temporary toilets** for 14 days\n- **Delivery**: Tomorrow morning\n- **Live load**: No\n- **Urgent**: No\n- **Location**: Dallas, Texas, 7110\n- **Name**: Jon Vital\n- **Email**: jjony@test.com\n- **Phone**: 121321312\n\nPlease confirm if all of this information is correct, or let me know if you need to make any changes.', '2025-07-14 05:25:49'),
+(365, 35, 'user', 'yes confirm', '2025-07-14 05:25:57'),
+(366, 35, 'assistant', 'Please provide the following details to proceed with your request:\n\n1. **Full Name**: Jon Vital\n2. **Email Address**: jjony@test.com\n3. **Phone Number**: 121321312\n4. **Service Location**: Dallas, Texas, 7110\n5. **Preferred Date**: Tomorrow\n6. **Preferred Time**: Morning\n\nOnce I have this information, I will summarize everything and submit your quote request.', '2025-07-14 05:25:57'),
+(367, 35, 'user', 'yes', '2025-07-14 05:26:18'),
+(368, 35, 'assistant', 'Great! I\'ve created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.', '2025-07-14 05:26:18'),
+(369, 36, 'user', 'hello i need jun removal service', '2025-07-14 06:46:11'),
+(370, 36, 'assistant', 'Please provide a description of the items you need removed. If you have any images, feel free to upload them so I can assist you better!', '2025-07-14 06:46:11'),
+(371, 36, 'user', '', '2025-07-14 06:46:34'),
+(372, 36, 'assistant', 'Here are the identifiable items in the image you provided:\n\n🟥 Item: Kids\' Electric Ride-On Cars  \n📏 Size: Approx. 3x2x1.5 ft each  \n⚖️ Weight: Approx. 50 lbs each  \n\n🟥 Item: Pink Bicycle  \n📏 Size: Approx. 3x1.5x1.5 ft  \n⚖️ Weight: Approx. 20 lbs  \n\n🟥 Item: Storage Bins (stacked)  \n📏 Size: Approx. 2x1.5x1.5 ft each  \n⚖️ Weight: Approx. 10 lbs each  \n\n🟥 Item: Shelving Unit  \n📏 Size: Approx. 6x3x1.5 ft  \n⚖️ Weight: Approx. 75 lbs  \n\n🟥 Item: Various Boxes and Small Items  \n📏 Size: Mixed sizes  \n⚖️ Weight: Approx. 30 lbs (total estimate)  \n\nIs this list correct, or do you need to make any changes?', '2025-07-14 06:46:34'),
+(373, 36, 'user', 'i think it is correct', '2025-07-14 06:46:55'),
+(374, 36, 'assistant', 'Great! Now I need to gather some required information from you to proceed with the junk removal service:\n\n1. Full Name\n2. Email Address\n3. Phone Number\n4. Service Location (full address)\n5. Preferred Date\n6. Preferred Time\n\nPlease provide this information, and I\'ll finalize your request!', '2025-07-14 06:46:55'),
+(375, 36, 'user', 'jonathan vital  my email is jjony@test.com', '2025-07-14 06:47:43'),
+(376, 36, 'assistant', 'Thank you, Jonathan. Please provide your phone number, service location (full address), preferred date, and preferred time for the junk removal service.', '2025-07-14 06:47:43'),
+(377, 36, 'user', 'sure its 121122334343', '2025-07-14 06:48:21'),
+(378, 36, 'assistant', 'Thank you for the phone number. Now, please provide your full service location (address), preferred date, and preferred time for the junk removal service.', '2025-07-14 06:48:21'),
+(379, 36, 'user', 'dallas texas 7110', '2025-07-14 06:48:46'),
+(380, 36, 'assistant', 'Thank you for the service location. Now, please provide your preferred date and preferred time for the junk removal service.', '2025-07-14 06:48:46'),
+(381, 36, 'user', 'tomorrow morning', '2025-07-14 06:49:10'),
+(382, 36, 'assistant', 'To summarize, here\'s the information I\'ve collected for your junk removal request:\n\n### Item List:\n- 🟥 Item: Kids\' Electric Ride-On Cars\n  - 📏 Size: Approx. 3x2x1.5 ft each\n  - ⚖️ Weight: Approx. 50 lbs each\n- 🟥 Item: Pink Bicycle\n  - 📏 Size: Approx. 3x1.5x1.5 ft\n  - ⚖️ Weight: Approx. 20 lbs\n- 🟥 Item: Storage Bins (stacked)\n  - 📏 Size: Approx. 2x1.5x1.5 ft each\n  - ⚖️ Weight: Approx. 10 lbs each\n- 🟥 Item: Shelving Unit\n  - 📏 Size: Approx. 6x3x1.5 ft\n  - ⚖️ Weight: Approx. 75 lbs\n- 🟥 Item: Various Boxes and Small Items\n  - 📏 Size: Mixed sizes\n  - ⚖️ Weight: Approx. 30 lbs (total estimate)\n\n### Customer Information:\n- **Full Name:** Jonathan Vital\n- **Email Address:** jjony@test.com\n- **Phone Number:** 121122334343\n- **Service Location:** Dallas, Texas, 7110\n- **Preferred Date:** Tomorrow\n- **Preferred Time:** Morning\n\nPlease confirm that this information is correct, and I\'ll proceed to submit your request!', '2025-07-14 06:49:10'),
+(383, 36, 'user', 'Hello', '2025-07-14 07:03:32'),
+(384, 36, 'assistant', 'Hello! How can I assist you today? If you have any questions or need further assistance, feel free to let me know.', '2025-07-14 07:03:32'),
+(385, 36, 'user', 'i will need a dumpster', '2025-07-14 07:03:44'),
+(386, 36, 'assistant', 'Got it! I’ll need to ask you a few questions to gather all the necessary details for your dumpster rental:\n\n1. Is this rental for residential or commercial use?\n2. What is your location or ZIP code?\n3. What type of project are you working on? (e.g., home cleanout, renovation, construction)\n4. What materials or waste will you be disposing of?\n5. What size dumpster do you think you need, or how much debris do you estimate you will have?\n6. How long do you need the dumpster for?\n7. When do you need the dumpster delivered and picked up?\n8. Where will the dumpster be placed on the property? (e.g., driveway, street)\n9. Do you have any hazardous or prohibited items to dispose of?\n10. What is your full contact information? (Name, phone number, email, and full service address)\n\nPlease provide this information, and I\'ll assist you with the rental!', '2025-07-14 07:03:44'),
+(387, 36, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:04:13'),
+(388, 36, 'assistant', 'Thank you for the details! Here’s the summarized information for your dumpster and equipment rental request:\n\n### Rental Details:\n- **Equipment Needed:**\n  - 2 x 15-yard dumpsters\n  - 1 x 20-yard dumpster\n  - 2 x Temporary toilets\n- **Duration:** 14 days\n- **Delivery Date:** Tomorrow (morning)\n- **Live Load Needed:** No\n- **Urgency:** Not urgent\n\n### Customer Information:\n- **Full Name:** Jon Vital\n- **Email Address:** jjony@test.com\n- **Phone Number:** 121321312\n- **Service Location:** Dallas, Texas, 7110\n\nPlease confirm that this information is correct, and I will proceed to submit your request!', '2025-07-14 07:04:13'),
+(389, 36, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:07:39'),
+(390, 36, 'assistant', 'Thank you for confirming. Here\'s the summarized information for your dumpster and equipment rental request:\n\n### Rental Details:\n- **Equipment Needed:**\n  - 2 x 15-yard dumpsters\n  - 1 x 20-yard dumpster\n  - 2 x Temporary toilets\n- **Duration:** 14 days\n- **Delivery Date:** Tomorrow (morning)\n- **Live Load Needed:** No\n- **Urgency:** Not urgent\n\n### Customer Information:\n- **Full Name:** Jon Vital\n- **Email Address:** jjony@test.com\n- **Phone Number:** 121321312\n- **Service Location:** Dallas, Texas, 7110\n\nAre you happy with this summary, or would you like to make any edits before we submit? If you wish to edit, I can create a draft you can adjust after logging in. Otherwise, we can submit directly to our team for a quote.', '2025-07-14 07:07:39'),
+(391, 36, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:25:59'),
+(392, 36, 'assistant', 'Great! I\'ve created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.', '2025-07-14 07:25:59'),
+(393, 37, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:26:37'),
+(394, 37, 'assistant', 'Let\'s first confirm the equipment details you provided:\n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 yards  \n⚖️ Weight: Approx. varies by waste type  \n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 yards  \n⚖️ Weight: Approx. varies by waste type  \n\n🟥 Item: 20-yard dumpster  \n📏 Size: 20 yards  \n⚖️ Weight: Approx. varies by waste type  \n\n🟥 Item: Temporary toilet  \n📏 Size: Standard size  \n⚖️ Weight: Approx. 100 lbs  \n\n🟥 Item: Temporary toilet  \n📏 Size: Standard size  \n⚖️ Weight: Approx. 100 lbs  \n\nIs this list correct, or do you need to make any changes?', '2025-07-14 07:26:37'),
+(395, 37, 'user', 'yes', '2025-07-14 07:27:03'),
+(396, 37, 'assistant', 'Please provide the required customer information to proceed with your request:\n\n- Full Name\n- Email Address\n- Phone Number\n- Service Location (full address)\n- Preferred Date\n- Preferred Time', '2025-07-14 07:27:03'),
+(397, 37, 'user', 'jonathan vital', '2025-07-14 07:27:16'),
+(398, 37, 'assistant', 'Great! Now, can you please provide the following additional details?\n\n- Email Address (you previously mentioned jjony@test.com, is that correct?)\n- Phone Number\n- Service Location (full address)\n- Preferred Date (you mentioned \"tomorrow,\" which will be [insert tomorrow\'s date here])\n- Preferred Time (you mentioned \"morning,\" is there a specific time?)', '2025-07-14 07:27:16'),
+(399, 37, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:27:52'),
+(400, 37, 'assistant', 'Great! I\'ve created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.', '2025-07-14 07:27:52'),
+(401, 38, 'user', 'residential', '2025-07-14 07:45:12'),
+(402, 38, 'assistant', 'I\'ve identified the following items:\n🟥 Item: Old Sofa 📏 Size: 6x3x3 ft ⚖️ Weight: approx. 150 lbs\n🟥 Item: Broken Refrigerator 📏 Size: 6x3x3 ft ⚖️ Weight: approx. 200 lbs\n🟥 Item: Cardboard Boxes 📏 Size: 3x3x2 ft ⚖️ Weight: approx. 50 lbs\n🟥 Item: Wooden Dining Table 📏 Size: 5x3x3 ft ⚖️ Weight: approx. 100 lbs\n🟥 Item: Old Mattress 📏 Size: 6x3x1 ft ⚖️ Weight: approx. 80 lbs\n🟥 Item: Exercise Bike 📏 Size: 4x2x4 ft ⚖️ Weight: approx. 100 lbs\n🟥 Item: Bicycles 📏 Size: 5x2x4 ft ⚖️ Weight: approx. 40 lbs\n🟥 Item: Old Televisions 📏 Size: 4x2x2 ft ⚖️ Weight: approx. 80 lbs\n🟥 Item: Old Dressers 📏 Size: 5x3x5 ft ⚖️ Weight: approx. 120 lbs\n🟥 Item: Broken Lawn Mower 📏 Size: 4x2x3 ft ⚖️ Weight: approx. 90 lbs\n\nIs this list correct, or do you need to make any changes?', '2025-07-14 07:45:12'),
+(403, 39, 'user', 'Hello', '2025-07-14 07:56:51'),
+(404, 39, 'assistant', '', '2025-07-14 07:56:51'),
+(405, 39, 'user', 'Hello', '2025-07-14 07:57:16'),
+(406, 39, 'assistant', 'Hello! How can I assist you today?', '2025-07-14 07:57:16'),
+(407, 39, 'user', 'Hello', '2025-07-14 07:57:52'),
+(408, 39, 'assistant', 'Hello again! How may I help you? Are you looking for equipment rental or junk removal assistance?', '2025-07-14 07:57:52'),
+(409, 39, 'user', 'dumpster rental', '2025-07-14 07:58:08'),
+(410, 39, 'assistant', 'Could you please provide some details about the dumpster rental you\'re interested in? Specifically, let me know the size of the dumpster you need and the duration for which you\'ll need it. If you have any specific requirements, feel free to mention those as well!', '2025-07-14 07:58:08'),
+(411, 39, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 07:58:27'),
+(412, 39, 'assistant', 'Great! I\'ve created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.', '2025-07-14 07:58:27'),
+(413, 40, 'user', 'residential', '2025-07-14 08:05:47'),
+(414, 40, 'assistant', 'It looks like you are interested in a service for residential needs. Please provide more details about your specific request—either equipment rental or junk removal. If it\'s junk removal, feel free to describe the items you need removed or upload an image.', '2025-07-14 08:05:47'),
+(415, 40, 'user', 'i will need 2 12 yard dumpters with 3 tones included', '2025-07-14 08:06:31'),
+(416, 40, 'assistant', 'Let\'s move forward with the details for your equipment rental request. Here’s a summary of what you\'ve mentioned:\n\n🟥 Item: 12-yard dumpster  \n📏 Size: 12 cubic yards  \n⚖️ Weight: 3 tons included  \n\nPlease confirm if this is correct or if you\'d like to make any changes.', '2025-07-14 08:06:31'),
+(417, 40, 'user', 'that is correct', '2025-07-14 08:06:47'),
+(418, 40, 'assistant', 'Great! Now, I\'ll need some customer information to proceed with your equipment rental request:\n\n- Full Name\n- Email Address\n- Phone Number\n- Service Location (full address)\n- Preferred Date\n- Preferred Time\n\nPlease provide these details, and I\'ll summarize everything for final review before submission.', '2025-07-14 08:06:47'),
+(419, 40, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 08:07:00'),
+(420, 40, 'assistant', 'Here\'s the updated list of your equipment rental request:\n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: 20-yard dumpster  \n📏 Size: 20 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: Temporary toilet  \n📏 Size: Standard  \n⚖️ Weight: Not specified\n\n🟥 Item: Temporary toilet  \n📏 Size: Standard  \n⚖️ Weight: Not specified\n\n**Details:**  \n- Duration: 14 days  \n- Delivery Date: Tomorrow  \n- Delivery Time: Morning  \n- Live Load: No  \n- Urgent: No  \n- Location: Dallas, Texas 7110  \n- Customer Name: Jon Vital  \n- Email: jjony@test.com  \n- Phone Number: 121321312  \n\nPlease confirm if this list and the details are correct or if you need to make any changes.', '2025-07-14 08:07:00'),
+(421, 40, 'user', '2 20 yard dumpster', '2025-07-14 08:10:17'),
+(422, 40, 'assistant', 'Here’s the updated list of your equipment rental request:\n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: 15-yard dumpster  \n📏 Size: 15 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: 20-yard dumpster  \n📏 Size: 20 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: 20-yard dumpster  \n📏 Size: 20 cubic yards  \n⚖️ Weight: Not specified\n\n🟥 Item: Temporary toilet  \n📏 Size: Standard  \n⚖️ Weight: Not specified\n\n🟥 Item: Temporary toilet  \n📏 Size: Standard  \n⚖️ Weight: Not specified\n\n**Details:**  \n- Duration: 14 days  \n- Delivery Date: Tomorrow  \n- Delivery Time: Morning  \n- Live Load: No  \n- Urgent: No  \n- Location: Dallas, Texas 7110  \n- Customer Name: Jon Vital  \n- Email: jjony@test.com  \n- Phone Number: 121321312  \n\nIs this list correct, or do you need to make any changes?', '2025-07-14 08:10:17'),
+(423, 40, 'user', 'that is correct', '2025-07-14 08:10:34'),
+(424, 40, 'assistant', 'Thank you for the confirmation! Here’s a summary of your equipment rental request before submission:\n\n### Equipment Rental Request\n- **Items:**\n  - 2 x 15-yard dumpster (15 cubic yards each)\n  - 2 x 20-yard dumpster (20 cubic yards each)\n  - 2 x Temporary toilet (Standard size)\n  \n- **Duration:** 14 days\n- **Delivery Date:** Tomorrow\n- **Delivery Time:** Morning\n- **Live Load:** No\n- **Urgent:** No\n\n### Customer Information\n- **Full Name:** Jon Vital\n- **Email Address:** jjony@test.com\n- **Phone Number:** 121321312\n- **Service Location:** Dallas, Texas 7110\n\nI will now proceed to submit your request. Please hold on for a moment.', '2025-07-14 08:10:34'),
+(425, 40, 'user', 'hello', '2025-07-14 08:20:00'),
+(426, 40, 'assistant', 'Thank you! Your quote request (#Q30) has been successfully submitted. Our team will review the details and send you the best price within the hour.', '2025-07-14 08:20:00'),
+(427, 41, 'user', 'Hello', '2025-07-14 08:20:34'),
+(428, 41, 'assistant', 'Hello! How can I assist you today? Are you looking for equipment rentals or junk removal services?', '2025-07-14 08:20:34'),
+(429, 41, 'user', 'i need 2 dumpster with 6 ton included', '2025-07-14 08:20:53'),
+(430, 41, 'assistant', 'Could you please provide me with the following details regarding your dumpster rental request?\n\n1. How many days do you need the dumpsters for?\n2. What specific type of dumpster are you looking for? (e.g., 10-yard, 20-yard)\n3. Do you need any special instructions or requirements for the rental? \n\nThis will help me put together the best offer for you!', '2025-07-14 08:20:53'),
+(431, 41, 'user', '20 yard will be fine', '2025-07-14 08:21:08'),
+(432, 41, 'assistant', 'To summarize your request so far, you need:\n\n- **Quantity**: 2\n- **Size**: 20-yard dumpsters\n  \nCould you please let me know how many days you would like to rent the dumpsters for, and if you have any specific instructions or requirements?', '2025-07-14 08:21:08'),
+(433, 41, 'user', '14 days and you can leave it on footpath', '2025-07-14 08:21:31'),
+(434, 41, 'assistant', 'Here’s the summary of your dumpster rental request:\n\n- **Quantity**: 2\n- **Size**: 20-yard dumpsters\n- **Duration**: 14 days\n- **Instructions**: Leave it on the footpath\n\nPlease confirm if this is correct, and we\'ll proceed to gather your contact information for the rental!', '2025-07-14 08:21:31'),
+(435, 41, 'user', 'yes go ahead what you need', '2025-07-14 08:21:49'),
+(436, 41, 'assistant', 'Please provide me with the following customer information:\n\n1. Full Name\n2. Email Address\n3. Phone Number\n4. Service Location (full address)\n5. Preferred Date for the rental\n6. Preferred Time for the rental\n\nOnce I have this information, I can finalize your request!', '2025-07-14 08:21:49'),
+(437, 41, 'user', 'i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital i need 2 15 yard dumpster and 1 20 yard dumpster and 2 temporary toilets, for 14 days, tomorrow, can deliver in morning, not a live load, not urgent, location is dallas texas 7110,jon vital 121321312 jjony@test.com', '2025-07-14 08:22:08'),
+(438, 41, 'assistant', 'Let me summarize your request:\n\n### Equipment Rental Details:\n- **2 x 15-yard dumpsters**\n- **1 x 20-yard dumpster**\n- **2 x Temporary toilets**\n- **Duration**: 14 days\n- **Preferred Date**: Tomorrow\n- **Preferred Time**: Morning\n- **Live Load Needed**: No\n- **Urgent**: No\n\n### Customer Information:\n- **Full Name**: Jon Vital\n- **Email Address**: jjony@test.com\n- **Phone Number**: 121321312\n- **Service Location**: Dallas, Texas 7110\n\nPlease confirm that all details are correct, and I will proceed with your request!', '2025-07-14 08:22:08'),
+(439, 41, 'user', 'yes correct', '2025-07-14 08:22:18'),
+(440, 41, 'assistant', 'Thank you! Your quote request (#Q31) has been successfully submitted. Our team will review the details and send you the best price within the hour.', '2025-07-14 08:22:18');
 
 -- --------------------------------------------------------
 
@@ -628,7 +715,15 @@ INSERT INTO `conversations` (`id`, `user_id`, `initial_service_type`, `created_a
 (30, 1, 'junk-removal-service', '2025-07-12 07:46:14'),
 (31, 1, 'create-booking', '2025-07-12 08:23:02'),
 (32, 1, 'junk-removal-service', '2025-07-12 08:48:55'),
-(33, 1, 'create-booking', '2025-07-13 18:20:36');
+(33, 1, 'create-booking', '2025-07-13 18:20:36'),
+(34, NULL, 'create-booking', '2025-07-14 02:55:46'),
+(35, 1, 'create-booking', '2025-07-14 05:25:45'),
+(36, 3, 'create-booking', '2025-07-14 06:46:09'),
+(37, NULL, 'create-booking', '2025-07-14 07:26:34'),
+(38, NULL, 'create-booking', '2025-07-14 07:45:08'),
+(39, NULL, 'create-booking', '2025-07-14 07:55:23'),
+(40, NULL, 'create-booking', '2025-07-14 08:05:46'),
+(41, NULL, 'create-booking', '2025-07-14 08:20:33');
 
 -- --------------------------------------------------------
 
@@ -698,10 +793,8 @@ INSERT INTO `invoices` (`id`, `quote_id`, `user_id`, `invoice_number`, `amount`,
 (22, NULL, 1, 'INV-EXT-A1C4FA', 100.00, 'pending', '2025-07-18', NULL, NULL, '2025-07-11 17:09:06', '2025-07-11 17:09:06', 'Rental extension of 10 days for Booking #BOOK-D762B7', 10, 0.00, 0.00, 0),
 (23, NULL, 1, 'INV-CHG-D78C58', 50.00, 'pending', '2025-07-25', NULL, NULL, '2025-07-11 17:14:33', '2025-07-11 17:14:33', 'Additional charge for Booking #BOOK-D762B7: 2 ton extra', 10, 0.00, 0.00, 0),
 (24, 23, 1, 'INV-4BE5404D', 492.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 02:29:10', '2025-07-12 02:29:31', NULL, NULL, 10.00, 2.00, 0),
-(25, 24, 1, 'INV-38D2B897', 425.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 08:18:48', '2025-07-12 08:20:08', NULL, NULL, 100.00, 25.00, 0),
-(26, 25, 1, 'INV-08C1AD35', 508.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 08:30:14', '2025-07-12 08:30:42', NULL, NULL, 2.00, 10.00, 0),
-(27, NULL, 1, 'INV-EXT-BCEC0A', 50.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 08:33:40', '2025-07-12 08:34:22', 'Rental extension of 5 days for Booking #BOOK-AA82BE', 14, 0.00, 0.00, 0),
-(28, NULL, 1, 'INV-REL-d12a43', 25.00, 'paid', '2025-07-15', NULL, NULL, '2025-07-12 08:34:40', '2025-07-12 08:35:13', 'Invoice for Relocation Request on Booking #BOOK-AA82BE', 14, 0.00, 0.00, 0),
+(25, NULL, 1, 'INV-38D2B897', 425.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 08:18:48', '2025-07-12 08:20:08', NULL, NULL, 100.00, 25.00, 0),
+(26, NULL, 1, 'INV-08C1AD35', 508.00, 'paid', '2025-07-19', NULL, NULL, '2025-07-12 08:30:14', '2025-07-12 08:30:42', NULL, NULL, 2.00, 10.00, 0),
 (29, NULL, 1, 'INV-CHG-E8C847', 10.00, 'paid', '2025-07-26', NULL, NULL, '2025-07-12 08:36:32', '2025-07-12 08:36:57', 'Additional charge for Booking #BOOK-AA82BE: overweight', 14, 0.00, 0.00, 0);
 
 -- --------------------------------------------------------
@@ -780,8 +873,6 @@ INSERT INTO `invoice_items` (`id`, `invoice_id`, `description`, `quantity`, `uni
 (58, 26, ' - 15 Yard Dumpster (14 days)', 2, 0.00, 0.00),
 (59, 26, ' - 20 Yard Dumpster (14 days)', 1, 0.00, 0.00),
 (60, 26, ' - Temporary Toilet (14 days)', 2, 0.00, 0.00),
-(61, 27, 'Rental Extension for Booking #BOOK-AA82BE (5 days)', 1, 50.00, 50.00),
-(62, 28, 'Relocation Service for Booking #BOOK-AA82BE', 1, 25.00, 25.00),
 (63, 29, 'Additional Charge (tonnage_overage) for Booking #BOOK-AA82BE: overweight', 1, 10.00, 10.00);
 
 -- --------------------------------------------------------
@@ -806,8 +897,7 @@ CREATE TABLE `junk_removal_details` (
 INSERT INTO `junk_removal_details` (`id`, `quote_id`, `junk_items_json`, `recommended_dumpster_size`, `additional_comment`, `media_urls_json`) VALUES
 (5, 21, '[{\"itemType\": \"Sofa\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x2x3 ft\"}, {\"itemType\": \"Plastic Storage Bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Medium Moving Box\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"2x1.5x1.5 ft\"}, {\"itemType\": \"Cooler\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"2x1x1 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x2x3 ft\"}]', NULL, NULL, '[\"/uploads/junk_removal_media/media_6871b9ebcceb6.jpeg\"]'),
 (6, 22, '[{\"itemType\": \"Couch\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"4x2x2 ft\"}, {\"itemType\": \"Medium Box (assumed to contain miscellaneous items)\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"1.5x1.5x2 ft\"}, {\"itemType\": \"Plastic Bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1 ft each\"}]', NULL, NULL, '[\"/uploads/junk_removal_media/media_6871be6dabb7b.jpeg\"]'),
-(8, 23, '[{\"itemType\": \"Couch\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden chair\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"2x2x3 ft\"}, {\"itemType\": \"Box of assorted items\", \"quantity\": 1, \"estWeight\": \"30 lbs\", \"estDimensions\": \"2x1.5x1.5 ft\"}, {\"itemType\": \"Plastic bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Cool cooler\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x1.5x1.5 ft\"}, {\"itemType\": \"Dresser\", \"quantity\": 1, \"estWeight\": \"80 lbs\", \"estDimensions\": \"4x2x3 ft\"}, {\"itemType\": \"texi\", \"quantity\": 1, \"estWeight\": \"\", \"estDimensions\": \"\"}]', NULL, NULL, NULL),
-(10, 24, '[{\"itemType\": \"Sofa\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"3x2x3 ft\"}, {\"itemType\": \"Medium Box (with contents)\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"1.5x1.5x2 ft\"}, {\"itemType\": \"Plastic Bins\", \"quantity\": 3, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Baby Bicycle\", \"quantity\": 1, \"estWeight\": \"12 lbs\", \"estDimensions\": \"3x1.5x2 ft\"}, {\"itemType\": \"Cooler\", \"quantity\": 1, \"estWeight\": \"8 lbs\", \"estDimensions\": \"2x1x1 ft\"}, {\"itemType\": \"car\", \"quantity\": 1, \"estWeight\": \"\", \"estDimensions\": \"\"}]', NULL, NULL, NULL);
+(8, 23, '[{\"itemType\": \"Couch\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden chair\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"2x2x3 ft\"}, {\"itemType\": \"Box of assorted items\", \"quantity\": 1, \"estWeight\": \"30 lbs\", \"estDimensions\": \"2x1.5x1.5 ft\"}, {\"itemType\": \"Plastic bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Cool cooler\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x1.5x1.5 ft\"}, {\"itemType\": \"Dresser\", \"quantity\": 1, \"estWeight\": \"80 lbs\", \"estDimensions\": \"4x2x3 ft\"}, {\"itemType\": \"texi\", \"quantity\": 1, \"estWeight\": \"\", \"estDimensions\": \"\"}]', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1017,8 +1107,12 @@ INSERT INTO `quotes` (`id`, `user_id`, `service_type`, `status`, `customer_type`
 (21, 1, 'junk_removal', 'customer_draft', 'Residential', 'Dallas, Texas', NULL, NULL, '2023-10-06', '10 AM', 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas\", \"media_urls\": [], \"junk_details\": {\"junk_items\": [{\"itemType\": \"Sofa\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x2x3 ft\"}, {\"itemType\": \"Plastic Storage Bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Medium Moving Box\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"2x1.5x1.5 ft\"}, {\"itemType\": \"Cooler\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"2x1x1 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x2x3 ft\"}]}, \"service_date\": \"2023-10-06\", \"service_time\": \"10 AM\", \"service_type\": \"junk_removal\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"additional_comment\": \"\"}', NULL, '2025-07-12 01:27:16', '2025-07-12 01:40:13', 0, 0, 0.00, 0.00, NULL, 1),
 (22, 1, 'junk_removal', 'pending', 'Residential', 'Dallas, Texas', NULL, NULL, '2023-10-05', '9:00 AM', 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas\", \"junk_details\": {\"junk_items\": [{\"itemType\": \"Couch\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"4x2x2 ft\"}, {\"itemType\": \"Medium Box (assumed to contain miscellaneous items)\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"1.5x1.5x2 ft\"}, {\"itemType\": \"Plastic Bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1 ft each\"}]}, \"service_date\": \"2023-10-05\", \"service_time\": \"9:00 AM\", \"service_type\": \"junk_removal\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\"}', NULL, '2025-07-12 01:46:25', '2025-07-12 02:31:01', 0, 0, 0.00, 0.00, NULL, 1),
 (23, 1, 'junk_removal', 'accepted', 'Residential', 'Dallas, Texas', NULL, NULL, '2023-10-05', '10:00 AM', 0, 0, NULL, 500.00, 0.00, 0.00, 0.00, '{\"location\": \"Dallas, Texas\", \"junk_details\": {\"junk_items\": [{\"itemType\": \"Couch\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden chair\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"2x2x3 ft\"}, {\"itemType\": \"Box of assorted items\", \"quantity\": 1, \"estWeight\": \"30 lbs\", \"estDimensions\": \"2x1.5x1.5 ft\"}, {\"itemType\": \"Plastic bins\", \"quantity\": 2, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Cool cooler\", \"quantity\": 1, \"estWeight\": \"20 lbs\", \"estDimensions\": \"3x1.5x1.5 ft\"}, {\"itemType\": \"Dresser\", \"quantity\": 1, \"estWeight\": \"80 lbs\", \"estDimensions\": \"4x2x3 ft\"}]}, \"service_date\": \"2023-10-05\", \"service_time\": \"10:00 AM\", \"service_type\": \"junk_removal\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\"}', 'this is for complete', '2025-07-12 01:56:19', '2025-07-12 02:29:10', 0, 0, 10.00, 2.00, NULL, 1),
-(24, 1, 'junk_removal', 'accepted', 'Residential', 'Dallas, Texas', NULL, NULL, '2023-10-04', '9:00 AM', 0, 0, NULL, 500.00, 0.00, 0.00, 0.00, '{\"location\": \"Dallas, Texas\", \"media_urls\": [], \"junk_details\": {\"junk_items\": [{\"itemType\": \"Sofa\", \"quantity\": 1, \"estWeight\": \"100 lbs\", \"estDimensions\": \"6x3x3 ft\"}, {\"itemType\": \"Wooden Chair\", \"quantity\": 1, \"estWeight\": \"15 lbs\", \"estDimensions\": \"3x2x3 ft\"}, {\"itemType\": \"Medium Box (with contents)\", \"quantity\": 1, \"estWeight\": \"25 lbs\", \"estDimensions\": \"1.5x1.5x2 ft\"}, {\"itemType\": \"Plastic Bins\", \"quantity\": 3, \"estWeight\": \"10 lbs each\", \"estDimensions\": \"2x1.5x1.5 ft each\"}, {\"itemType\": \"Baby Bicycle\", \"quantity\": 1, \"estWeight\": \"12 lbs\", \"estDimensions\": \"3x1.5x2 ft\"}, {\"itemType\": \"Cooler\", \"quantity\": 1, \"estWeight\": \"8 lbs\", \"estDimensions\": \"2x1x1 ft\"}]}, \"service_date\": \"2023-10-04\", \"service_time\": \"9:00 AM\", \"service_type\": \"junk_removal\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"122131231\", \"additional_comment\": \"\"}', 'this includes everything', '2025-07-12 07:51:57', '2025-07-12 08:18:48', 0, 0, 100.00, 25.00, NULL, 1),
-(25, 1, 'equipment_rental', 'accepted', 'Residential', 'Dallas, Texas 7110', '2023-10-06', 'afternoon', NULL, NULL, 0, 0, NULL, 500.00, 10.00, 10.00, 25.00, '{\"location\": \"Dallas, Texas 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-06\", \"service_time\": \"afternoon\", \"service_type\": \"equipment_rental\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"123132131\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15 Yard Dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20 Yard Dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"Temporary Toilet\"}]}', '', '2025-07-12 08:29:10', '2025-07-12 08:30:14', 0, 0, 2.00, 10.00, NULL, 1);
+(26, 1, 'equipment_rental', 'customer_draft', 'Residential', 'Dallas, Texas, 7110', '2023-10-04', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas, 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-04\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"temporary toilet\"}]}', NULL, '2025-07-14 05:26:18', '2025-07-14 05:53:24', 0, 0, 0.00, 0.00, NULL, 1),
+(27, 1, 'equipment_rental', 'customer_draft', 'Residential', 'Dallas, Texas, 7110', '2023-11-28', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas, 7110\", \"is_urgent\": false, \"service_date\": \"2023-11-28\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"Temporary toilet\"}]}', NULL, '2025-07-14 07:25:59', '2025-07-14 08:44:46', 0, 0, 0.00, 0.00, NULL, 1),
+(28, 1, 'equipment_rental', 'customer_draft', 'Residential', 'dallas texas 7110', '2023-10-14', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"dallas texas 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-14\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"jonathan vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"temporary toilet\"}]}', NULL, '2025-07-14 07:27:52', '2025-07-14 07:27:52', 0, 0, 0.00, 0.00, NULL, 0),
+(29, 1, 'equipment_rental', 'customer_draft', 'Residential', 'dallas texas 7110', '2023-10-14', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"dallas texas 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-14\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"jon vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"temporary toilet\"}]}', NULL, '2025-07-14 07:58:27', '2025-07-14 07:58:27', 0, 0, 0.00, 0.00, NULL, 0),
+(30, 1, 'equipment_rental', 'pending', 'Residential', 'Dallas, Texas 7110', '2023-10-14', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-14\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"Temporary toilet\"}]}', NULL, '2025-07-14 08:20:00', '2025-07-14 09:25:20', 0, 0, 0.00, 0.00, NULL, 1),
+(31, 1, 'equipment_rental', 'pending', 'Residential', 'Dallas, Texas 7110', '2023-10-17', 'morning', NULL, NULL, 0, 0, NULL, NULL, NULL, 0.00, 0.00, '{\"location\": \"Dallas, Texas 7110\", \"is_urgent\": false, \"service_date\": \"2023-10-17\", \"service_time\": \"morning\", \"service_type\": \"equipment_rental\", \"customer_name\": \"Jon Vital\", \"customer_type\": \"Residential\", \"customer_email\": \"jjony@test.com\", \"customer_phone\": \"121321312\", \"live_load_needed\": false, \"equipment_details\": [{\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"15-yard dumpster\"}, {\"quantity\": 1, \"duration_days\": 14, \"equipment_name\": \"20-yard dumpster\"}, {\"quantity\": 2, \"duration_days\": 14, \"equipment_name\": \"Temporary toilet\"}]}', NULL, '2025-07-14 08:22:18', '2025-07-14 09:23:39', 0, 0, 0.00, 0.00, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1083,9 +1177,24 @@ INSERT INTO `quote_equipment_details` (`id`, `quote_id`, `equipment_id`, `equipm
 (46, 20, NULL, '15-yard dumpster', 2, 14, NULL),
 (47, 20, NULL, '20-yard dumpster', 1, 14, NULL),
 (48, 20, NULL, 'temporary toilet', 2, 14, NULL),
-(52, 25, NULL, '15 Yard Dumpster', 2, 14, NULL),
-(53, 25, NULL, '20 Yard Dumpster', 1, 14, NULL),
-(54, 25, NULL, 'Temporary Toilet', 2, 14, NULL);
+(55, 26, NULL, '15-yard dumpster', 2, 14, NULL),
+(56, 26, NULL, '20-yard dumpster', 1, 14, NULL),
+(57, 26, NULL, 'temporary toilet', 2, 14, NULL),
+(58, 27, NULL, '15-yard dumpster', 2, 14, NULL),
+(59, 27, NULL, '20-yard dumpster', 1, 14, NULL),
+(60, 27, NULL, 'Temporary toilet', 2, 14, NULL),
+(61, 28, NULL, '15-yard dumpster', 2, 14, NULL),
+(62, 28, NULL, '20-yard dumpster', 1, 14, NULL),
+(63, 28, NULL, 'temporary toilet', 2, 14, NULL),
+(64, 29, NULL, '15-yard dumpster', 2, 14, NULL),
+(65, 29, NULL, '20-yard dumpster', 1, 14, NULL),
+(66, 29, NULL, 'temporary toilet', 2, 14, NULL),
+(67, 30, NULL, '15-yard dumpster', 2, 14, NULL),
+(68, 30, NULL, '20-yard dumpster', 2, 14, NULL),
+(69, 30, NULL, 'Temporary toilet', 2, 14, NULL),
+(70, 31, NULL, '15-yard dumpster', 2, 14, NULL),
+(71, 31, NULL, '20-yard dumpster', 1, 14, NULL),
+(72, 31, NULL, 'Temporary toilet', 2, 14, NULL);
 
 -- --------------------------------------------------------
 
@@ -1146,12 +1255,13 @@ CREATE TABLE `users` (
   `last_name` varchar(100) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` varchar(50) DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
   `state` varchar(100) DEFAULT NULL,
   `zip_code` varchar(20) DEFAULT NULL,
   `role` enum('customer','admin','vendor') NOT NULL DEFAULT 'customer',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -1160,10 +1270,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `phone_number`, `password`, `address`, `city`, `state`, `zip_code`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'jon', 'vital', 'jjony@test.com', '2144762669', '$2y$10$IH1CJpttFvwjthD67pyiWer7nICgdu76NI3gpZzv7S2K4TEqDhxZC', 'Dallas, TX, USA', 'Dallas', 'Texas', '7110', 'customer', '2025-07-11 03:08:16', '2025-07-12 03:22:11'),
-(2, 'Jon', 'Vital', 'jjonyes@test.com', '121321312', '$2y$10$osaPsnLr1MXt0dW4tTGame6DVLlYsjJqy.XQT26URLoHYQ/WgAB8S', NULL, NULL, NULL, NULL, 'customer', '2025-07-11 05:58:01', '2025-07-11 23:08:48'),
-(3, 'Admin', 'User', 'admin@admin.com', '1234567890', '$2y$10$pmYXW9RjE0CjZYE/09h/uu6gwa.TKKnSK9T2Z7UlOxtxYwvqyy0gO', NULL, NULL, NULL, NULL, 'admin', '2025-07-11 06:04:59', '2025-07-11 06:05:32');
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `phone_number`, `password_hash`, `address`, `city`, `state`, `zip_code`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'jon', 'vital', 'jjony@test.com', '2144762669', '$2y$10$IH1CJpttFvwjthD67pyiWer7nICgdu76NI3gpZzv7S2K4TEqDhxZC', 'Dallas, TX, USA', 'Dallas', 'Texas', '7110', 'customer', 1, '2025-07-11 03:08:16', '2025-07-12 03:22:11'),
+(2, 'Jon', 'Vital', 'jjonyes@test.com', '121321312', '$2y$10$osaPsnLr1MXt0dW4tTGame6DVLlYsjJqy.XQT26URLoHYQ/WgAB8S', NULL, NULL, NULL, NULL, 'customer', 1, '2025-07-11 05:58:01', '2025-07-11 23:08:48'),
+(3, 'Admin', 'User', 'admin@admin.com', '1234567890', '$2y$10$pmYXW9RjE0CjZYE/09h/uu6gwa.TKKnSK9T2Z7UlOxtxYwvqyy0gO', NULL, NULL, NULL, NULL, 'admin', 1, '2025-07-11 06:04:59', '2025-07-11 06:05:32');
 
 -- --------------------------------------------------------
 
@@ -1420,13 +1530,13 @@ ALTER TABLE `booking_status_history`
 -- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=351;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=441;
 
 --
 -- AUTO_INCREMENT for table `conversations`
 --
 ALTER TABLE `conversations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `equipment`
@@ -1474,13 +1584,13 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `quotes`
 --
 ALTER TABLE `quotes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `quote_equipment_details`
 --
 ALTER TABLE `quote_equipment_details`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `reviews`

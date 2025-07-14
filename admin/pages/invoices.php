@@ -346,7 +346,7 @@ function getAdminInvoiceStatusBadge($status) {
                             <td class="p-2"><input type="text" name="items[description][]" class="w-full p-2 border rounded" value="<?php echo htmlspecialchars($item['description']); ?>" required></td>
                             <td class="p-2"><input type="number" name="items[quantity][]" class="w-full p-2 border rounded" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" required></td>
                             <td class="p-2"><input type="number" name="items[unit_price][]" class="w-full p-2 border rounded" value="<?php echo htmlspecialchars($item['unit_price']); ?>" step="0.01" min="0" required></td>
-                            <td class="p-2"><input type="text" name="items[total][]" class="w-full p-2 border rounded bg-gray-100" value="<?php echo htmlspecialchars($item['total']); ?>" readonly></td>
+                            <td class="p-2"><input type="text" name="items[total][]" class="w-full p-2 border rounded bg-gray-100" readonly></td>
                             <td class="p-2 text-center"><button type="button" class="text-red-500 hover:text-red-700 remove-item-btn">&times;</button></td>
                         </tr>
                         <?php endforeach; ?>
@@ -519,6 +519,7 @@ document.body.addEventListener('click', function(event) {
                 if (confirmed) {
                     const formData = new FormData();
                     formData.append('action', 'delete_bulk');
+                    formData.append('csrf_token', '<?php echo htmlspecialchars($csrf_token); ?>'); // Add CSRF token here
                     // Append each selected ID to the FormData object.
                     selectedIds.forEach(id => formData.append('invoice_ids[]', id));
                     try {

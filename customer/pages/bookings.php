@@ -258,59 +258,42 @@ function getTimelineIconClass($status) {
                     </ol>
                 </div>
 
-                   <?php if (in_array($booking_detail['status'], ['delivered', 'in_use', 'awaiting_pickup'])): ?>
+                 <?php if (in_array($booking_detail['status'], ['delivered', 'in_use', 'awaiting_pickup'])): // Show service requests for active rentals ?>
                     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700 mb-4">Service Requests</h3>
                         <div class="space-y-3">
-                            <?php
-                            $is_dumpster_booking = false;
-                            if ($booking_detail['service_type'] === 'equipment_rental' && !empty($booking_detail['equipment_items'])) {
-                                foreach ($booking_detail['equipment_items'] as $item) {
-                                    if (stripos($item['equipment_name'], 'dumpster') !== false) {
-                                        $is_dumpster_booking = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            ?>
-
-                            <?php if ($is_dumpster_booking): // Relocation, Swap, Extension only for Dumpster bookings ?>
-                                <button class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-md request-relocation-btn"
+                             <button class="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-md request-relocation-btn"
+                                     data-booking-id="<?php echo $booking_detail['id']; ?>"
+                                     data-charge="<?php echo htmlspecialchars($booking_detail['relocation_charge'] ?? '0.00'); ?>"
+                                     data-is-included="<?php echo htmlspecialchars($booking_detail['is_relocation_included'] ? 'true' : 'false'); ?>">
+                                 <i class="fas fa-truck-loading mr-2"></i>Request Relocation
+                             </button>
+                             <button class="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md request-swap-btn"
+                                     data-booking-id="<?php echo $booking_detail['id']; ?>"
+                                     data-charge="<?php echo htmlspecialchars($booking_detail['swap_charge'] ?? '0.00'); ?>"
+                                     data-is-included="<?php echo htmlspecialchars($booking_detail['is_swap_included'] ? 'true' : 'false'); ?>">
+                                 <i class="fas fa-exchange-alt mr-2"></i>Request Swap
+                             </button>
+                             <?php if ($booking_detail['extension_request_id'] && $booking_detail['extension_request_status'] === 'pending'): ?>
+                                <div class="p-3 text-center bg-yellow-100 text-yellow-800 rounded-lg">
+                                    <i class="fas fa-hourglass-half mr-2"></i>Your extension request is pending admin approval.
+                                </div>
+                             <?php elseif ($booking_detail['extension_request_id'] && $booking_detail['extension_request_status'] === 'approved' && $booking_detail['extension_invoice_id'] && $booking_detail['extension_invoice_status'] === 'pending'): ?>
+                                <button class="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md animate-pulse"
+                                        onclick="window.loadCustomerSection('invoices', { invoice_id: <?php echo $booking_detail['extension_invoice_id']; ?> });">
+                                    <i class="fas fa-file-invoice-dollar mr-2"></i>Extension Approved! Pay Invoice
+                                </button>
+                             <?php else: ?>
+                                <button class="w-full px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 shadow-md request-extension-btn"
                                         data-booking-id="<?php echo $booking_detail['id']; ?>"
-                                        data-charge="<?php echo htmlspecialchars($booking_detail['relocation_charge'] ?? '0.00'); ?>"
-                                        data-is-included="<?php echo htmlspecialchars($booking_detail['is_relocation_included'] ? 'true' : 'false'); ?>">
-                                    <i class="fas fa-truck-loading mr-2"></i>Request Relocation
+                                        data-daily-rate="<?php echo htmlspecialchars($booking_detail['daily_rate'] ?? '0.00'); ?>">
+                                    <i class="fas fa-calendar-plus mr-2"></i>Request Extension
                                 </button>
-                                <button class="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md request-swap-btn"
-                                        data-booking-id="<?php echo $booking_detail['id']; ?>"
-                                        data-charge="<?php echo htmlspecialchars($booking_detail['swap_charge'] ?? '0.00'); ?>"
-                                        data-is-included="<?php echo htmlspecialchars($booking_detail['is_swap_included'] ? 'true' : 'false'); ?>">
-                                    <i class="fas fa-exchange-alt mr-2"></i>Request Swap
-                                </button>
-                                <?php if ($booking_detail['extension_request_id'] && $booking_detail['extension_request_status'] === 'pending'): ?>
-                                    <div class="p-3 text-center bg-yellow-100 text-yellow-800 rounded-lg">
-                                        <i class="fas fa-hourglass-half mr-2"></i>Your extension request is pending admin approval.
-                                    </div>
-                                <?php elseif ($booking_detail['extension_request_id'] && $booking_detail['extension_request_status'] === 'approved' && $booking_detail['extension_invoice_id'] && $booking_detail['extension_invoice_status'] === 'pending'): ?>
-                                    <button class="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow-md animate-pulse"
-                                            onclick="window.loadCustomerSection('invoices', { invoice_id: <?php echo $booking_detail['extension_invoice_id']; ?> });">
-                                        <i class="fas fa-file-invoice-dollar mr-2"></i>Extension Approved! Pay Invoice
-                                    </button>
-                                <?php else: ?>
-                                    <button class="w-full px-4 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 shadow-md request-extension-btn"
-                                            data-booking-id="<?php echo $booking_detail['id']; ?>"
-                                            data-daily-rate="<?php echo htmlspecialchars($booking_detail['daily_rate'] ?? '0.00'); ?>">
-                                        <i class="fas fa-calendar-plus mr-2"></i>Request Extension
-                                    </button>
-                                <?php endif; ?>
-                            <?php endif; ?>
-
-                            <?php if ($booking_detail['service_type'] === 'equipment_rental'): // Pickup for any Equipment Rental type ?>
-                                <button class="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors duration-200 shadow-md schedule-pickup-btn"
-                                        data-booking-id="<?php echo $booking_detail['id']; ?>">
-                                    <i class="fas fa-calendar-check mr-2"></i>Schedule Pickup
-                                </button>
-                            <?php endif; ?>
+                             <?php endif; ?>
+                             <button class="w-full px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors duration-200 shadow-md schedule-pickup-btn"
+                                     data-booking-id="<?php echo $booking_detail['id']; ?>">
+                                 <i class="fas fa-calendar-check mr-2"></i>Schedule Pickup
+                             </button>
                         </div>
                     </div>
                 <?php endif; ?>

@@ -137,7 +137,7 @@ This is a strict two-step process. Do not combine the steps.
 
 **STEP 1: ITEM IDENTIFICATION & CONFIRMATION**
 - If the user uploads an image or provides a description, your FIRST task is to analyze it and list all identifiable items.
-- For EACH item identified, you MUST use this exact format:
+- For EACH item identified, You MUST use this exact format:
 🟥 Item: [Item Name]
 📏 Size: [Your best estimate of the dimensions, e.g., "3x2x2 ft"]
 ⚖️ Weight: [Your best estimate of the weight, e.g., "approx. 50 lbs"]
@@ -257,10 +257,26 @@ PROMPT;
     if (isset($responseMessage['tool_calls'])) {
         $toolCall = $responseMessage['tool_calls'][0]['function'];
         if ($toolCall['name'] === 'submit_quote_request') {
-            $arguments = json_decode($toolCall['arguments'], true);
+           $arguments = json_decode($toolCall['arguments'], true);
 
-            $conn->begin_transaction();
+// Check if JSON decoding was successful before proceeding
+if (json_last_error() !== JSON_ERROR_NONE) {
+    // Log the error and the invalid data for debugging
+    error_log("Failed to decode JSON from tool_call arguments. Raw data: " . $toolCall['arguments']);
+    // Throw a new exception to be caught by your handler
+    throw new Exception("The AI returned an invalid data format. Could not process the request.");
+}
+
+// ... rest of your code to process the arguments
+$conn->begin_transaction();
             try {
+                // Determine the initial status for the quote
+                $quote_status = 'pending'; // Default for equipment rental
+                if ($arguments['service_type'] === 'junk_removal') {
+                    // Set status to 'customer_draft' for junk removal requests
+                    $quote_status = 'customer_draft';
+                }
+
                 // Ensure customer_type is handled correctly, defaulting if not provided
                 $customer_type = $arguments['customer_type'] ?? 'Residential';
 
@@ -284,7 +300,8 @@ PROMPT;
                 }
                 $stmt_user_check->close();
 
-                $stmt_quote = $conn->prepare("INSERT INTO quotes (user_id, service_type, customer_type, location, delivery_date, removal_date, delivery_time, removal_time, live_load_needed, is_urgent, driver_instructions, quote_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                // Insert into quotes table with the determined status
+                $stmt_quote = $conn->prepare("INSERT INTO quotes (user_id, service_type, status, customer_type, location, delivery_date, removal_date, delivery_time, removal_time, live_load_needed, is_urgent, driver_instructions, quote_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $details_json = json_encode($arguments);
                 $delivery_date = $arguments['service_type'] === 'equipment_rental' ? ($arguments['service_date'] ?? null) : null;
                 $removal_date = $arguments['service_type'] === 'junk_removal' ? ($arguments['service_date'] ?? null) : null;
@@ -293,7 +310,8 @@ PROMPT;
                 $live_load = (int)($arguments['live_load_needed'] ?? 0);
                 $is_urgent = (int)($arguments['is_urgent'] ?? 0);
                 
-                $stmt_quote->bind_param("isssssssiiss", $userId, $arguments['service_type'], $customer_type, $arguments['location'], $delivery_date, $removal_date, $delivery_time, $removal_time, $live_load, $is_urgent, $arguments['driver_instructions'], $details_json);
+                // Corrected bind_param string: 'isssssssiiss' was 12, needs to be 13 characters for 13 variables
+                $stmt_quote->bind_param("isssssssiisss", $userId, $arguments['service_type'], $quote_status, $customer_type, $arguments['location'], $delivery_date, $removal_date, $delivery_time, $removal_time, $live_load, $is_urgent, $arguments['driver_instructions'], $details_json);
                 $stmt_quote->execute();
                 $quoteId = $conn->insert_id;
                 $stmt_quote->close();
@@ -327,11 +345,19 @@ PROMPT;
                 }
 
                 $conn->commit();
-                $aiResponseText = "Great! I've created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.";
-                
-                $jsonResponse['is_info_collected'] = true;
-                $jsonResponse['ai_response'] = $aiResponseText;
-                $jsonResponse['redirect_url'] = "/customer/dashboard.php#junk-removal?quote_id=" . $quoteId;
+
+                // Adjust AI response and redirect based on the determined status
+                if ($quote_status === 'customer_draft') {
+                    $aiResponseText = "Great! I've created a draft of your request. Please review the details on the next page and submit it to our team for a final quote.";
+                    $jsonResponse['is_info_collected'] = true;
+                    $jsonResponse['ai_response'] = $aiResponseText;
+                    $jsonResponse['redirect_url'] = "/customer/dashboard.php#junk-removal?quote_id=" . $quoteId;
+                } else {
+                    $aiResponseText = "Thank you! Your quote request (#Q{$quoteId}) has been successfully submitted. Our team will review the details and send you the best price within the hour.";
+                    $jsonResponse['is_info_collected'] = true;
+                    $jsonResponse['ai_response'] = $aiResponseText;
+                    $jsonResponse['redirect_url'] = "/customer/dashboard.php#quotes?quote_id=" . $quoteId; // Redirect to quotes for equipment rental
+                }
                 
                 unset($_SESSION['conversation_id']);
                 

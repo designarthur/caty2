@@ -35,6 +35,9 @@ try {
             case 'approve_extension':
                 handleApproveExtension($conn);
                 break;
+            case 'delete_bulk':
+                handleDeleteBulk($conn);
+                break;
             default:
                 throw new Exception('Invalid POST action specified.');
         }
@@ -343,4 +346,44 @@ function handleApproveExtension($conn) {
     $conn->commit();
     echo json_encode(['success' => true, 'message' => 'Rental extension approved. An invoice has been sent to the customer.']);
 }
-?>
+
+/**
+ * Handles bulk deletion of bookings.
+ * This function deletes the booking records and relies on ON DELETE CASCADE
+ * to remove associated records in `booking_charges`, `booking_extension_requests`,
+ * `booking_status_history`, and `reviews`.
+ * Invoices and quotes are NOT deleted by this function, as they may have broader financial context.
+ *
+ * @param mysqli $conn The database connection object.
+ * @return array Response array with success status and message.
+ * @throws Exception If no booking IDs are provided or a database error occurs.
+ */
+function handleDeleteBulk($conn) {
+    $booking_ids = $_POST['booking_ids'] ?? [];
+    if (empty($booking_ids) || !is_array($booking_ids)) {
+        throw new Exception("No booking IDs provided for bulk deletion.");
+    }
+
+    $conn->begin_transaction();
+
+    try {
+        $placeholders = implode(',', array_fill(0, count($booking_ids), '?'));
+        $types = str_repeat('i', count($booking_ids));
+        
+        $stmt_delete_bookings = $conn->prepare("DELETE FROM bookings WHERE id IN ($placeholders)");
+        $stmt_delete_bookings->bind_param($types, ...$booking_ids);
+        
+        if (!$stmt_delete_bookings->execute()) {
+            throw new Exception("Failed to delete bookings: " . $stmt_delete_bookings->error);
+        }
+        $stmt_delete_bookings->close();
+
+        $conn->commit();
+        echo json_encode(['success' => true, 'message' => 'Selected bookings and their associated data have been deleted.']);
+
+    } catch (Exception $e) {
+        $conn->rollback();
+        error_log("Bulk delete bookings error: " . $e->getMessage());
+        throw $e;
+    }
+}
