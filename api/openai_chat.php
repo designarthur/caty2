@@ -273,7 +273,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $equipment_name = $item['equipment_name'] ?? 'N/A';
                         $quantity = $item['quantity'] ?? 1;
                         $duration_days = $item['duration_days'] ?? null;
-                        $specific_needs = $item['specific_needs'] ?? null;
+                        $specific_needs = $item['specific_needs'] ?? ''; // Initialize as empty string
+
+                        // Append estimated_weight_tons to specific_needs if present
+                        if (isset($item['estimated_weight_tons']) && $item['estimated_weight_tons'] !== null) {
+                            $weight_info = 'Est. Weight: ' . $item['estimated_weight_tons'] . ' tons';
+                            if (!empty($specific_needs)) {
+                                $specific_needs .= '; ' . $weight_info;
+                            } else {
+                                $specific_needs = $weight_info;
+                            }
+                        }
                         
                         $stmt_eq->bind_param("isiss", $quoteId, $equipment_name, $quantity, $duration_days, $specific_needs);
                         $stmt_eq->execute();

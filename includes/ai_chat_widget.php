@@ -17,7 +17,16 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
 
 <div id="aiChatWidget" class="fixed bottom-0 right-0 w-full md:w-96 h-full md:h-[600px] bg-white border border-gray-300 rounded-lg shadow-xl flex flex-col z-[1000] transform translate-y-full md:translate-x-full transition-all duration-300 ease-in-out">
     <div class="flex items-center justify-between p-4 bg-blue-600 text-white rounded-t-lg cursor-grab">
-        <h3 class="text-lg font-semibold">Chat with AI Assistant</h3>
+        <h3 class="text-lg font-semibold flex items-center">
+            Chat with AI Assistant
+            <span class="ml-3 text-sm font-medium flex items-center">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+                </span>
+                <span class="ml-1">Online</span>
+            </span>
+        </h3>
         <button id="closeChat" class="text-white hover:text-gray-200 p-1 rounded-full hover:bg-blue-700 transition">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -61,7 +70,6 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const chatWidget = document.getElementById('aiChatWidget');
-        // const openChatButton = document.getElementById('openChat'); // No longer needed as button is now global via window.showAIChat
         const closeChatButton = document.getElementById('closeChat');
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
@@ -77,40 +85,29 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
         let selectedFile = null;
         let currentConversationId = null;
 
-        // Determine if user is logged in (passed from PHP)
         const isUserLoggedIn = <?php echo json_encode($isUserLoggedIn); ?>;
 
-        // --- Session Reset on Page Load for Non-Logged-in Users ---
-        // This ensures a clean slate when a non-logged-in user refreshes the page.
         if (!isUserLoggedIn) {
             sessionStorage.removeItem('conversation_id');
-            // Optionally, you might clear chatMessages.innerHTML here if you want absolutely no greeting
-            // before the showAIChat is explicitly called. But currently, the showAIChat handles it.
         } else {
-            // For logged-in users, try to retrieve previous conversation ID
             const storedId = sessionStorage.getItem('conversation_id');
             if (storedId) {
                 currentConversationId = storedId;
-                // In a full implementation, you'd load past messages here.
-                // For now, we just ensure the ID is set for subsequent server calls.
             }
         }
-        // --- END Session Reset Logic ---
 
-        // Function to open the chat widget
         window.showAIChat = function(initialServiceType = 'general') {
             chatWidget.classList.remove('translate-y-full', 'md:translate-x-full');
-            chatWidget.style.transform = 'translateY(0) translateX(0)'; // Ensure direct transform is applied
+            chatWidget.style.transform = 'translateY(0) translateX(0)';
 
             isChatOpen = true;
-            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            document.body.style.overflow = 'hidden';
             chatInput.focus();
 
-            // Clear chat and send initial message only if starting a new chat (no current ID or explicitly 'general')
             const storedConversationId = sessionStorage.getItem('conversation_id');
             if (!storedConversationId || initialServiceType === 'general') {
-                sessionStorage.removeItem('conversation_id'); // Ensure it's truly new
-                currentConversationId = null; // Reset JS variable
+                sessionStorage.removeItem('conversation_id');
+                currentConversationId = null;
                 chatMessages.innerHTML = `
                     <div class="flex justify-start mb-2">
                         <div class="bg-blue-200 text-blue-800 rounded-lg p-3 max-w-[80%]">
@@ -118,26 +115,21 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
                         </div>
                     </div>
                 `;
-                // Send an empty message to trigger the AI's first response with suggested replies
                 sendUserMessageToAI('', initialServiceType);
             } else {
-                // If an existing conversation, update currentConversationId from sessionStorage
                 currentConversationId = storedConversationId;
-                // No need to send an empty message if continuing existing chat, AI will pick up.
             }
         };
 
-        // Function to close the chat widget
         closeChatButton.addEventListener('click', function() {
             chatWidget.classList.add('translate-y-full', 'md:translate-x-full');
-            chatWidget.style.transform = ''; // Clear inline style set by draggable or showAIChat
+            chatWidget.style.transform = '';
             isChatOpen = false;
-            document.body.style.overflow = ''; // Allow scrolling background
-            quickReplyButtonsContainer.classList.add('hidden'); // Hide buttons on close
-            quickReplyButtonsContainer.innerHTML = ''; // Clear buttons
+            document.body.style.overflow = '';
+            quickReplyButtonsContainer.classList.add('hidden');
+            quickReplyButtonsContainer.innerHTML = '';
         });
 
-        // Function to add a message to the chat display
         function addMessage(sender, message, isHtml = false) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('flex', 'mb-2', sender === 'user' ? 'justify-end' : 'justify-start');
@@ -153,18 +145,16 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
             if (isHtml) {
                 contentElement.innerHTML = message;
             } else {
-                // Use marked.js for markdown parsing in AI responses
                 contentElement.innerHTML = sender === 'assistant' ? marked.parse(message) : message;
             }
             
             messageElement.appendChild(contentElement);
             chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Function to display quick reply buttons
         function displayQuickReplyButtons(buttons) {
-            quickReplyButtonsContainer.innerHTML = ''; // Clear existing buttons
+            quickReplyButtonsContainer.innerHTML = '';
             if (buttons && buttons.length > 0) {
                 quickReplyButtonsContainer.classList.remove('hidden');
                 buttons.forEach(buttonData => {
@@ -173,7 +163,7 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
                     button.textContent = buttonData.text;
                     button.onclick = () => {
                         chatInput.value = buttonData.value;
-                        sendMessageButton.click(); // Simulate sending the message
+                        sendMessageButton.click();
                     };
                     quickReplyButtonsContainer.appendChild(button);
                 });
@@ -182,16 +172,14 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
             }
         }
 
-        // Function to send message to AI API
         async function sendUserMessageToAI(message, initialServiceType = null) {
-            // Only add user message to display if it's not an empty string for initial chat trigger
             if (message.trim() !== '') {
                 addMessage('user', message);
             }
-            chatInput.value = ''; // Clear input field
+            chatInput.value = '';
             typingIndicator.classList.remove('hidden'); // Show typing indicator
-            quickReplyButtonsContainer.classList.add('hidden'); // Hide quick reply buttons
-            quickReplyButtonsContainer.innerHTML = ''; // Clear quick reply buttons
+            quickReplyButtonsContainer.classList.add('hidden');
+            quickReplyButtonsContainer.innerHTML = '';
 
             const formData = new FormData();
             formData.append('message', message);
@@ -200,12 +188,11 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
             }
             if (selectedFile) {
                 formData.append('media_files[]', selectedFile);
-                selectedFile = null; // Clear selected file after adding to form data
-                fileUploadPreview.classList.add('hidden'); // Hide preview
-                previewFileName.textContent = ''; // Clear preview text
+                selectedFile = null;
+                fileUploadPreview.classList.add('hidden');
+                previewFileName.textContent = '';
             }
 
-            // Always send currentConversationId if available
             if (currentConversationId) {
                 formData.append('conversation_id', currentConversationId);
             }
@@ -222,25 +209,22 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
 
                 if (data.success) {
                     addMessage('assistant', data.ai_response);
-                    // Update currentConversationId and sessionStorage based on server response
                     if (data.conversation_id) {
                         sessionStorage.setItem('conversation_id', data.conversation_id);
                         currentConversationId = data.conversation_id;
-                    } else if (data.conversation_id === null) { // Server explicitly reset conversation
+                    } else if (data.conversation_id === null) {
                         sessionStorage.removeItem('conversation_id');
                         currentConversationId = null;
                     }
 
-                    // Handle suggested replies
                     if (data.suggested_replies && data.suggested_replies.length > 0) {
                         displayQuickReplyButtons(data.suggested_replies);
                     }
 
-                    // Handle redirects
                     if (data.redirect_url) {
                         setTimeout(() => {
                             window.location.href = data.redirect_url;
-                        }, 1000); // Redirect after a short delay
+                        }, 1000);
                     }
                 } else {
                     addMessage('assistant', 'Error: ' + (data.message || 'Something went wrong.'));
@@ -260,19 +244,17 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
             }
         }
 
-        // Event Listeners for sending messages
         sendMessageButton.addEventListener('click', function() {
             sendUserMessageToAI(chatInput.value);
         });
 
         chatInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent new line in input
+                e.preventDefault();
                 sendUserMessageToAI(chatInput.value);
             }
         });
 
-        // File input change handler
         mediaFileInput.addEventListener('change', function(e) {
             if (e.target.files.length > 0) {
                 selectedFile = e.target.files[0];
@@ -285,15 +267,13 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
             }
         });
 
-        // Remove file button handler
         removeFileButton.addEventListener('click', function() {
             selectedFile = null;
-            mediaFileInput.value = ''; // Clear the file input
+            mediaFileInput.value = '';
             previewFileName.textContent = '';
             fileUploadPreview.classList.add('hidden');
         });
 
-        // Make chat widget draggable for desktop
         if (window.innerWidth >= 768) {
             const chatHeader = chatWidget.querySelector('.p-4:first-child');
             let isDragging = false;
@@ -312,7 +292,6 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
                 initialX = e.clientX - xOffset;
                 initialY = e.clientY - yOffset;
 
-                // Ensure dragging only starts from the header itself, not its children
                 if (e.target.closest('#aiChatWidget > div:first-child') === chatHeader) {
                     isDragging = true;
                 }

@@ -1,5 +1,5 @@
 <?php
-// api/customer/quotes.php - Handles customer actions on quotes (accept/reject).
+// api/customer/quotes.php - Handles customer actions on quotes (accept/reject, delete_bulk).
 
 // --- Setup & Includes ---
 session_start();
@@ -34,10 +34,12 @@ try {
 
 // --- Input Processing & Action Routing ---
 $action = $_POST['action'] ?? '';
-$quote_id = filter_input(INPUT_POST, 'quote_id', FILTER_VALIDATE_INT);
 $user_id = $_SESSION['user_id'];
+$quote_id = filter_input(INPUT_POST, 'quote_id', FILTER_VALIDATE_INT);
 
-if (empty($action) || !$quote_id) {
+
+// Common logic for single quote actions
+if ($action !== 'delete_bulk' && !$quote_id) {
     http_response_code(400); // Bad Request
     echo json_encode(['success' => false, 'message' => 'Invalid request. Missing action or quote ID.']);
     exit;
@@ -45,17 +47,20 @@ if (empty($action) || !$quote_id) {
 
 // --- Main Logic ---
 try {
-    // First, verify the quote belongs to the user and is in a valid state for the action.
-    // Fetch all relevant pricing details from the quote
-    $stmt_verify = $conn->prepare("SELECT status, quoted_price, service_type, daily_rate, swap_charge, relocation_charge, discount, tax, is_swap_included, is_relocation_included FROM quotes WHERE id = ? AND user_id = ?");
-    $stmt_verify->bind_param("ii", $quote_id, $user_id);
-    $stmt_verify->execute();
-    $quote = $stmt_verify->get_result()->fetch_assoc();
-    $stmt_verify->close();
+    if ($action !== 'delete_bulk') { // For single quote actions, verify ownership
+        // First, verify the quote belongs to the user and is in a valid state for the action.
+        // Fetch all relevant pricing details from the quote
+        $stmt_verify = $conn->prepare("SELECT status, quoted_price, service_type, daily_rate, swap_charge, relocation_charge, discount, tax, is_swap_included, is_relocation_included FROM quotes WHERE id = ? AND user_id = ?");
+        $stmt_verify->bind_param("ii", $quote_id, $user_id);
+        $stmt_verify->execute();
+        $quote = $stmt_verify->get_result()->fetch_assoc();
+        $stmt_verify->close();
 
-    if (!$quote) {
-        throw new Exception('Quote not found or you do not have permission to access it.');
+        if (!$quote) {
+            throw new Exception('Quote not found or you do not have permission to access it.');
+        }
     }
+
 
     switch ($action) {
         case 'accept_quote':
@@ -75,6 +80,9 @@ try {
                 throw new Exception('This quote is not a draft and cannot be submitted.');
             }
             $response = handleSubmitDraftQuote($conn, $quote_id, $user_id);
+            break;
+        case 'delete_bulk':
+            $response = handleDeleteBulk($conn, $user_id); // Pass user_id for ownership check
             break;
         default:
             throw new Exception('Invalid action specified.');
@@ -307,5 +315,87 @@ function handleRejectQuote($conn, $quote_id, $user_id) {
     } catch (Exception $e) {
         $conn->rollback();
         throw $e; // Re-throw to be caught by the main try-catch block
+    }
+}
+
+/**
+ * Handles bulk deletion of quotes for the customer.
+ * Deletes quotes only if they belong to the current user.
+ * Associated bookings are deleted if linked to the deleted invoice.
+ *
+ * @param mysqli $conn The database connection object.
+ * @param int $user_id The ID of the logged-in user.
+ * @return array Response array with success status and message.
+ * @throws Exception If no quote IDs are provided or a database error occurs.
+ */
+function handleDeleteBulk($conn, $user_id) {
+    $quote_ids = $_POST['quote_ids'] ?? [];
+    if (empty($quote_ids) || !is_array($quote_ids)) {
+        throw new Exception("No quote IDs provided for bulk deletion.");
+    }
+
+    // Filter to ensure only quotes owned by the current user are processed
+    $filtered_quote_ids = [];
+    $placeholders = implode(',', array_fill(0, count($quote_ids), '?'));
+    $types = str_repeat('i', count($quote_ids));
+
+    $stmt_check_ownership = $conn->prepare("SELECT id FROM quotes WHERE id IN ($placeholders) AND user_id = ?");
+    $stmt_check_ownership->bind_param($types . 'i', ...array_merge($quote_ids, [$user_id]));
+    $stmt_check_ownership->execute();
+    $result_ownership = $stmt_check_ownership->get_result();
+    while ($row = $result_ownership->fetch_assoc()) {
+        $filtered_quote_ids[] = $row['id'];
+    }
+    $stmt_check_ownership->close();
+
+    if (empty($filtered_quote_ids)) {
+        throw new Exception("No valid quotes found for deletion or you do not have permission to delete these quotes.");
+    }
+
+    $conn->begin_transaction();
+
+    try {
+        $delete_placeholders = implode(',', array_fill(0, count($filtered_quote_ids), '?'));
+        $delete_types = str_repeat('i', count($filtered_quote_ids));
+        
+        // 1. Get booking IDs associated with invoices linked to these quotes
+        $stmt_fetch_bookings = $conn->prepare("SELECT b.id FROM bookings b JOIN invoices i ON b.invoice_id = i.id WHERE i.quote_id IN ($delete_placeholders)");
+        $stmt_fetch_bookings->bind_param($delete_types, ...$filtered_quote_ids);
+        $stmt_fetch_bookings->execute();
+        $result_bookings = $stmt_fetch_bookings->get_result();
+        $booking_ids_to_delete = [];
+        while($row = $result_bookings->fetch_assoc()) {
+            $booking_ids_to_delete[] = $row['id'];
+        }
+        $stmt_fetch_bookings->close();
+
+        // 2. If there are associated bookings, delete them
+        if (!empty($booking_ids_to_delete)) {
+            $booking_placeholders = implode(',', array_fill(0, count($booking_ids_to_delete), '?'));
+            $booking_types = str_repeat('i', count($booking_ids_to_delete));
+            
+            $stmt_delete_bookings = $conn->prepare("DELETE FROM bookings WHERE id IN ($booking_placeholders)");
+            $stmt_delete_bookings->bind_param($booking_types, ...$booking_ids_to_delete);
+            if (!$stmt_delete_bookings->execute()) {
+                throw new Exception("Failed to delete associated bookings: " . $stmt_delete_bookings->error);
+            }
+            $stmt_delete_bookings->close();
+        }
+
+        // 3. Delete the quotes (this will cascade delete from junk_removal_details and quote_equipment_details if foreign keys are set up correctly)
+        $stmt_delete_quotes = $conn->prepare("DELETE FROM quotes WHERE id IN ($delete_placeholders)");
+        $stmt_delete_quotes->bind_param($delete_types, ...$filtered_quote_ids);
+        if (!$stmt_delete_quotes->execute()) {
+            throw new Exception("Failed to delete quotes: " . $stmt_delete_quotes->error);
+        }
+        $stmt_delete_quotes->close();
+
+        $conn->commit();
+        return ['success' => true, 'message' => 'Selected quotes and their associated data have been deleted.'];
+
+    } catch (Exception $e) {
+        $conn->rollback();
+        error_log("Customer bulk delete quotes error: " . $e->getMessage());
+        throw $e;
     }
 }

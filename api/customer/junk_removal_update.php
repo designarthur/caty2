@@ -33,6 +33,15 @@ if (!$quote_id || empty($action)) {
     exit;
 }
 
+// --- CSRF Token Validation ---
+try {
+    validate_csrf_token();
+} catch (Exception $e) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Invalid security token. Please refresh the page and try again.']);
+    exit;
+}
+
 // Ensure the quote belongs to the logged-in user and is a junk_removal service
 $stmt_verify = $conn->prepare("SELECT status, service_type FROM quotes WHERE id = ? AND user_id = ? AND service_type = 'junk_removal'");
 $stmt_verify->bind_param("ii", $quote_id, $user_id);
@@ -68,7 +77,11 @@ try {
             }
             handleSubmitCustomerDraft($conn, $quote_id);
             break;
-
+        case 'delete_bulk':
+            // This action is handled by api/customer/quotes.php, but if this API were to handle it,
+            // it would be similar to the admin/quotes.php delete_bulk. For now, it's a passthrough.
+            throw new Exception('Bulk delete is handled by the main quotes API. Invalid action for this endpoint.');
+            
         default:
             throw new Exception('Invalid action specified.');
     }
