@@ -617,7 +617,7 @@ if (!$companyName) {
                            Just tell our AI what you need. We'll connect with our local network and get you the best price, guaranteed, within the hour. No more waiting, no more hassle.
                         </p>
                         <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block">Start a New Booking</a>
+                            <a href="#" onclick="showAIChat('general'); return false;" class="btn-primary inline-block">Start a New Booking</a>
                             <a href="#how-it-works-section" class="btn-secondary inline-block">How It Works</a>
                         </div>
                     </div>
@@ -659,7 +659,7 @@ if (!$companyName) {
                         <h4>Best Price Guarantee</h4>
                         <p>Our innovative marketplace model ensures you always receive the most competitive pricing from a network of top local, vetted suppliers, guaranteeing exceptional value.</p>
                         <p class="mt-auto">Need financing for a large project? We offer flexible payment options and plans tailored to your needs, helping you acquire equipment faster.</p>
-                        <a href="#contact-section" class="btn-start-trial mt-6">
+                        <a href="#" onclick="showAIChat('general'); return false;" class="btn-start-trial mt-6">
                             Get a Free Quote
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </a>
@@ -696,7 +696,7 @@ if (!$companyName) {
                             <p class="how-it-works-step-number">Step 1</p>
                             <h3 class="how-it-works-step-title">Chat with Our AI Booking System</h3>
                             <p class="how-it-works-step-description">Start your rental process by simply chatting with our intelligent AI booking system. Tell us your specific equipment requirements, project details, and timeline, and our AI will efficiently capture all necessary information to begin your quote request, making the initial step quick and effortless.</p>
-                            <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Chatting Now &rarr;</a>
+                            <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium mt-4 inline-block">Start Chatting Now &rarr;</a>
                         </div>
                     </div>
 
@@ -738,19 +738,19 @@ if (!$companyName) {
                         <img src="/assets/images/dumpster_rental.png" alt="Dumpster Rentals" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Dumpster Rentals</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">From extensive home cleanouts to large-scale construction projects, easily find the perfect size dumpster to efficiently handle any waste disposal need, ensuring a clean and safe site for your operations.</p>
-                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                     <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-200">
                         <img src="/assets/images/portable_toilet.png" alt="Temporary Toilets" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Temporary Toilets</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">Ensure comfort and sanitation with our clean, reliable, and regularly serviced portable toilets, ideal for events, busy job sites, and emergency situations requiring immediate facilities on demand.</p>
-                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                     <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-300">
                         <img src="/assets/images/storage_container.png" alt="Storage Containers" class="rounded-lg mb-6 shadow-md border border-gray-300">
                         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Storage Containers</h3>
                         <p class="text-gray-600 leading-relaxed mb-6">Secure your valuable equipment and materials with our robust, weatherproof on-site storage containers, conveniently delivered right to your specified location for maximum accessibility and protection.</p>
-                        <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                        <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                     </div>
                 </div>
                 <div class="text-center mt-20 animate-on-scroll delay-400">
@@ -766,13 +766,13 @@ if (!$companyName) {
                     <img src="/assets/images/junk_removal.png" alt="Junk Removal Services" class="rounded-lg mb-6 shadow-md border border-gray-300">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Advanced Junk Removal Services</h3>
                     <p class="text-gray-600 leading-relaxed mb-6">For efficient junk removal, simply upload images and even videos of your items. Our advanced system analyzes the content to generate a precise, fair quote. If you're satisfied with the quotation, we'll generate an invoice for you to conveniently pay directly from your personalized dashboard.</p>
-                    <a href="#" onclick="showAIChat('junk-removal-service'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                    <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                 </div>
                 <div class="p-10 rounded-2xl shadow-xl flex flex-col items-center text-center card-hover-effect animate-on-scroll delay-200">
                     <img src="/assets/images/relocation_swap.png" alt="Relocation & Swap Services" class="rounded-lg mb-6 shadow-md border border-gray-300">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Relocation & Swap Services</h3>
                     <p class="text-gray-600 leading-relaxed mb-6">Project running longer than expected? Need a different size unit for your evolving needs? We offer seamless relocation or swap services for your rental unit, ensuring your project stays on track and on budget without interruption.</p>
-                    <a href="#" onclick="showAIChat('create-booking'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
+                    <a href="#" onclick="showAIChat('general'); return false;" class="text-blue-custom hover:underline font-medium flex items-center justify-center">Learn More & Get Quote <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a>
                 </div>
             </div>
         </section>
@@ -951,7 +951,7 @@ if (!$companyName) {
                     </div>
                     <div class="contact-form-box animate-on-scroll delay-300">
                         <div class="flex mb-8">
-                            <button onclick="showAIChat(''); return false;" class="flex-1 py-3 px-4 rounded-lg font-semibold text-blue-custom border border-blue-custom bg-blue-50 w-full">Chat with AI Assistant</button>
+                            <button onclick="showAIChat('general'); return false;" class="flex-1 py-3 px-4 rounded-lg font-semibold text-blue-custom border border-blue-custom bg-blue-50 w-full">Chat with AI Assistant</button>
                         </div>
                         <form class="space-y-4">
                             <div>
@@ -984,7 +984,7 @@ if (!$companyName) {
                 <p class="text-xl text-gray-700 mb-12 max-w-3xl mx-auto animate-on-scroll delay-100">
                     Experience the future of equipment rentals. Get a free, no-obligation quote in seconds and streamline your project needs with <?php echo htmlspecialchars($companyName); ?>'s powerful, intuitive platform.
                 </p>
-                <a href="#" onclick="showAIChat('create-booking'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 mb-16 animate-on-scroll delay-200">Get Started & Get a Quote</a>
+                <a href="#" onclick="showAIChat('general'); return false;" class="btn-primary inline-block shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 mb-16 animate-on-scroll delay-200">Get Started & Get a Quote</a>
 
                 <div class="bg-gray-100 p-12 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-center gap-10 animate-on-scroll delay-300">
                     <div class="icon-box bg-blue-custom text-white flex-shrink-0">
@@ -1009,7 +1009,7 @@ if (!$companyName) {
         </section>
     </main>
 
-    <div id="floating-chat-trigger" onclick="showAIChat('create-booking');">
+    <div id="floating-chat-trigger" onclick="showAIChat('general');">
         <i class="fas fa-comment-dots"></i>
     </div>
 
