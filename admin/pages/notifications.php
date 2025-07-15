@@ -16,20 +16,32 @@ if (!is_logged_in() || !has_role('admin')) {
 $admin_user_id = $_SESSION['user_id'];
 $notifications = [];
 
-// Fetch notifications for the admin.
-// For simplicity, we'll fetch notifications where user_id is the admin's ID,
-// or potentially system-wide notifications if a 'null' user_id is used for them.
-// A more robust system might have an 'admin_notifications' table or specific notification types for admin.
-// For now, let's fetch all notifications that are not specifically linked to a 'customer' role user_id,
-// or directly linked to the current admin. You might need to refine this logic based on how admin notifications are generated.
-$stmt = $conn->prepare("SELECT id, type, message, link, is_read, created_at FROM notifications ORDER BY created_at DESC");
-// A more advanced query might be:
-// SELECT n.id, n.type, n.message, n.link, n.is_read, n.created_at, u.role
-// FROM notifications n
-// LEFT JOIN users u ON n.user_id = u.id
-// WHERE n.user_id IS NULL OR u.role = 'admin' OR n.user_id = ?
-// ORDER BY created_at DESC
+// --- Pagination & Filter Variables ---
+$items_per_page_options = [10, 25, 50, 100];
+$items_per_page = filter_input(INPUT_GET, 'per_page', FILTER_VALIDATE_INT);
+if (!in_array($items_per_page, $items_per_page_options)) {
+    $items_per_page = 25; // Default items per page
+}
 
+$current_page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+if (!$current_page || $current_page < 1) {
+    $current_page = 1;
+}
+$offset = ($current_page - 1) * $items_per_page;
+
+
+// Fetch total count for pagination
+$stmt_count = $conn->prepare("SELECT COUNT(*) FROM notifications");
+$stmt_count->execute();
+$total_notifications_count = $stmt_count->get_result()->fetch_row()[0];
+$stmt_count->close();
+
+$total_pages = ceil($total_notifications_count / $items_per_page);
+
+
+// Fetch notifications for the admin with LIMIT and OFFSET
+$stmt = $conn->prepare("SELECT id, type, message, link, is_read, created_at FROM notifications ORDER BY created_at DESC LIMIT ? OFFSET ?");
+$stmt->bind_param("ii", $items_per_page, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -141,10 +153,65 @@ function getNotificationIcon($type) {
                 </div>
             <?php endforeach; ?>
         </div>
+        <nav class="mt-4 flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <p class="text-sm text-gray-700">
+                    Showing <span class="font-medium"><?php echo $offset + 1; ?></span> to
+                    <span class="font-medium"><?php echo min($offset + $items_per_page, $total_notifications_count); ?></span> of
+                    <span class="font-medium"><?php echo $total_notifications_count; ?></span> results
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-700">Notifications per page:</span>
+                <select id="items-per-page-select" onchange="loadAdminNotifications({page: 1, per_page: this.value})"
+                        class="p-2 border border-gray-300 rounded-md text-sm">
+                    <?php foreach ($items_per_page_options as $option): ?>
+                        <option value="<?php echo $option; ?>" <?php echo $items_per_page == $option ? 'selected' : ''; ?>>
+                            <?php echo $option; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button onclick="loadAdminNotifications({page: <?php echo max(1, $current_page - 1); ?>, per_page: <?php echo $items_per_page; ?>})"
+                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Previous</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <button onclick="loadAdminNotifications({page: <?php echo $i; ?>, per_page: <?php echo $items_per_page; ?>})"
+                               class="<?php echo $i == $current_page ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'; ?> relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                            <?php echo $i; ?>
+                        </button>
+                    <?php endfor; ?>
+                    <button onclick="loadAdminNotifications({page: <?php echo min($total_pages, $current_page + 1); ?>, per_page: <?php echo $items_per_page; ?>})"
+                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Next</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </nav>
+            </div>
+        </nav>
     <?php endif; ?>
 </div>
 
 <script>
+    // Function to load the admin notifications section with updated parameters
+    function loadAdminNotifications(params = {}) {
+        const currentParams = new URLSearchParams(window.location.search);
+        const newParams = {
+            page: currentParams.get('page') || 1,
+            per_page: currentParams.get('per_page') || 25, // Default as in PHP
+            ...params
+        };
+        window.loadAdminSection('notifications', newParams);
+    }
+
     // --- Event listener for notification actions ---
     document.addEventListener('click', async function(event) {
         // Mark individual notification as read
@@ -159,7 +226,6 @@ function getNotificationIcon($type) {
                 formData.append('action', 'mark_read');
                 formData.append('id', notificationId);
 
-                // IMPORTANT: This will call /api/admin/notifications.php (needs to be created)
                 const response = await fetch('/api/admin/notifications.php', {
                     method: 'POST',
                     body: formData
@@ -168,7 +234,7 @@ function getNotificationIcon($type) {
 
                 if (result.success) {
                     showToast(result.message || 'Notification marked as read.', 'success');
-                    window.loadAdminSection('notifications'); // Reload section to reflect change
+                    loadAdminNotifications(); // Reload section to reflect change
                 } else {
                     showToast(result.message || 'Failed to mark notification as read.', 'error');
                 }
@@ -195,7 +261,6 @@ function getNotificationIcon($type) {
                             formData.append('action', 'delete');
                             formData.append('id', notificationId);
 
-                            // IMPORTANT: This will call /api/admin/notifications.php (needs to be created)
                             const response = await fetch('/api/admin/notifications.php', {
                                 method: 'POST',
                                 body: formData
@@ -204,7 +269,7 @@ function getNotificationIcon($type) {
 
                             if (result.success) {
                                 showToast(result.message || 'Notification deleted.', 'success');
-                                window.loadAdminSection('notifications'); // Reload section to reflect change
+                                loadAdminNotifications(); // Reload section to reflect change
                             } else {
                                 showToast(result.message || 'Failed to delete notification.', 'error');
                             }
@@ -230,7 +295,6 @@ function getNotificationIcon($type) {
                 const formData = new FormData();
                 formData.append('action', 'mark_read');
                 formData.append('id', notificationId);
-                // IMPORTANT: This will call /api/admin/notifications.php (needs to be created)
                 await fetch('/api/admin/notifications.php', { method: 'POST', body: formData });
             } catch (error) {
                 console.error('Failed to mark notification as read on link click (admin):', error);
@@ -267,7 +331,6 @@ function getNotificationIcon($type) {
                             formData.append('action', 'mark_read');
                             formData.append('id', 'all');
 
-                            // IMPORTANT: This will call /api/admin/notifications.php (needs to be created)
                             const response = await fetch('/api/admin/notifications.php', {
                                 method: 'POST',
                                 body: formData
@@ -276,7 +339,7 @@ function getNotificationIcon($type) {
 
                             if (result.success) {
                                 showToast(result.message || 'All notifications marked as read.', 'success');
-                                window.loadAdminSection('notifications'); // Reload section
+                                loadAdminNotifications(); // Reload section
                             } else {
                                 showToast(result.message || 'Failed to mark all notifications as read.', 'error');
                             }
@@ -306,7 +369,6 @@ function getNotificationIcon($type) {
                             formData.append('action', 'delete');
                             formData.append('id', 'all');
 
-                            // IMPORTANT: This will call /api/admin/notifications.php (needs to be created)
                             const response = await fetch('/api/admin/notifications.php', {
                                 method: 'POST',
                                 body: formData
@@ -315,7 +377,7 @@ function getNotificationIcon($type) {
 
                             if (result.success) {
                                 showToast(result.message || 'All notifications deleted.', 'success');
-                                window.loadAdminSection('notifications'); // Reload section
+                                loadAdminNotifications(); // Reload section
                             } else {
                                 showToast(result.message || 'Failed to delete all notifications.', 'error');
                             }
